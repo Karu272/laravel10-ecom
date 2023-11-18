@@ -1,6 +1,6 @@
 @extends('admin.layout.layout')
 @section('content')
-    <h1>Update Admin Password</h1>
+    <h3>Update Admin Password</h3>
     <form method="POST" action="{{ route('admin.update_password') }}" enctype="multipart/form-data">@csrf
         <div class="card-body">
             <div class="form-group">
@@ -8,6 +8,22 @@
                 <strong> || {{Auth::guard('admin')->user()->email}}</strong>
             </div>
             <div class="form-group">
+                @if (Session::has('error_message'))
+                <div class="redDanger alert alert-danger" role="alert">
+                    {{ Session::get('error_message') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @endif
+                @if (Session::has('success_message'))
+                <div class="greenDanger alert alert-danger" role="alert">
+                    {{ Session::get('success_message') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @endif
                 <label for="current_pwd">Current Password</label>
                 <input class="form-control @error('current_pwd') is-invalid @enderror" type="password" name="current_pwd" id="current_pwd"
                     placeholder="Enter Current Password"><span id="chkCurrentPwd"></span>

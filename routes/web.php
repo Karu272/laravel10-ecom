@@ -22,8 +22,9 @@ Route::prefix('admin')->group(function () {
         Route::get('dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('logout', [AdminController::class,'logout'])->name('admin.login');
         /* ========== Admin Setup ========== */
-        Route::get('update-password', [AdminController::class,'updatePassword'])->name('admin.update_password');
+        Route::match(['get', 'post'], 'update-password', [AdminController::class,'updatePassword'])->name('admin.update_password');
         Route::post('check-current-password', [AdminController::class, 'checkCurrentPassword']);
+        Route::match(['get', 'post'], 'update-admin-details', [AdminController::class,'updateAdminDetails'])->name('admin.update_admin_details');
     });
 
 });

@@ -24,23 +24,29 @@
     <script type="text/javascript" src="{{ url('admin/js/bootstrap-3.1.1.min.js') }}"></script>
     <!-- //for bootstrap working -->
     <link rel="stylesheet" href="{{ Url('admin/css/admin.css') }}">
+    <!-- Cropper.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.min.css">
 </head>
 
 <body>
     @include('admin.layout.header')
-<div class="container">
-    <div class="row">
-        <div class="col-sm-4">
-            @include('admin.layout.sidebar')
-        </div>
-        <div class="col-sm-8">
-            @yield('content')
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                @include('admin.layout.sidebar')
+            </div>
+            <div class="col-sm-8">
+                @yield('content')
+            </div>
         </div>
     </div>
-</div>
 
     @include('admin.layout.footer')
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <!-- Cropper.js -->
+    <script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
     <!-- Custom Admin JS -->
     <script src="{{ url('admin/js/Jquery.js') }}" type="text/javascript"></script>
     <script src="{{ url('admin/js/app.js') }}" type="text/javascript"></script>

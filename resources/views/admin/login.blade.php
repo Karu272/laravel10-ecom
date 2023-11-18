@@ -13,14 +13,6 @@
 
 <body>
     <div class="container">
-        @if (Session::has('error_message'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ Session::get('error_message') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -31,6 +23,14 @@
             </div>
         @endif
         <form action="{{ URL('/admin/login') }}" method="post">@csrf
+            @if (Session::has('error_message'))
+                <div class="redDanger alert alert-danger" role="alert">
+                    {{ Session::get('error_message') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="box1">
                 <h3>Admin Login</h3>
             </div>
