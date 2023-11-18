@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Auth;
+use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
-use Validator;
 use App\Models\Admin;
+use Auth;
+use Validator;
 use Hash;
 use Log;
-use Intervention\Image\Facades\Image;
+use Session;
 
 class AdminController extends Controller
 {
@@ -62,6 +63,7 @@ class AdminController extends Controller
 
     public function updatePassword(Request $request)
     {
+        Session::put('page','update_password');
         if ($request->isMethod('post')) {
             try {
                 $data = $request->all();
@@ -106,6 +108,7 @@ class AdminController extends Controller
 
     public function updateAdminDetails(Request $request)
     {
+        Session::put('page','update_admin_details');
         if ($request->isMethod('post')) {
             $data = $request->all();
             $imageName = null; // Initialize $imageName

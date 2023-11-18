@@ -37,3 +37,13 @@ li {
   background-color: #02cc5a;
   color: white;
 }
+
+.adminImg, img {
+  width: 6em;
+}
+
+.adminName {
+  background-color: red;
+  padding-left: 3%;
+  margin-top: 4%;
+}

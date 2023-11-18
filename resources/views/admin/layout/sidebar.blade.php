@@ -1,21 +1,32 @@
 <nav class="mt-2">
     <ul class="nav nav-pills nav-sidebar flex-column">
-        <li class="nav-item menu-open">
-            <a href="#" class="nav-link active">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
-                <p>Settings<i class="right fas fa-angle-left"></i></p>
+        <li class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                <p>
+                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                    Settings
+                    <i class="fas fa-angle-left"></i>
+                </p>
             </a>
-            <ul class="nav nav-treeview">
+            <ul class="dropdown-menu" role="menu">
+                @if (Session::get('page') == 'update-password')
+                    @php $active="active" @endphp
+                @else
+                    @php $active="" @endphp
+                @endif
                 <li class="nav-item">
-                    <a href="{{url('admin/update-password')}}" class="nav-link active">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Update Admin Password</p>
+                    <a href="{{ url('admin/update-password') }}" class="nav-link">
+                        <p><i class="far fa-circle nav-icon"></i> Update Admin Password</p>
                     </a>
                 </li>
+                @if (Session::get('page') == 'update-admin-details')
+                    @php $active="active" @endphp
+                @else
+                    @php $active="" @endphp
+                @endif
                 <li class="nav-item">
-                    <a href="{{url('admin/update-admin-details')}}" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Update Admin Details</p>
+                    <a href="{{ url('admin/update-admin-details') }}" class="nav-link">
+                        <p><i class="far fa-circle nav-icon"></i> Update Admin Details</p>
                     </a>
                 </li>
             </ul>
