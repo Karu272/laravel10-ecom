@@ -125,6 +125,12 @@ class AdminController extends Controller
 
             $validator = Validator::make($data, $rules, $customMessages);
 
+            // Update Admin Details
+            Admin::where('email', Auth::guard('admin')->user()->email)->update([
+                'name' => $data['admin_name'],
+                'mobile' => $data['admin_mobile'],
+            ]);
+            // =================== Image crop and upload ===================
             if ($request->has('cropped_image_data')) {
                 $base64Image = $request->input('cropped_image_data');
 
@@ -168,8 +174,6 @@ class AdminController extends Controller
 
             // Update Admin Details
             Admin::where('email', Auth::guard('admin')->user()->email)->update([
-                'name' => $data['admin_name'] ?? null,
-                'mobile' => $data['admin_mobile'] ?? null,
                 'image' => $imageName ?? null,
             ]);
 
