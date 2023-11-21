@@ -1,5 +1,5 @@
 <nav class="mt-2">
-    <ul class="nav nav-pills nav-sidebar flex-column">
+    <ul class="nav nav-pills nav-sidebar">
         <li class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                 <p>
@@ -16,7 +16,7 @@
                 @endif
                 <li class="nav-item">
                     <a href="{{ url('admin/update-password') }}" class="nav-link">
-                        <p><i class="far fa-circle nav-icon"></i> Update Admin Password</p>
+                        <p><i class="nav-icon fas fa-users"></i> Update Admin Password</p>
                     </a>
                 </li>
                 @if (Session::get('page') == 'update-admin-details')
@@ -26,7 +26,40 @@
                 @endif
                 <li class="nav-item">
                     <a href="{{ url('admin/update-admin-details') }}" class="nav-link">
-                        <p><i class="far fa-circle nav-icon"></i> Update Admin Details</p>
+                        <p><i class="nav-icon fas fa-users"></i> Update Admin Details</p>
+                    </a>
+                </li>
+                @if (Session::get('page') == 'subadmins')
+                    @php $active="active" @endphp
+                @else
+                    @php $active="" @endphp
+                @endif
+                <li class="nav-item">
+                    <a href="{{ url('admin/subadmins/subadmins') }}" class="nav-link">
+                        <p><i class="nav-icon fas fa-users"></i> Subadmins</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav nav-pills nav-sidebar">
+        <li class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                <p>
+                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                    Cms Pages
+                    <i class="fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                @if (Session::get('page') == 'cms-pages')
+                    @php $active="active" @endphp
+                @else
+                    @php $active="" @endphp
+                @endif
+                <li class="nav-item">
+                    <a href="{{ url('admin/pages/cms-pages') }}" class="nav-link">
+                        <p><i class="far fa-circle nav-icon"></i> CMS info</p>
                     </a>
                 </li>
             </ul>

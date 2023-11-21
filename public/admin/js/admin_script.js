@@ -29,22 +29,25 @@ $(document).ready(function () {
         });
     });
 
-    // Update Section Status
-    $(document).on("click", ".updateSectionStatus", function () {
+    // Update CMS Page Status
+    $(document).on("click", ".updateCmsPageStatus", function () {
         var status = $(this).children("i").attr("status");
-        var section_id = $(this).attr("section_id");
+        var page_id = $(this).attr("page_id");
         $.ajax({
+            headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
             type: "post",
-            url: "/admin/update-section-status",
-            data: { status: status, section_id: section_id },
+            url: "/admin/update-cms-pages-status",
+            data: { status: status, page_id: page_id },
             success: function (resp) {
                 if (resp["status"] == 0) {
-                    $("#section-" + section_id).html(
+                    $("#page-" + page_id).html(
                         "<i class='fas fa-toggle-off' aria-hidden='true' status='Inactive'></i>"
                     );
                 } else if (resp["status"] == 1) {
-                    $("#section-" + section_id).html(
-                        "<i class='fas fa-toggle-on' aria-hidden='true' status='Active'></i>"
+                    $("#page-" + page_id).html(
+                        "<i class='fas fa-toggle-on' aria-hidden='true' status='Active' style='color: blue;'></i>"
                     );
                 }
             },
@@ -54,22 +57,25 @@ $(document).ready(function () {
         });
     });
 
-    // Update ENG Section Status
-    $(document).on("click", ".updateSectionEngStatus", function () {
+    // Update Subadmin Status
+    $(document).on("click", ".updateSubadminStatus", function () {
         var status = $(this).children("i").attr("status");
-        var sectionEng_id = $(this).attr("sectionEng_id");
+        var page_id = $(this).attr("page_id");
         $.ajax({
+            headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
             type: "post",
-            url: "/admin/update-sectionEng-status",
-            data: { status: status, sectionEng_id: sectionEng_id },
+            url: "/admin/update-subadmin-status",
+            data: { status: status, page_id: page_id },
             success: function (resp) {
                 if (resp["status"] == 0) {
-                    $("#sectionEng-" + sectionEng_id).html(
+                    $("#page-" + page_id).html(
                         "<i class='fas fa-toggle-off' aria-hidden='true' status='Inactive'></i>"
                     );
                 } else if (resp["status"] == 1) {
-                    $("#sectionEng-" + sectionEng_id).html(
-                        "<i class='fas fa-toggle-on' aria-hidden='true' status='Active'></i>"
+                    $("#page-" + page_id).html(
+                        "<i class='fas fa-toggle-on' aria-hidden='true' status='Active' style='color: blue;'></i>"
                     );
                 }
             },
@@ -79,55 +85,7 @@ $(document).ready(function () {
         });
     });
 
-    // Update Category Status
-    $(document).on("click", ".updateCategoryStatus", function () {
-        var status = $(this).children("i").attr("status");
-        var category_id = $(this).attr("category_id");
-        $.ajax({
-            type: "post",
-            url: "/admin/update-category-status",
-            data: { status: status, category_id: category_id },
-            success: function (resp) {
-                if (resp["status"] == 0) {
-                    $("#category-" + category_id).html(
-                        "<i class='fas fa-toggle-off' aria-hidden='true' status='Inactive'></i>"
-                    );
-                } else if (resp["status"] == 1) {
-                    $("#category-" + category_id).html(
-                        "<i class='fas fa-toggle-on' aria-hidden='true' status='Active'></i>"
-                    );
-                }
-            },
-            error: function () {
-                alert("Error");
-            },
-        });
-    });
 
-    // Update ENG Category Status
-    $(document).on("click", ".updateCategoryEngStatus", function () {
-        var status = $(this).children("i").attr("status");
-        var categoryEng_id = $(this).attr("categoryEng_id");
-        $.ajax({
-            type: "post",
-            url: "/admin/update-categoryEng-status",
-            data: { status: status, categoryEng_id: categoryEng_id },
-            success: function (resp) {
-                if (resp["status"] == 0) {
-                    $("#categoryEng-" + categoryEng_id).html(
-                        "<i class='fas fa-toggle-off' aria-hidden='true' status='Inactive'></i>"
-                    );
-                } else if (resp["status"] == 1) {
-                    $("#categoryEng-" + categoryEng_id).html(
-                        "<i class='fas fa-toggle-on' aria-hidden='true' status='Active'></i>"
-                    );
-                }
-            },
-            error: function () {
-                alert("Error");
-            },
-        });
-    });
 
     // Append Categories Level
     $("#section_id").change(function () {
@@ -161,105 +119,7 @@ $(document).ready(function () {
         });
     });
 
-    // Update Product Status
-    $(document).on("click", ".updateProductStatus", function () {
-        var status = $(this).children("i").attr("status");
-        var product_id = $(this).attr("product_id");
-        $.ajax({
-            type: "post",
-            url: "/admin/update-product-status",
-            data: { status: status, product_id: product_id },
-            success: function (resp) {
-                if (resp["status"] == 0) {
-                    $("#product-" + product_id).html(
-                        "<i class='fas fa-toggle-off' aria-hidden='true' status='Inactive'></i>"
-                    );
-                } else if (resp["status"] == 1) {
-                    $("#product-" + product_id).html(
-                        "<i class='fas fa-toggle-on' aria-hidden='true' status='Active'></i>"
-                    );
-                }
-            },
-            error: function () {
-                alert("Error");
-            },
-        });
-    });
 
-    // Update ENG Product Status
-    $(document).on("click", ".updateProductStatus", function () {
-        var status = $(this).children("i").attr("status");
-        var product_id = $(this).attr("product_id");
-        $.ajax({
-            type: "post",
-            url: "/admin/update-productEng-status",
-            data: { status: status, product_id: product_id },
-            success: function (resp) {
-                if (resp["status"] == 0) {
-                    $("#product-" + product_id).html(
-                        "<i class='fas fa-toggle-off' aria-hidden='true' status='Inactive'></i>"
-                    );
-                } else if (resp["status"] == 1) {
-                    $("#product-" + product_id).html(
-                        "<i class='fas fa-toggle-on' aria-hidden='true' status='Active'></i>"
-                    );
-                }
-            },
-            error: function () {
-                alert("Error");
-            },
-        });
-    });
-
-    // Update Index page setup Status
-    $(document).on("click", ".updateinimgtxtStatus", function () {
-        var status = $(this).children("i").attr("status");
-        var inimgtxt_id = $(this).attr("inimgtxt_id");
-        $.ajax({
-            type: "post",
-            url: "/admin/update-inimgtxt-status",
-            data: { status: status, inimgtxt_id: inimgtxt_id },
-            success: function (resp) {
-                if (resp["status"] == 0) {
-                    $("#inimgtxt-" + inimgtxt_id).html(
-                        "<i class='fas fa-toggle-off' aria-hidden='true' status='Inactive'></i>"
-                    );
-                } else if (resp["status"] == 1) {
-                    $("#inimgtxt-" + inimgtxt_id).html(
-                        "<i class='fas fa-toggle-on' aria-hidden='true' status='Active'></i>"
-                    );
-                }
-            },
-            error: function () {
-                alert("Error");
-            },
-        });
-    });
-
-    // Update ENGLISH Index page setup Status
-    $(document).on("click", ".updateinimgtxtStatus", function () {
-        var status = $(this).children("i").attr("status");
-        var inimgtxt_id = $(this).attr("inimgtxt_id");
-        $.ajax({
-            type: "post",
-            url: "/admin/update-engIndexPage-status",
-            data: { status: status, inimgtxt_id: inimgtxt_id },
-            success: function (resp) {
-                if (resp["status"] == 0) {
-                    $("#inimgtxt-" + inimgtxt_id).html(
-                        "<i class='fas fa-toggle-off' aria-hidden='true' status='Inactive'></i>"
-                    );
-                } else if (resp["status"] == 1) {
-                    $("#inimgtxt-" + inimgtxt_id).html(
-                        "<i class='fas fa-toggle-on' aria-hidden='true' status='Active'></i>"
-                    );
-                }
-            },
-            error: function () {
-                alert("Error");
-            },
-        });
-    });
 
     // confirm delete with sweetalert
     $(document).on("click", ".confirmDelete", function () {

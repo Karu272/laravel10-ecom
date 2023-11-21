@@ -30,16 +30,16 @@
 
 <body>
     @include('admin.layout.header')
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-2">
                 @include('admin.layout.sidebar')
             </div>
-            <div class="col-sm-8">
-                @yield('content')
-            </div>
+
+            @yield('content')
         </div>
     </div>
+
 
     @include('admin.layout.footer')
     <!-- jQuery -->

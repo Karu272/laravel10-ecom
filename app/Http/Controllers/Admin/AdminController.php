@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
 use App\Models\Admin;
+use App\Models\CmsPage;
 use Auth;
 use Validator;
 use Hash;
@@ -47,6 +48,15 @@ class AdminController extends Controller
                     ]
                 )
             ) {
+                // Remember Admin email & password with cookies
+                if (isset($data['remember']) && !empty($data['remember'])) {
+                    setcookie('email', $data['email'], time() + 3600);
+                    setcookie('password', $data['password'], time() + 3600);
+                } else {
+                    setcookie('email', '');
+                    setcookie('password', '');
+                }
+
                 return redirect('admin/dashboard');
             } else {
                 return redirect()->back()->with('error_message', 'Invalid Email or Password!');
@@ -63,7 +73,7 @@ class AdminController extends Controller
 
     public function updatePassword(Request $request)
     {
-        Session::put('page','update_password');
+        Session::put('page', 'update_password');
         if ($request->isMethod('post')) {
             try {
                 $data = $request->all();
@@ -108,7 +118,7 @@ class AdminController extends Controller
 
     public function updateAdminDetails(Request $request)
     {
-        Session::put('page','update_admin_details');
+        Session::put('page', 'update_admin_details');
         if ($request->isMethod('post')) {
             $data = $request->all();
             $imageName = null; // Initialize $imageName
@@ -126,7 +136,7 @@ class AdminController extends Controller
                 'admin_image.image' => 'Valid Image is required',
             ];
 
-            $validator = Validator::make($data, $rules, $customMessages);
+            $this->validate($request, $rules, $customMessages);
 
             // Update Admin Details
             Admin::where('email', Auth::guard('admin')->user()->email)->update([
@@ -171,10 +181,6 @@ class AdminController extends Controller
                 }
             }
 
-            if ($validator->fails()) {
-                return redirect()->back()->withErrors($validator)->withInput();
-            }
-
             // Update Admin Details
             Admin::where('email', Auth::guard('admin')->user()->email)->update([
                 'image' => $imageName ?? null,
@@ -185,5 +191,215 @@ class AdminController extends Controller
 
         return view('admin.update_admin_details');
     }
+
+    public function subadmins()
+    {
+        $subadminDbData = Admin::where('type', 'subadmin')->get();
+        return view('admin.subadmins.subadmins', compact('subadminDbData'));
+    }
+
+    // Update status on Subadmin
+    public function updateSubadmin(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = $request->all();
+            if ($data['status'] == "Active") {
+                $status = 0;
+            } else {
+                $status = 1;
+            }
+            Admin::where('id', $data['page_id'])->update(['status' => $status]);
+            return response()->json(['status' => $status, 'page_id' => $data['page_id']]);
+        }
+    }
+
+    public function editSubadmin(Request $request, $id = null)
+    {
+        if ($id == "") {
+            $title = "Add SubAdmin";
+            $subadmin = new Admin;
+            $message = "SubAdmin added successfully!";
+        } else {
+            $title = "Edit SubAdmin";
+            $subadmin = Admin::find($id);
+            $message = "SubAdmin Edited successfully!";
+        }
+
+        if ($request->isMethod('post')) {
+            $data = $request->all();
+            $imageName = null; // Initialize $imageName
+
+            if($id==""){
+                $subadminCount = Admin::where('email',$data['email'])->count();
+                if($subadminCount > 0){
+                    return redirect()->back()->with('error_message','Subadmin already exists!');
+                }
+            }
+
+
+            $rules = [
+                'name' => 'required|max:255',
+                'mobile' => 'required|numeric',
+                'email'=> 'required|email',
+                'password'=> 'required',
+                'image' => 'image',
+            ];
+
+            $customMessages = [
+                'name.required' => 'Name is required',
+                'mobile.required' => 'Mobile is required',
+                'mobile.numeric' => 'Only numbers are required',
+                'email.required' => 'Email is required',
+                'email.email' => 'Incorrect email syntax',
+                'password.required' => 'Password reuired',
+                'image.image' => 'Valid Image is required',
+            ];
+
+            $this->validate($request, $rules, $customMessages);
+
+            $subadmin->name = $data['name'];
+            $subadmin->mobile = $data['mobile'];
+            if($id==""){
+                $subadmin->email = $data["email"];
+                $subadmin->type = 'subadmin';
+            }
+            if($data['password'] != ""){
+                $subadmin->password = bcrypt($data['password']);
+            }
+            $subadmin->save();
+
+            if ($request->has('cropped_image_data')) {
+                $base64Image = $request->input('cropped_image_data');
+
+                // Check if the base64 data is present and properly formatted
+                if (strpos($base64Image, ';base64,') !== false) {
+                    list(, $data) = explode(';', $base64Image);
+                    list(, $data) = explode(',', $data);
+                    $decodedImage = base64_decode($data);
+
+                    // Get Image Extension
+                    $extension = 'jpg'; // Adjust this based on your requirements
+
+                    // Generate New Name
+                    $imageName = rand(111, 90000) . '.' . $extension;
+
+                    // Save Image
+                    $image_path = 'admin/img/' . $imageName;
+                    file_put_contents($image_path, $decodedImage);
+                } else {
+                    // Handle the case where the base64 data is not in the expected format
+                    return redirect()->back()->with('error_message', 'Invalid image data format.');
+                }
+            } else if ($request->hasFile('image')) {
+                $image_tmp = $request->file('image');
+                if ($image_tmp->isValid()) {
+                    // Get Image Extension
+                    $extension = $image_tmp->getClientOriginalExtension();
+
+                    // Generate New Name
+                    $imageName = rand(111, 90000) . '.' . $extension;
+
+                    // Save Image
+                    $image_path = 'admin/img/' . $imageName;
+                    Image::make($image_tmp)->save($image_path);
+                }
+            }
+
+            // Update Admin Details
+            $subadmin->image = $imageName ?? null;
+            $subadmin->save();
+
+
+            return redirect()->route('subadmins.subadmins')->with('success_message', $message);
+        }
+
+        return view("admin.subadmins.add_edit_subadmin", compact("title", "subadmin"));
+    }
+
+    public function destroySubadmin($id)
+    {
+        // Delete
+        Admin::where('id', $id)->delete();
+        $message = 'Subadmin deleted successfully!';
+        session::flash('success_message', $message);
+        return redirect()->back();
+    }
+
+    // ====================== Cms Pages ======================
+
+    public function index()
+    {
+        $CmsPages = CmsPage::get()->toArray();
+
+        return view('admin.pages.cms_pages', compact('CmsPages'));
+    }
+
+    // Update status value
+    public function update(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = $request->all();
+            if ($data['status'] == "Active") {
+                $status = 0;
+            } else {
+                $status = 1;
+            }
+            CmsPage::where('id', $data['page_id'])->update(['status' => $status]);
+            return response()->json(['status' => $status, 'page_id' => $data['page_id']]);
+        }
+    }
+
+    public function edit(Request $request, $id = null)
+    {
+        if ($id == "") {
+            $title = "Add CMS Page";
+            $cmspage = new CmsPage;
+            $message = "CMS Page Info added successfully!";
+        } else {
+            $title = "Edit CMS Page";
+            $cmspage = CmsPage::find($id);
+            $message = "CMS Page Edited successfully!";
+        }
+
+        if ($request->isMethod('post')) {
+            $data = $request->all();
+
+            // CMS PAges Validation
+            $rules = [
+                'title' => 'required',
+                'url' => 'required',
+                'description' => 'required',
+            ];
+            $customMessages = [
+                'title.required' => 'Page Title is required',
+                'url.required' => 'Page URL is required',
+                'description.required' => 'Page Description is required',
+            ];
+            $this->validate($request, $rules, $customMessages);
+
+            $cmspage->title = $data['title'];
+            $cmspage->url = $data['url'];
+            $cmspage->description = $data['description'];
+            $cmspage->meta_title = $data['meta_title'];
+            $cmspage->meta_keywords = $data['meta_keywords'];
+            $cmspage->meta_description = $data['meta_description'];
+            $cmspage->status = 1;
+            $cmspage->save();
+            return redirect('admin/pages/cms-pages')->with('success_message', $message);
+        }
+
+        return view('admin.pages.add_edit_cmsPage', compact("title", "cmspage"));
+    }
+
+
+    public function destroy($id)
+    {
+        // Delete
+        CmsPage::where('id', $id)->delete();
+        $message = 'CMS Page deleted successfully!';
+        session::flash('success_message', $message);
+        return redirect()->back();
+    }
+
 
 }
