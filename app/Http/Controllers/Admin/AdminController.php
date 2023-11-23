@@ -7,11 +7,13 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
 use App\Models\Admin;
 use App\Models\CmsPage;
+use App\Models\AdminsRole;
 use Auth;
 use Validator;
 use Hash;
 use Log;
 use Session;
+use DB;
 
 class AdminController extends Controller
 {
@@ -32,7 +34,7 @@ class AdminController extends Controller
             ];
 
             $customMesseges = [
-                'email.requierd' => "Email is required",
+                'email.required' => "Email is required",
                 'email.email' => "Valid email is required",
                 'password.required' => "Please enter a password",
                 'password.password' => "Invalid password",
@@ -229,10 +231,10 @@ class AdminController extends Controller
             $data = $request->all();
             $imageName = null; // Initialize $imageName
 
-            if($id==""){
-                $subadminCount = Admin::where('email',$data['email'])->count();
-                if($subadminCount > 0){
-                    return redirect()->back()->with('error_message','Subadmin already exists!');
+            if ($id == "") {
+                $subadminCount = Admin::where('email', $data['email'])->count();
+                if ($subadminCount > 0) {
+                    return redirect()->back()->with('error_message', 'Subadmin already exists!');
                 }
             }
 
@@ -240,8 +242,8 @@ class AdminController extends Controller
             $rules = [
                 'name' => 'required|max:255',
                 'mobile' => 'required|numeric',
-                'email'=> 'required|email',
-                'password'=> 'required',
+                'email' => 'required|email',
+                'password' => 'required',
                 'image' => 'image',
             ];
 
@@ -259,11 +261,11 @@ class AdminController extends Controller
 
             $subadmin->name = $data['name'];
             $subadmin->mobile = $data['mobile'];
-            if($id==""){
+            if ($id == "") {
                 $subadmin->email = $data["email"];
                 $subadmin->type = 'subadmin';
             }
-            if($data['password'] != ""){
+            if ($data['password'] != "") {
                 $subadmin->password = bcrypt($data['password']);
             }
             $subadmin->save();
@@ -324,6 +326,52 @@ class AdminController extends Controller
         session::flash('success_message', $message);
         return redirect()->back();
     }
+
+    public function updateRole(Request $request, $id)
+    {
+        $title = 'Roles & Permissions';
+
+        if ($request->isMethod('post')) {
+            $data = $request->all();
+            // Delete all earlier roles for subadmin
+            AdminsRole::where('subadmin_id', $id)->delete();
+            // Add new roles for subadmin
+            if (isset($data['cms_pages']['view'])) {
+                $cms_pages_view = $data['cms_pages']['view'];
+            } else {
+                $cms_pages_view = 0;
+            }
+
+            if (isset($data['cms_pages']['edit'])) {
+                $cms_pages_edit = $data['cms_pages']['edit'];
+            } else {
+                $cms_pages_edit = 0;
+            }
+
+            if (isset($data['cms_pages']['full'])) {
+                $cms_pages_full = $data['cms_pages']['full'];
+            } else {
+                $cms_pages_full = 0;
+            }
+
+            $role = new AdminsRole;
+            $role->subadmin_id = $id;
+            $role->module = 'cms_pages';
+            $role->view_access = $cms_pages_view;
+            $role->edit_access = $cms_pages_edit;
+            $role->full_access = $cms_pages_full;
+            $role->save();
+
+            $message = 'Subadmin Roles Updated Successfully!';
+            return redirect()->back()->with('success_message', $message);
+        }
+
+        // if already selected. view -> when enter edit.
+        $subadminRoles = AdminsRole::where('subadmin_id', $id)->get()->toArray();
+ 
+        return view('admin.subadmins.update_role', compact('title', 'id', 'subadminRoles'));
+    }
+
 
     // ====================== Cms Pages ======================
 

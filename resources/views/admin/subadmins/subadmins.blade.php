@@ -61,6 +61,10 @@
                                         <a title="Delete CmsPage" href="javascript:void(0)" class="confirmDelete"
                                             record="subadmin" recordid="{{ $subadmin['id'] }}"><i
                                                 class="fas fa-trash"></i></a>
+                                        <a href="{{ route('admin.subadmins.update_role', ['id' => $subadmin['id']]) }}"
+                                            style="color: blue;">
+                                            <i class="fas fa-unlock"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
