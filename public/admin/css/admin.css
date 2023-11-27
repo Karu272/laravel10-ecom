@@ -48,8 +48,13 @@ li {
     text-align: center;
 }
 
+.imgSetup {
+    width: 50%;
+    height: auto;
+}
+
 .userProfileBox-Name {
-    padding: 2% 2% 2% 23%;
+    padding: 2% 2% 2% 13%;
 }
 
 /* ------------------ Tables */

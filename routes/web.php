@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\CategoryController;
 
 Route::prefix('admin')->group(function () {
 
@@ -24,6 +25,11 @@ Route::prefix('admin')->group(function () {
         Route::post('update-cms-pages-status', [AdminController::class,'update']);
         Route::match(['get','post'],'pages/add-edit-cmsPage/{id?}', [AdminController::class,'edit'])->name('admin.pages.add_edit_cmsPage');
         Route::get('delete-cmsPage/{id}', [AdminController::class,'destroy']);
+
+        /* ========== E-com Pages ========== */
+        Route::get('categories/categories', [CategoryController::class, 'categories'])->name('categories.categories');
+        Route::match(['get','post'],'categories/add-edit-category/{id?}', [CategoryController::class,'editCategory'])->name('admin.categories.add_edit_category');
+        Route::post('update-category-status', [AdminController::class,'update']);
     });
 
 });

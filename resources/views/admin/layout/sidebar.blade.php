@@ -4,10 +4,9 @@
             <div class="img">
                 @if (!empty(Auth::guard('admin')->user()->image))
                     <img src="{{ asset('admin/img/' . Auth::guard('admin')->user()->image) }}" alt="UserImage"
-                        class="img-circle elevation-2">
+                        class="img-circle imgSetup">
                 @else
-                    <img src="{{ asset('admin/img/no-img.png') }}" alt="UserImage"
-                        class="img-circle elevation-2">
+                    <img src="{{ asset('admin/img/no-img.png') }}" alt="UserImage" class="img-circle imgSetup">
                 @endif
             </div>
             <div class="userProfileBox-Name">
@@ -55,12 +54,10 @@
                 </li>
             </ul>
         </li>
-    </ul>
-    <ul class="nav nav-pills nav-sidebar">
         <li class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                 <p>
-                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                    <i class="nav-icon fas fa-copy"></i>
                     Cms Pages
                     <i class="fas fa-angle-left"></i>
                 </p>
@@ -74,6 +71,27 @@
                 <li class="nav-item">
                     <a href="{{ url('admin/pages/cms-pages') }}" class="nav-link">
                         <p><i class="far fa-circle nav-icon"></i> CMS info</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                <p>
+                    <i class="nav-icon fa fa-shopping-cart"></i>
+                    E-com Pages
+                    <i class="fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                @if (Session::get('page') == 'categories')
+                    @php $active="active" @endphp
+                @else
+                    @php $active="" @endphp
+                @endif
+                <li class="nav-item">
+                    <a href="{{ url('admin/categories/categories') }}" class="nav-link">
+                        <p><i class="far fa-circle nav-icon"></i> Categories </p>
                     </a>
                 </li>
             </ul>
