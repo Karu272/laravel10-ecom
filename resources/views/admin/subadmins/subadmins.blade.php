@@ -11,9 +11,11 @@
                 </div>
             @endif
             <div class="tablecontainer">
-                <h3 style="margin-top: 10px"> CMS Page
-                    <a href="{{ URL('admin/subadmins/add-edit-subadmin') }}" class="btn btn-block btn-success tblBtn">
-                        Add / Edit</a>
+                <h3 style="margin-top: 10px">Subadmins
+                    @if ($pagesModule['edit_access'] == 1 || $pagesModule['full_access'] == 1)
+                        <a href="{{ URL('admin/subadmins/add-edit-subadmin') }}" class="btn btn-block btn-success tblBtn">
+                            Add / Edit</a>
+                    @endif
                 </h3>
                 <div class="innerCon">
                     <table class="table" id="example">
@@ -40,31 +42,37 @@
                                     <td class="table__content" data-heading="Created at">
                                         {{ date('F j, Y, g:i a', strtotime($subadmin['created_at'])) }}</td>
                                     <td class="table__content" data-heading="Status">
-                                        @if ($subadmin['status'] == 1)
-                                            <a class="updateSubadminStatus" id="page-{{ $subadmin['id'] }}"
-                                                page_id="{{ $subadmin['id'] }}" href="javascript:void(0)"
-                                                style="color: blue;">
-                                                <i class="fas fa-toggle-on" status="Active"></i>
-                                            </a>
-                                        @else
-                                            <a class="updateSubadminStatus" id="page-{{ $subadmin['id'] }}"
-                                                page_id="{{ $subadmin['id'] }}" href="javascript:void(0)">
-                                                <i class="fas fa-toggle-off" status="Inactive"></i>
-                                            </a>
+                                        @if ($pagesModule['full_access'] == 1)
+                                            @if ($subadmin['status'] == 1)
+                                                <a class="updateSubadminStatus" id="page-{{ $subadmin['id'] }}"
+                                                    page_id="{{ $subadmin['id'] }}" href="javascript:void(0)"
+                                                    style="color: blue;">
+                                                    <i class="fas fa-toggle-on" status="Active"></i>
+                                                </a>
+                                            @else
+                                                <a class="updateSubadminStatus" id="page-{{ $subadmin['id'] }}"
+                                                    page_id="{{ $subadmin['id'] }}" href="javascript:void(0)">
+                                                    <i class="fas fa-toggle-off" status="Inactive"></i>
+                                                </a>
+                                            @endif
                                         @endif
                                     </td>
                                     <td class="table__content" data-heading="action">
-                                        <a href="{{ route('admin.subadmins.add_edit_subadmin', ['id' => $subadmin['id']]) }}"
-                                            style="color: blue;">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a title="Delete CmsPage" href="javascript:void(0)" class="confirmDelete"
-                                            record="subadmin" recordid="{{ $subadmin['id'] }}"><i
-                                                class="fas fa-trash"></i></a>
-                                        <a href="{{ route('admin.subadmins.update_role', ['id' => $subadmin['id']]) }}"
-                                            style="color: blue;">
-                                            <i class="fas fa-unlock"></i>
-                                        </a>
+                                        @if ($pagesModule['edit_access'] == 1 || $pagesModule['full_access'] == 1)
+                                            <a href="{{ route('admin.subadmins.add_edit_subadmin', ['id' => $subadmin['id']]) }}"
+                                                style="color: blue;">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        @endif
+                                        @if ($pagesModule['full_access'] == 1)
+                                            <a title="Delete CmsPage" href="javascript:void(0)" class="confirmDelete"
+                                                record="subadmin" recordid="{{ $subadmin['id'] }}"><i
+                                                    class="fas fa-trash"></i></a>
+                                            <a href="{{ route('admin.subadmins.update_role', ['id' => $subadmin['id']]) }}"
+                                                style="color: blue;">
+                                                <i class="fas fa-unlock"></i>
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

@@ -36,8 +36,8 @@
                     @endif
                 @endforeach
                 @endif
-                <div class="form-group">
-                    <label style="margin-left: 10%;" for="cms_pages">
+                <div style="margin-left: 10%;" class="form-group">
+                    <label for="cms_pages">
                         <h4>CMS Pages</h4>
                     </label>
                     <div class="form-check">
@@ -55,8 +55,9 @@
                             @if (isset($fullCMSPages)) {{ $fullCMSPages }} @endif>
                         <label class="form-check-label">Full access</label>
                     </div>
+                    <br>
+                    <button type="submit" class="btn btn-primary me-2">Update</button>
                 </div>
-                <button type="submit" class="btn btn-primary me-2">Update</button>
             </div>
         </form>
     </div>

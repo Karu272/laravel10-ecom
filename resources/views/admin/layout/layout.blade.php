@@ -39,9 +39,10 @@
             @yield('content')
         </div>
     </div>
+    <div class="container">
+        @include('admin.layout.footer')
+    </div>
 
-
-    @include('admin.layout.footer')
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

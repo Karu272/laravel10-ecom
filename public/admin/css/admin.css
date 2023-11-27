@@ -39,18 +39,8 @@ li {
     color: white;
 }
 
-.adminImg,
-img {
-    width: 6em;
-}
-
-.adminName {
-    background-color: red;
-    padding-left: 3%;
-    margin-top: 4%;
-}
-
 .footer {
+    margin-top: 10% !important;
     position: fixed;
     left: 0;
     bottom: 0;

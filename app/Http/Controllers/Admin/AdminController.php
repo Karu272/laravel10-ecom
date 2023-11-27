@@ -46,7 +46,8 @@ class AdminController extends Controller
                 Auth::guard('admin')->attempt(
                     [
                         'email' => $data['email'],
-                        'password' => $data['password']
+                        'password' => $data['password'],
+                        'status' => 1,
                     ]
                 )
             ) {
@@ -197,7 +198,29 @@ class AdminController extends Controller
     public function subadmins()
     {
         $subadminDbData = Admin::where('type', 'subadmin')->get();
-        return view('admin.subadmins.subadmins', compact('subadminDbData'));
+
+        // Set Admin/subadmins Permissions for CMS pages
+        $pagesModule = [];
+
+        // Check if the user is an admin
+        if (Auth::guard('admin')->user()->type == "admin") {
+            $pagesModule['view_access'] = 1;
+            $pagesModule['edit_access'] = 1;
+            $pagesModule['full_access'] = 1;
+        } else {
+            // Retrieve the role for subadmins
+            $role = AdminsRole::where(['subadmin_id' => Auth::guard('admin')->user()->id, 'module' => 'cms_pages'])->first();
+
+            // If no role is found or all permissions are 0, redirect to dashboard
+            if (!$role || ($role->view_access == 0 && $role->edit_access == 0 && $role->full_access == 0)) {
+                $message = "This feature is restricted for you!";
+                return redirect()->route('admin.dashboard')->with('error_message', $message);
+            }
+
+            $pagesModule = $role->toArray();
+        }
+
+        return view('admin.subadmins.subadmins', compact('subadminDbData','pagesModule'));
     }
 
     // Update status on Subadmin
@@ -242,7 +265,6 @@ class AdminController extends Controller
             $rules = [
                 'name' => 'required|max:255',
                 'mobile' => 'required|numeric',
-                'email' => 'required|email',
                 'password' => 'required',
                 'image' => 'image',
             ];
@@ -329,46 +351,44 @@ class AdminController extends Controller
 
     public function updateRole(Request $request, $id)
     {
-        $title = 'Roles & Permissions';
-
         if ($request->isMethod('post')) {
             $data = $request->all();
             // Delete all earlier roles for subadmin
             AdminsRole::where('subadmin_id', $id)->delete();
-            // Add new roles for subadmin
-            if (isset($data['cms_pages']['view'])) {
-                $cms_pages_view = $data['cms_pages']['view'];
-            } else {
-                $cms_pages_view = 0;
-            }
 
-            if (isset($data['cms_pages']['edit'])) {
-                $cms_pages_edit = $data['cms_pages']['edit'];
-            } else {
-                $cms_pages_edit = 0;
-            }
-
-            if (isset($data['cms_pages']['full'])) {
-                $cms_pages_full = $data['cms_pages']['full'];
-            } else {
-                $cms_pages_full = 0;
-            }
+            $permissions = ['view', 'edit', 'full'];
 
             $role = new AdminsRole;
             $role->subadmin_id = $id;
             $role->module = 'cms_pages';
-            $role->view_access = $cms_pages_view;
-            $role->edit_access = $cms_pages_edit;
-            $role->full_access = $cms_pages_full;
+
+            foreach ($permissions as $permission) {
+                $storedData = "cms_pages_$permission";
+
+                // The double dollar sign ($$) is used for variable variables in PHP.
+                // It takes the value of the variable whose name is stored in $variable_name.
+                if (isset($data['cms_pages'][$permission])) {
+                    $$storedData = $data['cms_pages'][$permission];
+                } else {
+                    $$storedData = 0;
+                }
+
+                // Assign values to the corresponding attributes of the $role object
+                //  if $permission is 'view', it becomes 'view_access'.
+                $role->{$permission . '_access'} = $$storedData;
+            }
             $role->save();
 
             $message = 'Subadmin Roles Updated Successfully!';
             return redirect()->back()->with('success_message', $message);
         }
 
-        // if already selected. view -> when enter edit.
+        // if already selected. show -> when enter edit part.
         $subadminRoles = AdminsRole::where('subadmin_id', $id)->get()->toArray();
- 
+
+        $subadminDetails = Admin::where('id', $id)->first()->toArray();
+        $title = 'Update ' . $subadminDetails['name'] . ' Roles & Permissions';
+
         return view('admin.subadmins.update_role', compact('title', 'id', 'subadminRoles'));
     }
 
@@ -377,10 +397,33 @@ class AdminController extends Controller
 
     public function index()
     {
+        Session::put('page', 'cms-pages');
         $CmsPages = CmsPage::get()->toArray();
 
-        return view('admin.pages.cms_pages', compact('CmsPages'));
+        // Set Admin/subadmins Permissions for CMS pages
+        $pagesModule = [];
+
+        // Check if the user is an admin
+        if (Auth::guard('admin')->user()->type == "admin") {
+            $pagesModule['view_access'] = 1;
+            $pagesModule['edit_access'] = 1;
+            $pagesModule['full_access'] = 1;
+        } else {
+            // Retrieve the role for subadmins
+            $role = AdminsRole::where(['subadmin_id' => Auth::guard('admin')->user()->id, 'module' => 'cms_pages'])->first();
+
+            // If no role is found or all permissions are 0, redirect to dashboard
+            if (!$role || ($role->view_access == 0 && $role->edit_access == 0 && $role->full_access == 0)) {
+                $message = "This feature is restricted for you!";
+                return redirect()->route('admin.dashboard')->with('error_message', $message);
+            }
+
+            $pagesModule = $role->toArray();
+        }
+
+        return view('admin.pages.cms_pages', compact('CmsPages', 'pagesModule'));
     }
+
 
     // Update status value
     public function update(Request $request)

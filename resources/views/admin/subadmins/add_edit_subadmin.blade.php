@@ -52,11 +52,11 @@
                 </div>
 
 
+                <div class="form-group">
                 <!-- Existing image display -->
                 @if (!empty($subadmin['image']))
                     <img id="existingImage" src="{{ asset('admin/img/' . $subadmin['image']) }}" alt="Current Image">
                 @endif
-                <div class="form-group">
                     <label for="image">Upload New Image</label>
                     <input type="file" name="image" id="image" accept="image/*">
                     @error('image')
