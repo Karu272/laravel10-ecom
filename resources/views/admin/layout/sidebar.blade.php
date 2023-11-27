@@ -1,5 +1,19 @@
 <nav class="mt-2">
     <ul class="nav nav-pills nav-sidebar">
+        <div class="mt-3 pb-3 mb-3 d-flex">
+            <div class="img">
+                @if (!empty(Auth::guard('admin')->user()->image))
+                    <img src="{{ asset('admin/img/' . Auth::guard('admin')->user()->image) }}" alt="UserImage"
+                        class="img-circle elevation-2">
+                @else
+                    <img src="{{ asset('admin/img/no-img.png') }}" alt="UserImage"
+                        class="img-circle elevation-2">
+                @endif
+            </div>
+            <div class="userProfileBox-Name">
+                <a href="#" class="d-block">{{ Auth::guard('admin')->user()->name }}</a>
+            </div>
+        </div>
         <li class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                 <p>

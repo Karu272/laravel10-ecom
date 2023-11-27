@@ -48,6 +48,10 @@ li {
     text-align: center;
 }
 
+.userProfileBox-Name {
+    padding: 2% 2% 2% 23%;
+}
+
 /* ------------------ Tables */
 .tablecontainer {
     background: white;
