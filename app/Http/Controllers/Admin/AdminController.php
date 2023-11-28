@@ -329,7 +329,6 @@ class AdminController extends Controller
                 }
             }
 
-            // Update Admin Details
             $subadmin->image = $imageName ?? null;
             $subadmin->save();
 

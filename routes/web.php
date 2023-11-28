@@ -28,8 +28,9 @@ Route::prefix('admin')->group(function () {
 
         /* ========== E-com Pages ========== */
         Route::get('categories/categories', [CategoryController::class, 'categories'])->name('categories.categories');
-        Route::match(['get','post'],'categories/add-edit-category/{id?}', [CategoryController::class,'editCategory'])->name('admin.categories.add_edit_category');
-        Route::post('update-category-status', [AdminController::class,'update']);
+        Route::match(['get','post'],'categories/add-edit-category/{id?}', [CategoryController::class,'edit'])->name('admin.categories.add_edit_category');
+        Route::post('update-category-status', [CategoryController::class,'update']);
+        Route::get('delete-category/{id}', [CategoryController::class,'destroy']);
     });
 
 });

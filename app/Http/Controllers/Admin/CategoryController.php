@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\AdminsRole;
@@ -52,5 +53,106 @@ class CategoryController extends Controller
             Category::where('id', $data['page_id'])->update(['status' => $status]);
             return response()->json(['status' => $status, 'page_id' => $data['page_id']]);
         }
+    }
+
+    public function edit(Request $request, $id = null){
+        $getCategories = Category::getCategories();
+
+        if ($id == "") {
+            $title = "Add Category";
+            $editCat = new Category;
+            $message = "Category added successfully!";
+        } else {
+            $title = "Edit Category";
+            $editCat = Category::find($id);
+            $message = "Category Edited successfully!";
+        }
+        //dd($editCat);
+        if ($request->isMethod('post')) {
+            $data = $request->all();
+            //dd($data);
+            $imageName = null; // Initialize $imageName
+
+            $rules = [
+                'category_name' => 'required|max:255',
+                'description' => 'required',
+                'url' => 'required|unique:categories',
+                'image' => 'image',
+            ];
+
+            $customMessages = [
+                'category_name.required' => 'Name is required',
+                'description.required' => 'Description is required',
+                'url.required' => 'URL is required',
+                'image.image' => 'Valid Image is required',
+            ];
+
+            $this->validate($request, $rules, $customMessages);
+
+            $editCat->category_name = $data['category_name'];
+            $editCat->parent_id = $data['parent_id'];
+            $editCat->category_discount = $data['category_discount'];
+            $editCat->description = $data['description'];
+            $editCat->url = $data['url'];
+            $editCat->meta_title = $data['meta_title'];
+            $editCat->meta_keywords = $data['meta_keywords'];
+            $editCat->meta_description = $data['meta_description'];
+            $editCat->status = 1;
+            $editCat->save();
+
+            if ($request->has('cropped_image_data')) {
+                $base64Image = $request->input('cropped_image_data');
+
+                // Check if the base64 data is present and properly formatted
+                if (strpos($base64Image, ';base64,') !== false) {
+                    list(, $data) = explode(';', $base64Image);
+                    list(, $data) = explode(',', $data);
+                    $decodedImage = base64_decode($data);
+
+                    // Get Image Extension
+                    $extension = 'jpg'; // Adjust this based on your requirements
+
+                    // Generate New Name
+                    $imageName = rand(111, 90000) . '.' . $extension;
+
+                    // Save Image
+                    $image_path = 'admin/img/categories/' . $imageName;
+                    file_put_contents($image_path, $decodedImage);
+                } else {
+                    // Handle the case where the base64 data is not in the expected format
+                    return redirect()->back()->with('error_message', 'Invalid image data format.');
+                }
+            } else if ($request->hasFile('image')) {
+                $image_tmp = $request->file('image');
+                if ($image_tmp->isValid()) {
+                    // Get Image Extension
+                    $extension = $image_tmp->getClientOriginalExtension();
+
+                    // Generate New Name
+                    $imageName = rand(111, 90000) . '.' . $extension;
+
+                    // Save Image
+                    $image_path = 'admin/img/categories/' . $imageName;
+                    Image::make($image_tmp)->save($image_path);
+                }
+            }
+
+            // Update Admin Details
+            $editCat->image = $imageName ?? null;
+            $editCat->save();
+
+
+            return redirect()->route('categories.categories')->with('success_message', $message);
+        }
+
+        return view('admin.categories.add_edit_category', compact("title", "editCat","getCategories"));
+    }
+
+    public function destroy($id){
+        // Delete
+        Category::where('id', $id)->delete();
+        $message = 'Category deleted successfully!';
+        session::flash('success_message', $message);
+        return redirect()->back();
     }
 }

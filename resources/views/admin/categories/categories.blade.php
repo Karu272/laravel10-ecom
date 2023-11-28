@@ -13,7 +13,7 @@
             <div class="tablecontainer">
                 <h3 style="margin-top: 10px"> Categories Page
                     @if ($pagesModule['edit_access'] == 1 || $pagesModule['full_access'] == 1)
-                        <a href="{{ url('admin/pages/add-edit-categories') }}" class="btn btn-block btn-success tblBtn">
+                        <a href="{{ url('admin/categories/add-edit-category') }}" class="btn btn-block btn-success tblBtn">
                             Add / Edit</a>
                     @endif
                 </h3>

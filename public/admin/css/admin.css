@@ -57,6 +57,10 @@ li {
     padding: 2% 2% 2% 13%;
 }
 
+.oSizeT {
+    font-weight: bold;
+}
+
 /* ------------------ Tables */
 .tablecontainer {
     background: white;

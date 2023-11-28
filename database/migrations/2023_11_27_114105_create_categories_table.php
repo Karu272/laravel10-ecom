@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('parent_id');
             $table->string('category_name');
-            $table->string('category_img');
+            $table->string('image');
             $table->float('category_discount');
             $table->text('description');
             $table->string('url');
