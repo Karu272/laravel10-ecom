@@ -61,6 +61,11 @@ li {
     font-weight: bold;
 }
 
+#existingImage {
+    width: 50%;
+    height: auto;
+}
+
 /* ------------------ Tables */
 .tablecontainer {
     background: white;

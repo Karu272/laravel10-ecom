@@ -94,6 +94,16 @@
                         <p><i class="far fa-circle nav-icon"></i> Categories </p>
                     </a>
                 </li>
+                @if (Session::get('page') == 'products')
+                    @php $active="active" @endphp
+                @else
+                    @php $active="" @endphp
+                @endif
+                <li class="nav-item">
+                    <a href="{{ url('admin/products/products') }}" class="nav-link">
+                        <p><i class="far fa-circle nav-icon"></i> Products </p>
+                    </a>
+                </li>
             </ul>
         </li>
     </ul>

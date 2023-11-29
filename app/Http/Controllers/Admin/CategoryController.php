@@ -18,7 +18,7 @@ class CategoryController extends Controller
         $categoriesDBdata = Category::with('parentcategory')->get()->toArray();
         //dd($categoriesDBdata);
 
-        // Set Admin/subadmins Permissions for CMS pages
+        // Set Admin/subadmins Permissions for Categories
         $pagesModule = [];
 
         // Check if the user is an admin
@@ -28,7 +28,7 @@ class CategoryController extends Controller
             $pagesModule['full_access'] = 1;
         } else {
             // Retrieve the role for subadmins
-            $role = AdminsRole::where(['subadmin_id' => Auth::guard('admin')->user()->id, 'module' => 'cms_pages'])->first();
+            $role = AdminsRole::where(['subadmin_id' => Auth::guard('admin')->user()->id, 'module' => 'categories'])->first();
 
             // If no role is found or all permissions are 0, redirect to dashboard
             if (!$role || ($role->view_access == 0 && $role->edit_access == 0 && $role->full_access == 0)) {
@@ -154,5 +154,23 @@ class CategoryController extends Controller
         $message = 'Category deleted successfully!';
         session::flash('success_message', $message);
         return redirect()->back();
+    }
+
+    public function destroycatimg($id){
+        // Get Category img
+        $categoryImg = Category::select('image')->where('id',$id)->first();
+
+        // Get Category Img path
+        $category_image_path = 'admin/img/categories/';
+
+        // Delete Category Image from categories folder if exists
+        if(file_exists($category_image_path . $categoryImg->image)){
+            unlink($category_image_path . $categoryImg->image);
+        }
+
+        // Delete Category Img from categories table
+        Category::where('id', $id)->update(['image' => '']);
+
+        return redirect()->back()->with('success_message', 'Category img deleted successfully');
     }
 }

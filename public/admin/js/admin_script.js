@@ -113,6 +113,34 @@ $(document).ready(function () {
         });
     });
 
+    // Update Products Status
+    $(document).on("click", ".updateproductPageStatus", function () {
+        var status = $(this).children("i").attr("status");
+        var page_id = $(this).attr("page_id");
+        $.ajax({
+            headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+            type: "post",
+            url: "/admin/update-product-status",
+            data: { status: status, page_id: page_id },
+            success: function (resp) {
+                if (resp["status"] == 0) {
+                    $("#page-" + page_id).html(
+                        "<i class='fas fa-toggle-off' aria-hidden='true' status='Inactive'></i>"
+                    );
+                } else if (resp["status"] == 1) {
+                    $("#page-" + page_id).html(
+                        "<i class='fas fa-toggle-on' aria-hidden='true' status='Active' style='color: blue;'></i>"
+                    );
+                }
+            },
+            error: function () {
+                alert("Error");
+            },
+        });
+    });
+
 
 
 

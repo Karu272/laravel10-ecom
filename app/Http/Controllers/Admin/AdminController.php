@@ -220,7 +220,7 @@ class AdminController extends Controller
             $pagesModule = $role->toArray();
         }
 
-        return view('admin.subadmins.subadmins', compact('subadminDbData','pagesModule'));
+        return view('admin.subadmins.subadmins', compact('subadminDbData', 'pagesModule'));
     }
 
     // Update status on Subadmin
@@ -357,26 +357,29 @@ class AdminController extends Controller
 
             $permissions = ['view', 'edit', 'full'];
 
-            $role = new AdminsRole;
-            $role->subadmin_id = $id;
-            $role->module = 'cms_pages';
+            foreach (['products', 'categories', 'cms_pages'] as $module) {
+                $role = new AdminsRole;
+                $role->subadmin_id = $id;
+                $role->module = $module;
 
-            foreach ($permissions as $permission) {
-                $storedData = "cms_pages_$permission";
+                foreach ($permissions as $permission) {
+                    $storedData = "{$module}_$permission";
 
-                // The double dollar sign ($$) is used for variable variables in PHP.
-                // It takes the value of the variable whose name is stored in $variable_name.
-                if (isset($data['cms_pages'][$permission])) {
-                    $$storedData = $data['cms_pages'][$permission];
-                } else {
-                    $$storedData = 0;
+                    // The double dollar sign ($$) is used for variable variables in PHP.
+                    // It takes the value of the variable whose name is stored in $variable_name.
+                    if (isset($data[$module][$permission])) {
+                        $$storedData = $data[$module][$permission];
+                    } else {
+                        $$storedData = 0;
+                    }
+
+                    // Assign values to the corresponding attributes of the $role object
+                    //  if $permission is 'view', it becomes 'view_access'.
+                    $role->{$permission . '_access'} = $$storedData;
                 }
 
-                // Assign values to the corresponding attributes of the $role object
-                //  if $permission is 'view', it becomes 'view_access'.
-                $role->{$permission . '_access'} = $$storedData;
+                $role->save();
             }
-            $role->save();
 
             $message = 'Subadmin Roles Updated Successfully!';
             return redirect()->back()->with('success_message', $message);
@@ -390,6 +393,7 @@ class AdminController extends Controller
 
         return view('admin.subadmins.update_role', compact('title', 'id', 'subadminRoles'));
     }
+
 
 
     // ====================== Cms Pages ======================
