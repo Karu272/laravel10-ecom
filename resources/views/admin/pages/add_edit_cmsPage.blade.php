@@ -1,6 +1,8 @@
 @extends('admin.layout.layout')
 @section('content')
     <div class="col-sm-4">
+        <div class="card">
+            <div class="card-body">
         <h3> {{ $title }} </h3>
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -57,5 +59,7 @@
             </div>
             <button type="submit" class="btn btn-primary">Save</button>
         </form>
+    </div>
+        </div>
     </div>
 @endsection

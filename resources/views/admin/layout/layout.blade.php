@@ -32,9 +32,7 @@
     @include('admin.layout.header')
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-2">
-                @include('admin.layout.sidebar')
-            </div>
+            @include('admin.layout.sidebar')
 
             @yield('content')
         </div>

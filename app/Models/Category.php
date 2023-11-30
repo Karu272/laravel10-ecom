@@ -9,6 +9,7 @@ class Category extends Model
 {
     use HasFactory;
 
+    // this is send to products model
     public function parentcategory()
     {
         return $this->hasOne('App\Models\Category', 'id', 'parent_id')->select('id', 'category_name', 'url')->where('status', 1);

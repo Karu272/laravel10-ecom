@@ -1,6 +1,8 @@
 @extends('admin.layout.layout')
 @section('content')
     <div class="col-sm-4">
+        <div class="card">
+            <div class="card-body">
         <h3>Update Admin Details</h3>
         <form method="POST" action="{{ route('admin.update_admin_details') }}" enctype="multipart/form-data">@csrf
             <div class="card-body">
@@ -80,5 +82,7 @@
                 <button type="submit" class="btn btn-primary me-2">Update</button>
             </div>
         </form>
+    </div>
+        </div>
     </div>
 @endsection

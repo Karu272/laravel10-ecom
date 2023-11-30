@@ -1,6 +1,8 @@
 @extends('admin.layout.layout')
 @section('content')
     <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
         <h3> {{ $title }} </h3>
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -30,9 +32,30 @@
                         @if (!empty($editPro['product_name'])) value="{{ $editPro['product_name'] }}" @endif>
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="#">Category Level</label>
-                    <select name="parent_id" class="form-control">
+                    <label for="category_id">Category Level</label>
+                    <select name="category_id" class="form-control">
                         <option value="">Select</option>
+                        <option class="oSizeT" value="0">
+                            &lceil;Main Category&rceil;</option>
+                        @foreach ($getCategories as $cat)
+                            <option value="{{ $cat['id'] }}">&loz;
+                                {{ $cat['category_name'] }} &loz;</option>
+                            @if (!empty($cat['subcategories']))
+                                @foreach ($cat['subcategories'] as $subcat)
+                                    <option value="{{ $subcat['id'] }}">
+                                        &nbsp;&nbsp;&raquo; {{ $subcat['category_name'] }}
+                                    </option>
+                                    @if (!empty($subcat['subcategories']))
+                                        @foreach ($subcat['subcategories'] as $subsubcat)
+                                            <option value="{{ $subsubcat['id'] }}">
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;
+                                                {{ $subsubcat['category_name'] }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                            @endif
+                        @endforeach
                     </select>
                 </div>
                 <div class="form-group col-md-3">
@@ -48,9 +71,19 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="family_color">Family Color</label>
-                    <input type="text" class="form-control" id="family_color" name="family_color"
-                        placeholder="Type Family Color"
-                        @if (!empty($editPro['family_color'])) value="{{ $editPro['family_color'] }}" @endif>
+                    <select name="family_color" class="form-control" id="family_color">
+                        <option value="">Select</option>
+                        <option value="Red">Red</option>
+                        <option value="Green">Green</option>
+                        <option value="Yellow">Yellow</option>
+                        <option value="Black">Black</option>
+                        <option value="White">White</option>
+                        <option value="Blue">Blue</option>
+                        <option value="Orange">Orange</option>
+                        <option value="Grey">Grey</option>
+                        <option value="Silver">Silver</option>
+                        <option value="Golden">Golden</option>
+                    </select>
                 </div>
                 <div class="form-group col-md-3">
                     <label for="product_weight">weight</label>
@@ -71,16 +104,10 @@
                         @if (!empty($editPro['product_price'])) value="{{ $editPro['product_price'] }}" @endif>
                 </div>
                 <div class="form-group col-md-3">
-                    <label for="product_discount">Discount</label>
+                    <label for="product_discount">Discount %</label>
                     <input type="text" class="form-control" id="product_discount" name="product_discount"
                         placeholder="Type Discount"
                         @if (!empty($editPro['product_discount'])) value="{{ $editPro['product_discount'] }}" @endif>
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="discount_type">Discount Type</label>
-                    <input type="text" class="form-control" id="discount_type" name="discount_type"
-                        placeholder="Type type"
-                        @if (!empty($editPro['discount_type'])) value="{{ $editPro['discount_type'] }}" @endif>
                 </div>
                 <div class="form-group col-md-3">
                     <label for="final_price">Final Price</label>
@@ -88,91 +115,27 @@
                         placeholder="Type Final Price"
                         @if (!empty($editPro['final_price'])) value="{{ $editPro['final_price'] }}" @endif>
                 </div>
-                <div class="form-group col-md-5">
-                    <label for="product_video">Video</label>
-                    <input type="file" class="form-control" id="product_video" name="product_video">
-                    @if (!empty($editPro['product_video']))
-                        <small class="text-muted">Current Video: {{ $editPro['product_video'] }}</small>
-                    @endif
-                </div>
-                <!-- Existing image display -->
-                <div class="form-group col-md-2">
-                    @if (!empty($editPro['image']))
-                        <img id="existingImage" src="{{ asset('admin/img/products/' . $editPro['image']) }}"
-                            alt="Current Image">
-                        <a class="confirmDelete" title="Delete Image" href="javascript:void(0)" record="categoryimg"
-                            recordid="{{ $editPro['id'] }}"><i class="fas fa-trash"></i></a>
-                    @endif
-                    <label for="image">Image</label>
-                    <input type="file" name="image" id="image" accept="image/*">
-                    @error('image')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
-                    <!-- Cropper container -->
-                    <div id="cropperContainer"></div>
-                    <!-- Cropped image data (hidden input) -->
-                    <input type="hidden" name="cropped_image_data" id="croppedImageData">
-                    <script>
-                        $(document).ready(function() {
-                            var cropper;
-
-                            $('#image').on('change', function(e) {
-                                var input = e.target;
-                                var reader = new FileReader();
-
-                                reader.onload = function(e) {
-                                    $('#cropperContainer').html('<img id="cropperImage" src="' + e.target.result +
-                                        '">');
-
-                                    // Initialize Cropper
-                                    cropper = new Cropper(document.getElementById('cropperImage'), {
-                                        aspectRatio: 1, // You can adjust this ratio as needed
-                                        viewMode: 3,
-                                        crop: function(event) {
-                                            var croppedCanvas = cropper.getCroppedCanvas();
-                                            $('#croppedImageData').val(croppedCanvas.toDataURL(
-                                                'image/jpeg'));
-                                        }
-                                    });
-                                };
-
-                                reader.readAsDataURL(input.files[0]);
-                            });
-                        });
-                    </script>
-                </div>
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-6">
                     <label for="description">Description</label>
                     <textarea type="text" class="form-control" id="description" name="description" rows="3"
                         placeholder="Type Description">{{ !empty($editPro['description']) ? $editPro['description'] : '' }}</textarea>
                 </div>
+                <div class="form-group col-md-6">
+                    <label for="wash_care">Wash Care</label>
+                    <textarea type="text" class="form-control" id="wash_care" name="wash_care" rows="3"
+                        placeholder="Type wash_care">{{ !empty($editPro['wash_care']) ? $editPro['wash_care'] : '' }}</textarea>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="meta_description">Meta Description</label>
+                    <input type="text" class="form-control" id="meta_description" name="meta_description"
+                        placeholder="Type Meta Description"
+                        @if (!empty($editPro['meta_description'])) value="{{ $editPro['meta_description'] }}" @endif>
+                </div>
                 <div class="form-group col-md-3">
-                    <label for="keywords">Keywords</label>
+                    <label for="keywords">Search Keywords</label>
                     <input type="text" class="form-control" id="keywords" name="keywords"
                         placeholder="Type keywords"
                         @if (!empty($editPro['keywords'])) value="{{ $editPro['keywords'] }}" @endif>
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="fabric">Fabric</label>
-                    <input type="text" class="form-control" id="fabric" name="fabric" placeholder="Type color"
-                        @if (!empty($editPro['fabric'])) value="{{ $editPro['fabric'] }}" @endif>
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="sleeve">Sleeve</label>
-                    <input type="text" class="form-control" id="sleeve" name="sleeve"
-                        placeholder="Type sleeve type"
-                        @if (!empty($editPro['sleeve'])) value="{{ $editPro['sleeve'] }}" @endif>
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="fit">Fit</label>
-                    <input type="text" class="form-control" id="fit" name="fit" placeholder="Type fit"
-                        @if (!empty($editPro['fit'])) value="{{ $editPro['fit'] }}" @endif>
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="occassion">Occassion</label>
-                    <input type="text" class="form-control" id="occassion" name="occassion"
-                        placeholder="Type Family Color"
-                        @if (!empty($editPro['occassion'])) value="{{ $editPro['occassion'] }}" @endif>
                 </div>
                 <div class="form-group col-md-3">
                     <label for="meta_title">Meta Title</label>
@@ -193,11 +156,57 @@
                         <option value="NO" @if (!empty($editPro['is_featured']) && $editPro['is_featured'] == 'NO') selected @endif>NO</option>
                     </select>
                 </div>
-                <div class="form-group col-md-12">
-                    <label for="meta_description">Meta Description</label>
-                    <input type="text" class="form-control" id="meta_description" name="meta_description"
-                        placeholder="Type Meta Description"
-                        @if (!empty($editPro['meta_description'])) value="{{ $editPro['meta_description'] }}" @endif>
+                <div class="form-group col-md-6">
+                    <label for="product_video">Video</label>
+                    <input type="file" class="form-control" id="product_video" name="product_video">
+                    @if (!empty($editPro['product_video']))
+                        <small class="text-muted">Current Video: {{ $editPro['product_video'] }}</small>
+                    @endif
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="fabric">Fabric</label>
+                    <select name="fabric" class="form-control">
+                        <option value="">Select</option>
+                        @foreach ($productsFilters['fabricArray'] as $fabric)
+                            <option value="{{ $fabric }}">{{ $fabric }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="sleeve">Sleeve</label>
+                    <select name="sleeve" class="form-control">
+                        <option value="">Select</option>
+                        @foreach ($productsFilters['sleeveArray'] as $sleeve)
+                            <option value="{{ $sleeve }}">{{ $sleeve }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="pattern">Pattern</label>
+                    <select name="pattern" class="form-control">
+                        <option value="">Select</option>
+                        @foreach ($productsFilters['petternArray'] as $pattern)
+                            <option value="{{ $pattern }}">{{ $pattern }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="fit">Fit</label>
+                    <select name="fit" class="form-control">
+                        <option value="">Select</option>
+                        @foreach ( $productsFilters['fitArray'] as $fit)
+                            <option value="{{ $fit }}">{{ $fit }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="occasion">Occasion</label>
+                    <select name="occasion" class="form-control">
+                        <option value="">Select</option>
+                        @foreach ( $productsFilters['occasionArray'] as $occasion)
+                            <option value="{{ $occasion }}">{{ $occasion }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="form-row">
@@ -206,5 +215,7 @@
                 </div>
             </div>
         </form>
+    </div>
+        </div>
     </div>
 @endsection

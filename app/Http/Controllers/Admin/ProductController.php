@@ -17,7 +17,8 @@ class ProductController extends Controller
     public function index()
     {
         Session::put('page', 'products');
-        $getProductDBdata = Product::all();
+        // category() comes from the model products
+        $getProductDBdata = Product::with('category')->get()->toArray();
         //dd($getProductDBdata);
 
         // Set Admin/subadmins Permissions for products
@@ -61,6 +62,8 @@ class ProductController extends Controller
 
     public function edit(Request $request, $id = null)
     {
+        $getCategories = Category::getCategories();
+
         if ($id == "") {
             $title = "Add Product";
             $editPro = new Product;
@@ -71,7 +74,10 @@ class ProductController extends Controller
             $message = "Product Edited successfully!";
         }
 
-        return view("admin.products.add_edit_product", compact("title","editPro","message"));
+        // Product Filters
+        $productsFilters = Product::productFilters();
+
+        return view("admin.products.add_edit_product", compact("title","editPro","message","getCategories","productsFilters"));
     }
 
     public function destroy($id)

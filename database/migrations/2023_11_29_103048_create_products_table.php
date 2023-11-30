@@ -32,11 +32,12 @@ return new class extends Migration
             $table->string('sleeve')->nullable();
             $table->string('fit')->nullable();
             $table->string('occassion')->nullable();
+            $table->string('pattern')->nullable();
             $table->string('meta_title')->nullable();
             $table->string('meta_description')->nullable();
             $table->string('meta_keywords')->nullable();
             $table->enum('is_featured', ['NO','YES'])->default('YES');
-            $table->string('image')->nullable();
+            $table->string('wash_care')->nullable();
             $table->tinyInteger('status');
             $table->timestamps();
         });

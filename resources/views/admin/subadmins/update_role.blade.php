@@ -1,6 +1,8 @@
 @extends('admin.layout.layout')
 @section('content')
     <div class="col-sm-4">
+        <div class="card">
+            <div class="card-body">
         <h3>{{ $title }}</h3>
         @if (Session::has('success_message'))
             <div class="greenDanger alert alert-danger" role="alert">
@@ -98,5 +100,7 @@
                 </div>
             </div>
         </form>
+    </div>
+        </div>
     </div>
 @endsection

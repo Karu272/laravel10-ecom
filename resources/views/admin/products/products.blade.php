@@ -1,6 +1,8 @@
 @extends('admin.layout.layout')
 @section('content')
     <div class="col-sm-8">
+        <div class="card">
+            <div class="card-body">
         <div class="container-settings">
             @if (Session::has('success_message'))
                 <div class="greenDanger alert alert-danger" role="alert">
@@ -37,9 +39,10 @@
                                     <td class="table__content" data-heading="ID">{{ $product['id'] }}</td>
                                     <td class="table__content" data-heading="Name">{{ $product['product_name'] }}</td>
                                     <td class="table__content" data-heading="Parent">
-                                       <?php /* @if (isset($product['parentcategory']['category_name']))
-                                            {{ $product['parentcategory']['category_name'] }}
-                                        @endif */ ?>
+                                        <!-- category comes from the function called in controller with same name -->
+                                        @if (isset($product['category']['category_name']))
+                                            {{ $product['category']['category_name'] }}
+                                        @endif
                                     </td>
                                     <td class="table__content" data-heading="Family Color">{{ $product['family_color'] }}</td>
                                     <td class="table__content" data-heading="Is Featured">{{ $product['is_featured'] }}</td>
@@ -80,6 +83,8 @@
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
         </div>
     </div>
 @endsection
