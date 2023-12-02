@@ -32,7 +32,7 @@ Route::prefix('admin')->group(function () {
 
         /* ========== E-com Pages ========== */
         // Categories
-        Route::get('categories/categories', [CategoryController::class, 'categories'])->name('categories.categories');
+        Route::get('categories/categories', [CategoryController::class, 'categories'])->name('admin.categories.categories');
         Route::match(['get','post'],'categories/add-edit-category/{id?}', [CategoryController::class,'edit'])->name('admin.categories.add_edit_category');
         Route::post('update-category-status', [CategoryController::class,'update']);
         Route::get('delete-category/{id}', [CategoryController::class,'destroy']);
@@ -41,8 +41,10 @@ Route::prefix('admin')->group(function () {
         Route::get('products/products', [ProductController::class,'index'])->name('admin.products.products');
         Route::post('update-product-status', [ProductController::class,'update']);
         Route::match(['get','post'],'products/add-edit-product/{id?}', [ProductController::class, 'edit'])->name('admin.products.add_edit_product');
-        Route::get('delete-product', [ProductController::class,'destroy']);
-        Route::get('delete-productimg/{id}', [CategoryController::class,'destroycatproimg']);
+        Route::get('delete-product/{id}', [ProductController::class,'destroy']);
+        Route::get('delete-product-video/{id}', [ProductController::class,'destroyproVideo']);
+        Route::get('delete-productimg/{id}', [ProductController::class,'destroyproimg']);
+
     });
 
 });

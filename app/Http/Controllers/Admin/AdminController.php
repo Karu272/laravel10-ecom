@@ -357,7 +357,7 @@ class AdminController extends Controller
 
             $permissions = ['view', 'edit', 'full'];
 
-            foreach (['products', 'categories', 'cms_pages'] as $module) {
+            foreach (['images','products', 'categories', 'cms_pages'] as $module) {
                 $role = new AdminsRole;
                 $role->subadmin_id = $id;
                 $role->module = $module;

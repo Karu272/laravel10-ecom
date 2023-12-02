@@ -39,10 +39,11 @@ class CategoryController extends Controller
             $pagesModule = $role->toArray();
         }
 
-        return view('admin.categories.categories', compact('categoriesDBdata','pagesModule'));
+        return view('admin.categories.categories', compact('categoriesDBdata', 'pagesModule'));
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
         if ($request->ajax()) {
             $data = $request->all();
             if ($data['status'] == "Active") {
@@ -55,7 +56,8 @@ class CategoryController extends Controller
         }
     }
 
-    public function edit(Request $request, $id = null){
+    public function edit(Request $request, $id = null)
+    {
         $getCategories = Category::getCategories();
 
         if ($id == "") {
@@ -142,29 +144,31 @@ class CategoryController extends Controller
             $editCat->save();
 
 
-            return redirect()->route('categories.categories')->with('success_message', $message);
+            return redirect()->route('admin.categories.categories')->with('success_message', $message);
         }
 
-        return view('admin.categories.add_edit_category', compact("title", "editCat","getCategories"));
+        return view('admin.categories.add_edit_category', compact("title", "editCat", "getCategories"));
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         // Delete
         Category::where('id', $id)->delete();
-        $message = 'Category deleted successfully!';
-        session::flash('success_message', $message);
+        $message = 'Product deleted successfully!';
+        session()->flash('success_message', $message);
         return redirect()->back();
     }
 
-    public function destroycatimg($id){
+    public function destroycatimg($id)
+    {
         // Get Category img
-        $categoryImg = Category::select('image')->where('id',$id)->first();
+        $categoryImg = Category::select('image')->where('id', $id)->first();
 
         // Get Category Img path
         $category_image_path = 'admin/img/categories/';
 
         // Delete Category Image from categories folder if exists
-        if(file_exists($category_image_path . $categoryImg->image)){
+        if (file_exists($category_image_path . $categoryImg->image)) {
             unlink($category_image_path . $categoryImg->image);
         }
 

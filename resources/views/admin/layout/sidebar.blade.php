@@ -21,31 +21,22 @@
                     </p>
                 </a>
                 <ul class="dropdown-menu" role="menu">
+                    <!-- must be put inside a <a></a>
                     @if (Session::get('page') == 'update-password')
                         @php $active="active" @endphp
                     @else
                         @php $active="" @endphp
-                    @endif
+                    @endif -->
                     <li class="nav-item">
                         <a href="{{ url('admin/update-password') }}" class="nav-link">
                             <p><i class="nav-icon fas fa-users"></i> Update Admin Password</p>
                         </a>
                     </li>
-                    @if (Session::get('page') == 'update-admin-details')
-                        @php $active="active" @endphp
-                    @else
-                        @php $active="" @endphp
-                    @endif
                     <li class="nav-item">
                         <a href="{{ url('admin/update-admin-details') }}" class="nav-link">
                             <p><i class="nav-icon fas fa-users"></i> Update Admin Details</p>
                         </a>
                     </li>
-                    @if (Session::get('page') == 'subadmins')
-                        @php $active="active" @endphp
-                    @else
-                        @php $active="" @endphp
-                    @endif
                     <li class="nav-item">
                         <a href="{{ url('admin/subadmins/subadmins') }}" class="nav-link">
                             <p><i class="nav-icon fas fa-users"></i> Subadmins</p>
@@ -62,11 +53,6 @@
                     </p>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    @if (Session::get('page') == 'cms-pages')
-                        @php $active="active" @endphp
-                    @else
-                        @php $active="" @endphp
-                    @endif
                     <li class="nav-item">
                         <a href="{{ url('admin/pages/cms-pages') }}" class="nav-link">
                             <p><i class="far fa-circle nav-icon"></i> CMS info</p>
@@ -83,21 +69,11 @@
                     </p>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    @if (Session::get('page') == 'categories')
-                        @php $active="active" @endphp
-                    @else
-                        @php $active="" @endphp
-                    @endif
                     <li class="nav-item">
                         <a href="{{ url('admin/categories/categories') }}" class="nav-link">
                             <p><i class="far fa-circle nav-icon"></i> Categories </p>
                         </a>
                     </li>
-                    @if (Session::get('page') == 'products')
-                        @php $active="active" @endphp
-                    @else
-                        @php $active="" @endphp
-                    @endif
                     <li class="nav-item">
                         <a href="{{ url('admin/products/products') }}" class="nav-link">
                             <p><i class="far fa-circle nav-icon"></i> Products </p>

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Category;
+use App\Models\Productimage;
 
 class Product extends Model
 {
@@ -21,7 +22,11 @@ class Product extends Model
         $productsFilters['sleeveArray'] = ['Full Sleeve','Half Sleeve','Sleeveless'];
         $productsFilters['petternArray'] = ['Checked','Plain','Printed','Self','Solid'];
         $productsFilters['fitArray'] = ['Regular','Slim','Plus'];
-        $productsFilters['occasionArray'] = ['Casual','Formal'];
+        $productsFilters['occassionArray'] = ['Casual','Formal'];
         return $productsFilters;
+    }
+
+    public function images() {
+        return $this->hasMany('App\Models\Productimage');
     }
 }
