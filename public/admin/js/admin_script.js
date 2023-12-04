@@ -1,17 +1,45 @@
 $(document).ready(function () {
+    // Add / edit product Attribute
 
+    var maxField = 10; //Input fields increment limitation
+    var addButton = $(".add_button"); //Add button selector
+    var wrapper = $(".field_wrapper"); //Input field wrapper
+    var fieldHTML =
+        '<div><input type="text" name="size[]" style="color: black; width: 23.5%" placeholder="size"/>&nbsp;<input type="text" name="sku[]" style="color: black; width: 23.5%" placeholder="sku"/>&nbsp;<input type="text" name="price[]" style="color: black; width: 23.5%" placeholder="price"/>&nbsp;<input type="text" name="stock[]" style="color: black; width: 23.5%" placeholder="stock"/>&nbsp;<a href="javascript:void(0);" class="remove_button"><i style="display: inline-block;" class="fas fa-trash"></i></a></div>'; //New input field html
+    var x = 1; //Initial field counter is 1
+
+    // Once add button is clicked
+    $(addButton).click(function () {
+        //Check maximum number of input fields
+        if (x < maxField) {
+            x++; //Increase field counter
+            $(wrapper).append(fieldHTML); //Add field html
+        } else {
+            alert(
+                "A maximum of " + maxField + " fields are allowed to be added. "
+            );
+        }
+    });
+
+    // Once remove button is clicked
+    $(wrapper).on("click", ".remove_button", function (e) {
+        e.preventDefault();
+        $(this).parent("div").remove(); //Remove field html
+        x--; //Decrease field counter
+    });
+    // _______________________________________________
 
     // Check Admin Password is correct or not
     $("#current_pwd").keyup(function () {
         var current_pwd = $("#current_pwd").val();
         //alert(current_pwd);
         $.ajax({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
             type: "post",
             url: "/admin/check-current-password",
-            data: { current_password:current_pwd },
+            data: { current_password: current_pwd },
             success: function (resp) {
                 if (resp === "false") {
                     $("#chkCurrentPwd").html(
@@ -35,8 +63,8 @@ $(document).ready(function () {
         var page_id = $(this).attr("page_id");
         $.ajax({
             headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
             type: "post",
             url: "/admin/update-cms-pages-status",
             data: { status: status, page_id: page_id },
@@ -63,8 +91,8 @@ $(document).ready(function () {
         var page_id = $(this).attr("page_id");
         $.ajax({
             headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
             type: "post",
             url: "/admin/update-subadmin-status",
             data: { status: status, page_id: page_id },
@@ -91,8 +119,8 @@ $(document).ready(function () {
         var page_id = $(this).attr("page_id");
         $.ajax({
             headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
             type: "post",
             url: "/admin/update-category-status",
             data: { status: status, page_id: page_id },
@@ -119,8 +147,8 @@ $(document).ready(function () {
         var page_id = $(this).attr("page_id");
         $.ajax({
             headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
             type: "post",
             url: "/admin/update-product-status",
             data: { status: status, page_id: page_id },
@@ -140,43 +168,6 @@ $(document).ready(function () {
             },
         });
     });
-
-
-
-
-    // Append Categories Level
-    $("#section_id").change(function () {
-        var section_id = $(this).val();
-        $.ajax({
-            type: "post",
-            url: "/admin/append-categories-level",
-            data: { section_id: section_id },
-            success: function (resp) {
-                $("#appendCategoriesLevel").html(resp);
-            },
-            error: function () {
-                alert("Error");
-            },
-        });
-    });
-
-    // Append ENG Categories Level
-    $("#sectionEng_id").change(function () {
-        var sectionEng_id = $(this).val();
-        $.ajax({
-            type: "post",
-            url: "/admin/append-categoriesEng-level",
-            data: { sectionEng_id: sectionEng_id },
-            success: function (resp) {
-                $("#appendCategoriesEngLevel").html(resp);
-            },
-            error: function () {
-                alert("Error");
-            },
-        });
-    });
-
-
 
     // confirm delete with sweetalert
     $(document).on("click", ".confirmDelete", function () {
@@ -199,29 +190,5 @@ $(document).ready(function () {
                     "/admin/delete-" + record + "/" + recordid;
             }
         });
-    });
-
-    // Products Attributes Add/Remove Script
-    var maxField = 10; //Input fields increment limitation
-    var addButton = $(".add_button"); //Add button selector
-    var wrapper = $(".field_wrapper"); //Input field wrapper
-    var fieldHTML =
-        '<div ><div style="height:10px;"></div><input type="text" name="size[]" style="width:120px" placeholder="Size" />&nbsp;<input type="text" name="sku[]" style="width:120px" placeholder="SKU" />&nbsp;<input type="text" name="price[]" style="width:120px" placeholder="Price" />&nbsp;<input type="text" name="stock[]" style="width:120px" placeholder="Stock" />&nbsp;<a href="javascript:void(0);" class="remove_button">Delete</a></div>'; //New input field html
-    var x = 1; //Initial field counter is 1
-
-    //Once add button is clicked
-    $(addButton).click(function () {
-        //Check maximum number of input fields
-        if (x < maxField) {
-            x++; //Increment field counter
-            $(wrapper).append(fieldHTML); //Add field html
-        }
-    });
-
-    //Once remove button is clicked
-    $(wrapper).on("click", ".remove_button", function (e) {
-        e.preventDefault();
-        $(this).parent("div").remove(); //Remove field html
-        x--; //Decrement field counter
     });
 });

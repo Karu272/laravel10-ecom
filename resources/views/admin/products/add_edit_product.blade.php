@@ -229,10 +229,58 @@
                                     </option>
                                 @endforeach
                             </select>
+                            <br>
+                            <br>
                         </div>
                     </div>
                     <div class="form-row">
+                        <br>
+                        <div style="background: #52585e;" class="formgroup col-md-12">
+                            <label for="attribute">Attribute</label>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Size</th>
+                                        <th scope="col">SKU</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Stock</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($editPro['attributes'] as $atr)
+                                        <tr>
+                                            <td scope="row">{{ $atr['id'] }}</td>
+                                            <td>{{ $atr['size'] }}</td>
+                                            <td>{{ $atr['sku'] }}</td>
+                                            <td>{{ $atr['price'] }}</td>
+                                            <td>{{ $atr['stock'] }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            <br>
+                        </div>
+                        <div class="formgroup col-md-12">
+                            <br>
+                            <label for="attribute">Add attribute</label>
+                            <div class="field_wrapper">
+                                <input type="text" name="size[]" id="size" placeholder="size"
+                                    style="color: black; width: 23.5%" />
+                                <input type="text" name="sku[]" id="sku" placeholder="sku"
+                                    style="color: black; width: 23.5%" />
+                                <input type="text" name="price[]" id="price" placeholder="price"
+                                    style="color: black; width: 23.5%" />
+                                <input type="text" name="stock[]" id="stock" placeholder="stock"
+                                    style="color: black; width: 23.5%" />
+                                <a href="javascript:void(0);" class="add_button" title="Add field"><i
+                                        style="display: inline-block;" class="fas fa-plus"></i></a>
+                            </div>
+                        </div>
                         <div class="form-group col-md-12">
+                            <br>
+                            <br>
                             <label for="image">Upload Image</label>
                             <input type="file" name="image[]" multiple id="image">
                             @error('image')
@@ -251,10 +299,13 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($editPro['images'] as $img)
-                                                <input class="form-control" type="hidden" name="image[]" value="{{ $img['image'] }}">
+                                                <input class="form-control" type="hidden" name="image[]"
+                                                    value="{{ $img['image'] }}">
                                                 <tr class="table__row">
-                                                    <td style="width: 15%;" class="table__content text-center" data-heading="sort">
-                                                        <input style="display: inline-block;" class="form-control" type="text" name="image_sort[]"
+                                                    <td style="width: 15%;" class="table__content text-center"
+                                                        data-heading="sort">
+                                                        <input style="display: inline-block;" class="form-control"
+                                                            type="text" name="image_sort[]"
                                                             value="{{ $img['image_sort'] }}">
                                                     </td>
                                                     <td class="table__content text-center" data-heading="image">
@@ -263,7 +314,8 @@
                                                             alt="Product Image">
                                                     </td>
                                                     <td class="table__content text-center" data-heading="delete">
-                                                        <a title="Delete product" href="javascript:void(0)" class="confirmDelete" record="productimg"
+                                                        <a title="Delete product" href="javascript:void(0)"
+                                                            class="confirmDelete" record="productimg"
                                                             recordid="{{ $img['id'] }}">
                                                             <i style="display: inline-block;" class="fas fa-trash"></i>
                                                         </a>

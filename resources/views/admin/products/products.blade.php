@@ -17,7 +17,7 @@
                             @if ($pagesModule['edit_access'] == 1 || $pagesModule['full_access'] == 1)
                                 <a href="{{ url('admin/products/add-edit-product') }}"
                                     class="btn btn-block btn-success tblBtn">
-                                    Add / Edit</a>
+                                    Add </a>
                             @endif
                         </h3>
                         <div class="innerCon">

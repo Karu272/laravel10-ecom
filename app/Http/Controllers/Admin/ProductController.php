@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\AdminsRole;
 use App\Models\Category;
 use App\Models\Productimage;
+use App\Models\Attribute;
 use Session;
 use Auth;
 use DB;
@@ -73,7 +74,8 @@ class ProductController extends Controller
         } else {
             $title = "Edit Product";
             // Images comes from product model
-            $editPro = Product::with('images')->find($id);
+            $editPro = Product::with(['attributes','images'])->find($id);
+            //dd($editPro);
             $message = "Product Edited successfully!";
         }
 
@@ -162,6 +164,37 @@ class ProductController extends Controller
                 $product_id = $id;
             }
 
+
+            // Add atttributes
+            foreach ($data['sku'] as $key => $value) {
+                if (!empty($value)) {
+                    // SKU already exist check
+                    $countSKU = Attribute::where('sku', $value)->count();
+                    if ($countSKU > 0) {
+                        $message = "SKU already exists. Place try another SKU";
+                        return redirect()->back()->with('error_message', $message);
+                    }
+                    $countSize = Attribute::where([
+                        'product_id' => $product_id,
+                        'size' => $data['size'][$key]
+                    ])->count();
+
+                    if ($countSize > 0) {
+                        $message = "Size already exists. Place try another Size";
+                        return redirect()->back()->with('error_message', $message);
+                    }
+
+                    $atttribute = new Attribute;
+                    $atttribute->product_id = $product_id;
+                    $atttribute->sku = $value;
+                    $atttribute->size = $data['size'][$key];
+                    $atttribute->price = $data['price'][$key];
+                    $atttribute->stock = $data['stock'][$key];
+                    $atttribute->status = 1;
+                    $atttribute->save();
+                }
+            }
+
             // Save Image
             if ($request->hasFile('image')) {
                 $images = $request->file('image');
@@ -191,15 +224,15 @@ class ProductController extends Controller
             }
 
             // Sort product Images
-            if($id!=''){
-                if(isset($data['image'])){
+            if ($id != '') {
+                if (isset($data['image'])) {
                     foreach ($data['image'] as $key => $image) {
                         Productimage::where([
                             'product_id' => $id,
                             'image' => $image,
-                            ])->update([
-                                'image_sort' => $data['image_sort'][$key]
-                            ]);
+                        ])->update([
+                                    'image_sort' => $data['image_sort'][$key]
+                                ]);
                     }
                 }
             }
