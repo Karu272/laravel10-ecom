@@ -1,6 +1,6 @@
 $(document).ready(function () {
-    // Add / edit product Attribute
 
+    // Add / edit product Attribute
     var maxField = 10; //Input fields increment limitation
     var addButton = $(".add_button"); //Add button selector
     var wrapper = $(".field_wrapper"); //Input field wrapper
@@ -151,6 +151,62 @@ $(document).ready(function () {
             },
             type: "post",
             url: "/admin/update-product-status",
+            data: { status: status, page_id: page_id },
+            success: function (resp) {
+                if (resp["status"] == 0) {
+                    $("#page-" + page_id).html(
+                        "<i class='fas fa-toggle-off' aria-hidden='true' status='Inactive'></i>"
+                    );
+                } else if (resp["status"] == 1) {
+                    $("#page-" + page_id).html(
+                        "<i class='fas fa-toggle-on' aria-hidden='true' status='Active' style='color: blue;'></i>"
+                    );
+                }
+            },
+            error: function () {
+                alert("Error");
+            },
+        });
+    });
+
+    // Update Attribute Status
+    $(document).on("click", ".updateAttributeStatus", function () {
+        var status = $(this).children("i").attr("status");
+        var page_id = $(this).attr("page_id");
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            type: "post",
+            url: "/admin/update-attribute-status",
+            data: { status: status, page_id: page_id },
+            success: function (resp) {
+                if (resp["status"] == 0) {
+                    $("#page-" + page_id).html(
+                        "<i class='fas fa-toggle-off' aria-hidden='true' status='Inactive'></i>"
+                    );
+                } else if (resp["status"] == 1) {
+                    $("#page-" + page_id).html(
+                        "<i class='fas fa-toggle-on' aria-hidden='true' status='Active' style='color: rgb(41, 214, 113);'></i>"
+                    );
+                }
+            },
+            error: function () {
+                alert("Error");
+            },
+        });
+    });
+
+    // Update Brand Status
+    $(document).on("click", ".updateBrandPageStatus", function () {
+        var status = $(this).children("i").attr("status");
+        var page_id = $(this).attr("page_id");
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            type: "post",
+            url: "/admin/update-brand-status",
             data: { status: status, page_id: page_id },
             success: function (resp) {
                 if (resp["status"] == 0) {

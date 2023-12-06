@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
 use App\Models\Category;
@@ -10,10 +11,8 @@ use App\Models\AdminsRole;
 use Auth;
 use Session;
 
-class CategoryController extends Controller
-{
-    public function categories()
-    {
+class CategoryController extends Controller {
+    public function categories() {
         Session::put('page', 'categories');
         $categoriesDBdata = Category::with('parentcategory')->get()->toArray();
         //dd($categoriesDBdata);
@@ -22,7 +21,7 @@ class CategoryController extends Controller
         $pagesModule = [];
 
         // Check if the user is an admin
-        if (Auth::guard('admin')->user()->type == "admin") {
+        if(Auth::guard('admin')->user()->type == "admin") {
             $pagesModule['view_access'] = 1;
             $pagesModule['edit_access'] = 1;
             $pagesModule['full_access'] = 1;
@@ -31,7 +30,7 @@ class CategoryController extends Controller
             $role = AdminsRole::where(['subadmin_id' => Auth::guard('admin')->user()->id, 'module' => 'categories'])->first();
 
             // If no role is found or all permissions are 0, redirect to dashboard
-            if (!$role || ($role->view_access == 0 && $role->edit_access == 0 && $role->full_access == 0)) {
+            if(!$role || ($role->view_access == 0 && $role->edit_access == 0 && $role->full_access == 0)) {
                 $message = "This feature is restricted for you!";
                 return redirect()->route('admin.dashboard')->with('error_message', $message);
             }
@@ -42,11 +41,10 @@ class CategoryController extends Controller
         return view('admin.categories.categories', compact('categoriesDBdata', 'pagesModule'));
     }
 
-    public function update(Request $request)
-    {
-        if ($request->ajax()) {
+    public function update(Request $request) {
+        if($request->ajax()) {
             $data = $request->all();
-            if ($data['status'] == "Active") {
+            if($data['status'] == "Active") {
                 $status = 0;
             } else {
                 $status = 1;
@@ -56,11 +54,10 @@ class CategoryController extends Controller
         }
     }
 
-    public function edit(Request $request, $id = null)
-    {
+    public function edit(Request $request, $id = null) {
         $getCategories = Category::getCategories();
 
-        if ($id == "") {
+        if($id == "") {
             $title = "Add Category";
             $editCat = new Category;
             $message = "Category added successfully!";
@@ -70,15 +67,15 @@ class CategoryController extends Controller
             $message = "Category Edited successfully!";
         }
         //dd($editCat);
-        if ($request->isMethod('post')) {
+        if($request->isMethod('post')) {
             $data = $request->all();
             //dd($data);
             $imageName = null; // Initialize $imageName
 
             $rules = [
-                'category_name' => 'required|max:255',
+                'category_name' => 'required|max:255|unique:categories,category_name,'.$editCat->id,
                 'description' => 'required',
-                'url' => 'required|unique:categories',
+                'url' => 'required|unique:categories,url,'.$editCat->id,
                 'image' => 'image',
             ];
 
@@ -91,6 +88,29 @@ class CategoryController extends Controller
 
             $this->validate($request, $rules, $customMessages);
 
+            if(empty($data['category_discount'])) {
+                // If category discount is not set, set it to 0
+                $data['category_discount'] = 0;
+
+                // Check if $id is not empty
+                if($id != "") {
+                    // Fetch products belonging to the specified category
+                    $categoryProducts = Product::where('category_id', $id)->get()->toArray();
+
+                    // Loop through each product in the category
+                    foreach($categoryProducts as $key => $product) {
+                        // Check if the product has a category discount
+                        if($product['discount_type'] == 'category') {
+                            // Update the product with no category discount
+                            Product::where('id', $product['id'])->update([
+                                'discount_type' => '',
+                                'final_price' => $product['product_price']
+                            ]);
+                        }
+                    }
+                }
+            }
+
             $editCat->category_name = $data['category_name'];
             $editCat->parent_id = $data['parent_id'];
             $editCat->category_discount = $data['category_discount'];
@@ -102,11 +122,11 @@ class CategoryController extends Controller
             $editCat->status = 1;
             $editCat->save();
 
-            if ($request->has('cropped_image_data')) {
+            if($request->has('cropped_image_data')) {
                 $base64Image = $request->input('cropped_image_data');
 
                 // Check if the base64 data is present and properly formatted
-                if (strpos($base64Image, ';base64,') !== false) {
+                if(strpos($base64Image, ';base64,') !== false) {
                     list(, $data) = explode(';', $base64Image);
                     list(, $data) = explode(',', $data);
                     $decodedImage = base64_decode($data);
@@ -115,26 +135,26 @@ class CategoryController extends Controller
                     $extension = 'jpg'; // Adjust this based on your requirements
 
                     // Generate New Name
-                    $imageName = rand(111, 90000) . '.' . $extension;
+                    $imageName = rand(111, 90000).'.'.$extension;
 
                     // Save Image
-                    $image_path = 'admin/img/categories/' . $imageName;
+                    $image_path = 'admin/img/categories/'.$imageName;
                     file_put_contents($image_path, $decodedImage);
                 } else {
                     // Handle the case where the base64 data is not in the expected format
                     return redirect()->back()->with('error_message', 'Invalid image data format.');
                 }
-            } else if ($request->hasFile('image')) {
+            } else if($request->hasFile('image')) {
                 $image_tmp = $request->file('image');
-                if ($image_tmp->isValid()) {
+                if($image_tmp->isValid()) {
                     // Get Image Extension
                     $extension = $image_tmp->getClientOriginalExtension();
 
                     // Generate New Name
-                    $imageName = rand(111, 90000) . '.' . $extension;
+                    $imageName = rand(111, 90000).'.'.$extension;
 
                     // Save Image
-                    $image_path = 'admin/img/categories/' . $imageName;
+                    $image_path = 'admin/img/categories/'.$imageName;
                     Image::make($image_tmp)->save($image_path);
                 }
             }
@@ -150,8 +170,7 @@ class CategoryController extends Controller
         return view('admin.categories.add_edit_category', compact("title", "editCat", "getCategories"));
     }
 
-    public function destroy($id)
-    {
+    public function destroy($id) {
         // Delete
         Category::where('id', $id)->delete();
         $message = 'Product deleted successfully!';
@@ -159,8 +178,7 @@ class CategoryController extends Controller
         return redirect()->back();
     }
 
-    public function destroycatimg($id)
-    {
+    public function destroycatimg($id) {
         // Get Category img
         $categoryImg = Category::select('image')->where('id', $id)->first();
 
@@ -168,8 +186,8 @@ class CategoryController extends Controller
         $category_image_path = 'admin/img/categories/';
 
         // Delete Category Image from categories folder if exists
-        if (file_exists($category_image_path . $categoryImg->image)) {
-            unlink($category_image_path . $categoryImg->image);
+        if(file_exists($category_image_path.$categoryImg->image)) {
+            unlink($category_image_path.$categoryImg->image);
         }
 
         // Delete Category Img from categories table

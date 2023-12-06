@@ -53,6 +53,40 @@
                             @php $fullCategories = "" @endphp
                         @endif
                     @endif
+                    @if ($role['module'] == 'products')
+                        @if ($role['view_access'] == 1)
+                            @php $viewProducts = "checked" @endphp
+                        @else
+                            @php $viewProducts = "" @endphp
+                        @endif
+                        @if ($role['edit_access'] == 1)
+                            @php $editProducts = "checked" @endphp
+                        @else
+                            @php $editProducts = "" @endphp
+                        @endif
+                        @if ($role['full_access'] == 1)
+                            @php $fullProducts = "checked" @endphp
+                        @else
+                            @php $fullProducts = "" @endphp
+                        @endif
+                    @endif
+                    @if ($role['module'] == 'brands')
+                        @if ($role['view_access'] == 1)
+                            @php $viewBrands = "checked" @endphp
+                        @else
+                            @php $viewBrands = "" @endphp
+                        @endif
+                        @if ($role['edit_access'] == 1)
+                            @php $editBrands = "checked" @endphp
+                        @else
+                            @php $editBrands = "" @endphp
+                        @endif
+                        @if ($role['full_access'] == 1)
+                            @php $fullBrands = "checked" @endphp
+                        @else
+                            @php $fullBrands = "" @endphp
+                        @endif
+                    @endif
                 @endforeach
                 @endif
                 <div style="margin-left: 10%;" class="form-group">
@@ -93,6 +127,48 @@
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" name="categories[full]" value="1"
                             @if (isset($fullCategories)) {{ $fullCategories }} @endif>
+                        <label class="form-check-label">Full access</label>
+                    </div>
+                    <br>
+                </div>
+                <div style="margin-left: 10%;" class="form-group">
+                    <label for="products">
+                        <h4>Products</h4>
+                    </label>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="products[view]" value="1"
+                            @if (isset($viewProducts)) {{ $viewProducts }} @endif>
+                        <label class="form-check-label">View Access</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="Products[edit]" value="1"
+                            @if (isset($editProducts)) {{ $editProducts }} @endif>
+                        <label class="form-check-label">View/Edit Access</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="Products[full]" value="1"
+                            @if (isset($fullProducts)) {{ $fullProducts }} @endif>
+                        <label class="form-check-label">Full access</label>
+                    </div>
+                    <br>
+                </div>
+                <div style="margin-left: 10%;" class="form-group">
+                    <label for="brands">
+                        <h4>Brands</h4>
+                    </label>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="brands[view]" value="1"
+                            @if (isset($viewBrands)) {{ $viewBrands }} @endif>
+                        <label class="form-check-label">View Access</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="brands[edit]" value="1"
+                            @if (isset($editBrands)) {{ $editBrands }} @endif>
+                        <label class="form-check-label">View/Edit Access</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="brands[full]" value="1"
+                            @if (isset($fullBrands)) {{ $fullBrands }} @endif>
                         <label class="form-check-label">Full access</label>
                     </div>
                     <br>

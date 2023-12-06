@@ -195,6 +195,18 @@ class ProductController extends Controller
                 }
             }
 
+            // Edit Attributes
+            foreach ($data['attributeId'] as $akey => $atr) {
+                if (!empty($atr)) {
+                    Attribute::where([
+                        'id' =>$data['attributeId'][$akey]
+                        ])->update([
+                            'price' => $data['price'][$akey],
+                            'stock' => $data['stock'][$akey],
+                        ]);
+                }
+            }
+
             // Save Image
             if ($request->hasFile('image')) {
                 $images = $request->file('image');
@@ -227,6 +239,8 @@ class ProductController extends Controller
             if ($id != '') {
                 if (isset($data['image'])) {
                     foreach ($data['image'] as $key => $image) {
+                        $imageSort = isset($data['image_sort'][$key]) ? $data['image_sort'][$key] : null;
+
                         Productimage::where([
                             'product_id' => $id,
                             'image' => $image,
@@ -303,6 +317,26 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
+    public function updateAtrStatus(Request $request) {
+        if ($request->ajax()) {
+            $data = $request->all();
+            if ($data['status'] == "Active") {
+                $status = 0;
+            } else {
+                $status = 1;
+            }
+            Attribute::where('id', $data['page_id'])->update(['status' => $status]);
+            return response()->json(['status' => $status, 'page_id' => $data['page_id']]);
+        }
+    }
 
+    public function destroyattribute($id)
+    {
+        // Delete
+        Attribute::where('id', $id)->delete();
+        $message = 'Attribute deleted successfully!';
+        session()->flash('success_message', $message);
+        return redirect()->back();
+    }
 
 }

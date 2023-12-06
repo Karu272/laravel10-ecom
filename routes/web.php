@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\BrandController;
 
 Route::prefix('admin')->group(function () {
 
@@ -44,6 +45,14 @@ Route::prefix('admin')->group(function () {
         Route::get('delete-product/{id}', [ProductController::class,'destroy']);
         Route::get('delete-product-video/{id}', [ProductController::class,'destroyproVideo']);
         Route::get('delete-productimg/{id}', [ProductController::class,'destroyproimg']);
+        // Attribute
+        Route::post('update-attribute-status', [ProductController::class,'updateAtrStatus']);
+        Route::get('delete-attribute/{id}', [ProductController::class,'destroyattribute']);
+        // Brands
+        Route::get('brands/brands', [BrandController::class,'index'])->name('admin.brands.brands');
+        Route::post('update-brand-status', [BrandController::class,'update']);
+        Route::match(['get','post'],'brands/add-edit-brand/{id?}', [BrandController::class, 'edit'])->name('admin.brands.add_edit_brand');
+        Route::get('delete-brand/{id}', [BrandController::class,'destroy']);
 
     });
 

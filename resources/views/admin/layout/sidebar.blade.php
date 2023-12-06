@@ -15,7 +15,7 @@
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle nob" data-toggle="dropdown">
                     <p class="fq">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <i class="nav-icon fas fa-cogs"></i>
                         Settings
                         <i class="fas fa-angle-left"></i>
                     </p>
@@ -55,7 +55,7 @@
                 <ul class="dropdown-menu" role="menu">
                     <li class="nav-item">
                         <a href="{{ url('admin/pages/cms-pages') }}" class="nav-link">
-                            <p><i class="far fa-circle nav-icon"></i> CMS info</p>
+                            <p><i class="far fa-newspaper-o nav-icon"></i> CMS info</p>
                         </a>
                     </li>
                 </ul>
@@ -71,12 +71,17 @@
                 <ul class="dropdown-menu" role="menu">
                     <li class="nav-item">
                         <a href="{{ url('admin/categories/categories') }}" class="nav-link">
-                            <p><i class="far fa-circle nav-icon"></i> Categories </p>
+                            <p><i class="fas fa-thumb-tack  nav-icon"></i> Categories </p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ url('admin/products/products') }}" class="nav-link">
-                            <p><i class="far fa-circle nav-icon"></i> Products </p>
+                            <p><i class="fas fa-truck  nav-icon"></i> Products </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url('admin/brands/brands') }}" class="nav-link">
+                            <p><i class="fas fa-female nav-icon"></i> Brands </p>
                         </a>
                     </li>
                 </ul>

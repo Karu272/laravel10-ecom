@@ -236,7 +236,8 @@
                     <div class="form-row">
                         <br>
                         <div style="background: #52585e;" class="formgroup col-md-12">
-                            <label for="attribute">Attribute</label>
+                            <br>
+                            <label for="attribute">Attributes</label>
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -250,17 +251,42 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($editPro['attributes'] as $atr)
+                                        <input type="hidden" name="attributeId[]" value="{{ $atr['id'] }}">
                                         <tr>
                                             <td scope="row">{{ $atr['id'] }}</td>
                                             <td>{{ $atr['size'] }}</td>
                                             <td>{{ $atr['sku'] }}</td>
-                                            <td>{{ $atr['price'] }}</td>
-                                            <td>{{ $atr['stock'] }}</td>
+                                            <td>
+                                                <input style="width: 100px; color:black;" type="number" name="price[]"
+                                                    value="{{ $atr['price'] }}">
+                                            </td>
+                                            <td>
+                                                <input style="width: 100px; color:black;" type="number" name="stock[]"
+                                                    value="{{ $atr['stock'] }}">
+                                            </td>
+                                            <td>
+                                                @if ($atr['status'] == 1)
+                                                    <a class="updateAttributeStatus" id="page-{{ $atr['id'] }}"
+                                                        page_id="{{ $atr['id'] }}" href="javascript:void(0)"
+                                                        style="color: rgb(41, 214, 113);">
+                                                        <i class="fas fa-toggle-on" status="Active"></i>
+                                                    </a>
+                                                @else
+                                                    <a class="updateAttributeStatus" id="page-{{ $atr['id'] }}"
+                                                        page_id="{{ $atr['id'] }}" href="javascript:void(0)">
+                                                        <i class="fas fa-toggle-off" status="Inactive"></i>
+                                                    </a>
+                                                @endif
+                                                &nbsp;&nbsp;
+                                                <a title="Delete attribute" href="javascript:void(0)" class="confirmDelete"
+                                                    record="attribute" recordid="{{ $atr['id'] }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
-                            <br>
                         </div>
                         <div class="formgroup col-md-12">
                             <br>
