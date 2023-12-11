@@ -102,7 +102,6 @@ class AdminController extends Controller
         return view('admin.update_password');
     }
 
-
     public function checkCurrentPassword(Request $request)
     {
         $data = $request->all();
@@ -357,7 +356,7 @@ class AdminController extends Controller
 
             $permissions = ['view', 'edit', 'full'];
 
-            foreach (['brands','images','products', 'categories', 'cms_pages'] as $module) {
+            foreach (['banners','brands','images','products', 'categories', 'cms_pages'] as $module) {
                 $role = new AdminsRole;
                 $role->subadmin_id = $id;
                 $role->module = $module;

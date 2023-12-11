@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\BannersController;
 
 Route::prefix('admin')->group(function () {
 
@@ -53,7 +54,15 @@ Route::prefix('admin')->group(function () {
         Route::post('update-brand-status', [BrandController::class,'update']);
         Route::match(['get','post'],'brands/add-edit-brand/{id?}', [BrandController::class, 'edit'])->name('admin.brands.add_edit_brand');
         Route::get('delete-brand/{id}', [BrandController::class,'destroy']);
+        Route::get('delete-brandimg/{id}', [BrandController::class,'destroyImg']);
+        Route::get('delete-brand-logo/{id}', [BrandController::class,'destroyLogo']);
+        // Banners
+        Route::get('banners/banners', [BannersController::class,'index'])->name('admin.banners.banners');
+        Route::match(['get','post'],'banners/add-edit-banner/{id?}', [BannersController::class,'edit'])->name('admin.banners.add_edit_banner');
+        Route::post('update-banner-status', [BannersController::class, 'update']);
 
     });
 
 });
+
+

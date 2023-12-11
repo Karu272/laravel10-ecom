@@ -20,4 +20,6 @@ class Brand extends Model
         'brand_logo',
         // Add other attributes as needed
     ];
+
+
 }

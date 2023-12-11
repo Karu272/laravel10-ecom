@@ -26,13 +26,22 @@
           action="{{ route('admin.products.add_edit_product', ['id' => $editPro['id']]) }}" @endif
                     method="POST" enctype="multipart/form-data">@csrf
                     <div class="form-row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                             <label for="product_name">Name</label>
                             <input type="text" class="form-control" id="product_name" name="product_name"
                                 placeholder="Type name"
                                 @if (!empty($editPro['product_name'])) value="{{ $editPro['product_name'] }}" @endif>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
+                            <label for="brand_id">Select Brand</label>
+                            <select name="brand_id" id="brand_id" class="form-control">
+                                <option value="">Select</option>
+                                @foreach ($getBrands as $brand)
+                                    <option value="{{$brand['id']}}" @if(!empty( $editPro['brand_id'] && $editPro['brand_id'] == $brand['id'])) selected @endif>{{$brand['brand_name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
                             <label for="category_id">Select Category</label>
                             <select name="category_id" class="form-control">
                                 <option value="">Select</option>
@@ -115,7 +124,6 @@
                         <div class="form-group col-md-3">
                             <label for="final_price">Final Price</label>
                             <input type="text" class="form-control" id="final_price" name="final_price"
-                                placeholder="Type Final Price"
                                 @if (!empty($editPro['final_price'])) value="{{ $editPro['final_price'] }}" @endif readonly>
                         </div>
                         <div class="form-group col-md-6">
@@ -126,7 +134,7 @@
                         <div class="form-group col-md-6">
                             <label for="wash_care">Wash Care</label>
                             <textarea type="text" class="form-control" id="wash_care" name="wash_care" rows="3"
-                                placeholder="Type wash_care">{{ !empty($editPro['wash_care']) ? $editPro['wash_care'] : '' }}</textarea>
+                                placeholder="Type wash care">{{ !empty($editPro['wash_care']) ? $editPro['wash_care'] : '' }}</textarea>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="meta_description">Meta Description</label>

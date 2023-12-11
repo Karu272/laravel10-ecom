@@ -15,6 +15,7 @@ use Auth;
 use DB;
 
 class BrandController extends Controller {
+    // Method to display the brands and handle permissions
     public function index() {
         Session::put('page', 'brands');
         $brandDBdata = Brand::all();
@@ -43,6 +44,7 @@ class BrandController extends Controller {
         return view('admin.brands.brands', compact('brandDBdata', 'pagesModule'));
     }
 
+    // Method to update brand status via Ajax
     public function update(Request $request) {
         if($request->ajax()) {
             $data = $request->all();
@@ -56,6 +58,7 @@ class BrandController extends Controller {
         }
     }
 
+    // Method to handle brand editing (add or edit)
     public function edit(Request $request, $id = null) {
         if(empty($id)) {
             $title = "Add Brand";
@@ -71,6 +74,7 @@ class BrandController extends Controller {
             $data = $request->all();
             $imageName = null;
 
+            // Validation rules for brand information
             $rules = [
                 'brand_name' => 'required|max:255|unique:brands,brand_name,'.$editBrand->id,
                 'description' => 'required',
@@ -78,6 +82,7 @@ class BrandController extends Controller {
                 'image' => 'image',
             ];
 
+            // Custom error messages for validation
             $customMessages = [
                 'brand_name.required' => 'Name is required',
                 'description.required' => 'Description is required',
@@ -111,6 +116,7 @@ class BrandController extends Controller {
                 }
             }
 
+            // Save brand information
             $editBrand->fill([
                 'brand_name' => $data['brand_name'],
                 'brand_discount' => $data['brand_discount'],
@@ -138,6 +144,7 @@ class BrandController extends Controller {
         return view('admin.brands.add_edit_brand', compact("title", "editBrand"));
     }
 
+    // Method to process image based on whether it's uploaded or base64
     private function processImage($request, $inputName, $destinationPath, $defaultExtension) {
         $imageName = null;
 
@@ -154,6 +161,7 @@ class BrandController extends Controller {
         return $imageName;
     }
 
+    // Method to save base64 image
     private function saveBase64Image($base64Image, $destinationPath) {
         if(strpos($base64Image, ';base64,') !== false) {
             list(, $data) = explode(';', $base64Image);
@@ -172,6 +180,7 @@ class BrandController extends Controller {
         return null;
     }
 
+    // Method to save uploaded image file
     private function saveUploadedFile($file, $destinationPath, $defaultExtension) {
         if($file->isValid()) {
             $extension = $file->getClientOriginalExtension();
@@ -186,12 +195,50 @@ class BrandController extends Controller {
         return null;
     }
 
-
+    // Method to delete a brand
     public function destroy($id) {
         // Delete
         Brand::where('id', $id)->delete();
         $message = 'Product deleted successfully!';
         session()->flash('success_message', $message);
         return redirect()->back();
+    }
+
+    // Method to delete a brand
+    public function destroyImg($id) {
+        // Get brand img
+        $brandImg = Brand::select('image')->where('id', $id)->first();
+
+        // Get brand Img path
+        $brand_image_path = 'admin/img/brands/';
+
+        // Delete brand Image from categories folder if exists
+        if(file_exists($brand_image_path.$brandImg->image)) {
+            unlink($brand_image_path.$brandImg->image);
+        }
+
+        // Delete brand Img from categories table
+        brand::where('id', $id)->update(['image' => '']);
+
+        return redirect()->back()->with('success_message', 'Brand img deleted successfully');
+    }
+
+    // Method to delete a brand
+    public function destroyLogo($id) {
+        // Get brand img
+        $brandImg = Brand::select('brand_logo')->where('id', $id)->first();
+
+        // Get brand Img path
+        $brand_logo_path = 'admin/img/brands/logos/';
+
+        // Delete brand brand_logo from categories folder if exists
+        if(file_exists($brand_logo_path.$brandImg->brand_logo)) {
+            unlink($brand_logo_path.$brandImg->brand_logo);
+        }
+
+        // Delete brand Img from categories table
+        Brand::where('id', $id)->update(['brand_logo' => '']);
+
+        return redirect()->back()->with('success_message', 'Brand Logo deleted successfully');
     }
 }

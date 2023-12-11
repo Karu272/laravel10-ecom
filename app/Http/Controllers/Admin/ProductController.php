@@ -10,6 +10,7 @@ use App\Models\AdminsRole;
 use App\Models\Category;
 use App\Models\Productimage;
 use App\Models\Attribute;
+use App\Models\Brand;
 use Session;
 use Auth;
 use DB;
@@ -17,6 +18,7 @@ use DB;
 
 class ProductController extends Controller
 {
+    // Method to display products and handle permissions
     public function index()
     {
         Session::put('page', 'products');
@@ -48,7 +50,7 @@ class ProductController extends Controller
         return view("admin.products.products", compact("getProductDBdata", "pagesModule"));
     }
 
-    // Update status
+    // Method to update product status via Ajax
     public function update(Request $request)
     {
         if ($request->ajax()) {
@@ -63,9 +65,14 @@ class ProductController extends Controller
         }
     }
 
+    // Method to handle product editing (add or edit)
     public function edit(Request $request, $id = null)
     {
+        // Getting the Categories from the model
         $getCategories = Category::getCategories();
+
+        // Getting the Brands from the model
+        $getBrands = Brand::where('status', 1)->get()->toArray();
 
         if ($id == "") {
             $title = "Add Product";
@@ -74,7 +81,7 @@ class ProductController extends Controller
         } else {
             $title = "Edit Product";
             // Images comes from product model
-            $editPro = Product::with(['attributes','images'])->find($id);
+            $editPro = Product::with(['attributes', 'images'])->find($id);
             //dd($editPro);
             $message = "Product Edited successfully!";
         }
@@ -107,8 +114,10 @@ class ProductController extends Controller
 
             $this->validate($request, $rules, $customMessages);
 
+            // Update product information based on the form data
             $editPro->product_name = $data['product_name'];
             $editPro->category_id = $data['category_id'];
+            $editPro->brand_id = $data['brand_id'];
             $editPro->product_code = $data['product_code'];
             $editPro->product_color = $data['product_color'];
             $editPro->family_color = $data['family_color'];
@@ -116,6 +125,8 @@ class ProductController extends Controller
             $editPro->group_code = $data['group_code'];
             $editPro->product_price = $data['product_price'];
             $editPro->product_discount = $data['product_discount'];
+
+            // Calculate final price based on product discount and category discount
             if (!empty($data['product_discount']) && $data['product_discount'] > 0) {
                 $editPro->discount_type = 'editPro';
                 $editPro->final_price = $data['product_price'] - ($data['product_price'] * $data['product_discount']) / 100;
@@ -129,6 +140,7 @@ class ProductController extends Controller
                     $editPro->final_price = $data['product_price'] - ($data['product_price'] * $getCategoryDiscount->category_discount) / 100;
                 }
             }
+
             $editPro->description = $data['description'];
             $editPro->wash_care = $data['wash_care'];
             $editPro->meta_description = $data['meta_description'];
@@ -136,6 +148,7 @@ class ProductController extends Controller
             $editPro->meta_title = $data['meta_title'];
             $editPro->meta_keywords = $data['meta_keywords'];
             $editPro->is_featured = !empty($data['is_featured']) ? $data['is_featured'] : "NO";
+
             // Upload Product Video
             if ($request->hasFile('product_video')) {
                 $video_tmp = $request->file('product_video');
@@ -146,10 +159,11 @@ class ProductController extends Controller
                     $videoName = rand(11, 9999) . '.' . $extension;
                     $video_path = 'admin/products/videos';
                     $video_tmp->move($video_path, $video_name);
-                    // save video in products table
+                    // Save video in products table
                     $editPro->product_video = $videoName;
                 }
             }
+
             $editPro->fabric = $data['fabric'];
             $editPro->sleeve = $data['sleeve'];
             $editPro->pattern = $data['pattern'];
@@ -158,75 +172,82 @@ class ProductController extends Controller
             $editPro->status = 1;
             $editPro->save();
 
+            // Determine the product ID for new products or edited products
             if ($id == "") {
                 $product_id = DB::getPdo()->lastInsertId();
             } else {
                 $product_id = $id;
             }
 
-
-            // Add atttributes
+            // Add attributes
             foreach ($data['sku'] as $key => $value) {
                 if (!empty($value)) {
-                    // SKU already exist check
+                    // Check if SKU already exists
                     $countSKU = Attribute::where('sku', $value)->count();
                     if ($countSKU > 0) {
-                        $message = "SKU already exists. Place try another SKU";
+                        $message = "SKU already exists. Please try another SKU";
                         return redirect()->back()->with('error_message', $message);
                     }
+
+                    // Check if size already exists
                     $countSize = Attribute::where([
                         'product_id' => $product_id,
-                        'size' => $data['size'][$key]
+                        'size' => $data['size'][$key],
                     ])->count();
 
                     if ($countSize > 0) {
-                        $message = "Size already exists. Place try another Size";
+                        $message = "Size already exists. Please try another Size";
                         return redirect()->back()->with('error_message', $message);
                     }
 
-                    $atttribute = new Attribute;
-                    $atttribute->product_id = $product_id;
-                    $atttribute->sku = $value;
-                    $atttribute->size = $data['size'][$key];
-                    $atttribute->price = $data['price'][$key];
-                    $atttribute->stock = $data['stock'][$key];
-                    $atttribute->status = 1;
-                    $atttribute->save();
+                    // Create a new attribute
+                    $attribute = new Attribute;
+                    $attribute->product_id = $product_id;
+                    $attribute->sku = $value;
+                    $attribute->size = $data['size'][$key];
+                    $attribute->price = $data['price'][$key];
+                    $attribute->stock = $data['stock'][$key];
+                    $attribute->status = 1;
+                    $attribute->save();
                 }
             }
 
-            // Edit Attributes
-            foreach ($data['attributeId'] as $akey => $atr) {
-                if (!empty($atr)) {
-                    Attribute::where([
-                        'id' =>$data['attributeId'][$akey]
+            // Edit existing attributes
+            if (isset($data['attributeId'])) {
+                foreach ($data['attributeId'] as $akey => $atr) {
+                    if (!empty($atr)) {
+                        Attribute::where([
+                            'id' => $data['attributeId'][$akey],
                         ])->update([
-                            'price' => $data['price'][$akey],
-                            'stock' => $data['stock'][$akey],
-                        ]);
+                                    'price' => $data['price'][$akey],
+                                    'stock' => $data['stock'][$akey],
+                                ]);
+                    }
                 }
             }
 
-            // Save Image
+            // Save product images
             if ($request->hasFile('image')) {
                 $images = $request->file('image');
                 foreach ($images as $key => $image) {
-                    // Get temp image
+                    // Get temporary image
                     $image_temp = Image::make($image);
-                    // Get Image Extension
+                    // Get image extension
                     $extension = $image->getClientOriginalExtension();
-                    // Generate New Name
+                    // Generate a new name for the image
                     $imageName = rand(111, 90000) . '.' . $extension;
 
-                    // Save Image
+                    // Save the image in different sizes
                     $large_image_path = 'admin/img/products/large/' . $imageName;
                     $medium_image_path = 'admin/img/products/medium/' . $imageName;
                     $small_image_path = 'admin/img/products/small/' . $imageName;
-                    // resize
+
+                    // Resize the image
                     Image::make($image_temp)->resize(1040, 1200)->save($large_image_path);
                     Image::make($image_temp)->resize(520, 600)->save($medium_image_path);
                     Image::make($image_temp)->resize(260, 300)->save($small_image_path);
 
+                    // Create a new Productimage record
                     $image = new Productimage;
                     $image->image = $imageName;
                     $image->product_id = $product_id;
@@ -235,7 +256,7 @@ class ProductController extends Controller
                 }
             }
 
-            // Sort product Images
+            // Sort product images
             if ($id != '') {
                 if (isset($data['image'])) {
                     foreach ($data['image'] as $key => $image) {
@@ -257,9 +278,10 @@ class ProductController extends Controller
         // Product Filters
         $productsFilters = Product::productFilters();
 
-        return view("admin.products.add_edit_product", compact("title", "editPro", "message", "getCategories", "productsFilters"));
+        return view("admin.products.add_edit_product", compact("title", "editPro", "message", "getCategories", "productsFilters", "getBrands"));
     }
 
+    // Method to delete a product
     public function destroy($id)
     {
         // Delete
@@ -269,25 +291,27 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
+    // Method to delete a product video
     public function destroyproVideo($id)
     {
-        // Get product img
+        // Get product video
         $productVid = Product::select('product_video')->where('id', $id)->first();
 
-        // Get product Img path
+        // Get product video path
         $video_path = 'admin/products/videos/';
 
-        // Delete product Image from products folder if exists
+        // Delete product video from products folder if exists
         if (file_exists($video_path . $productVid->product_video)) {
             unlink($video_path . $productVid->product_video);
         }
 
-        // Delete product Img from products table
+        // Delete product video from products table
         Product::where('id', $id)->update(['product_video' => '']);
 
         return redirect()->back()->with('success_message', 'Product video deleted successfully');
     }
 
+    // Method to delete a product image
     public function destroyproimg($id)
     {
         // Get image information
@@ -317,7 +341,9 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
-    public function updateAtrStatus(Request $request) {
+    // Method to update attribute status via Ajax
+    public function updateAtrStatus(Request $request)
+    {
         if ($request->ajax()) {
             $data = $request->all();
             if ($data['status'] == "Active") {
@@ -330,6 +356,7 @@ class ProductController extends Controller
         }
     }
 
+    // Method to delete an attribute
     public function destroyattribute($id)
     {
         // Delete

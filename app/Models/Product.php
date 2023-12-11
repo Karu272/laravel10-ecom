@@ -11,27 +11,62 @@ use App\Models\Attribute;
 class Product extends Model
 {
     use HasFactory;
-    // sendind this function to products.blade index function
-    public function category() {
-        return $this->belongsTo('App\Models\Category','category_id')->with('parentcategory');
-    }
-    // parentcategory() comes from the category model
 
-    public static function productFilters() {
-        // product filter for clothing
-        $productsFilters['fabricArray'] = ['Cotton','Polyester','Wool'];
-        $productsFilters['sleeveArray'] = ['Full Sleeve','Half Sleeve','Sleeveless'];
-        $productsFilters['petternArray'] = ['Checked','Plain','Printed','Self','Solid'];
-        $productsFilters['fitArray'] = ['Regular','Slim','Plus'];
-        $productsFilters['occassionArray'] = ['Casual','Formal'];
+    /**
+     * Define a relationship with the Category model.
+     *
+     * This function establishes a "belongsTo" relationship between the Product and Category models.
+     * It associates a product with a category based on the category_id foreign key in the products table.
+     * The "with" method eager loads the parentcategory relationship from the Category model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function category()
+    {
+        return $this->belongsTo('App\Models\Category', 'category_id')->with('parentcategory');
+    }
+
+    /**
+     * Define a static method to retrieve product filters for clothing.
+     *
+     * This method provides predefined arrays for various clothing filters such as fabric, sleeve, pattern, fit, and occasion.
+     * These arrays can be used for filtering products on the frontend.
+     *
+     * @return array
+     */
+    public static function productFilters()
+    {
+        $productsFilters['fabricArray'] = ['Cotton', 'Polyester', 'Wool'];
+        $productsFilters['sleeveArray'] = ['Full Sleeve', 'Half Sleeve', 'Sleeveless'];
+        $productsFilters['petternArray'] = ['Checked', 'Plain', 'Printed', 'Self', 'Solid'];
+        $productsFilters['fitArray'] = ['Regular', 'Slim', 'Plus'];
+        $productsFilters['occassionArray'] = ['Casual', 'Formal'];
         return $productsFilters;
     }
 
-    public function images() {
+    /**
+     * Define a relationship with the Productimage model.
+     *
+     * This function establishes a "hasMany" relationship between the Product and Productimage models.
+     * It indicates that a product can have multiple images associated with it.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function images()
+    {
         return $this->hasMany('App\Models\Productimage');
     }
 
-    public function attributes() {
+    /**
+     * Define a relationship with the Attribute model.
+     *
+     * This function establishes a "hasMany" relationship between the Product and Attribute models.
+     * It indicates that a product can have multiple attributes associated with it.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function attributes()
+    {
         return $this->hasMany('App\Models\Attribute');
     }
 }

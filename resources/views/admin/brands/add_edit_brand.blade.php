@@ -158,7 +158,7 @@
                             @if (!empty($editBrand['brand_logo']))
                                 <img id="existingImage" src="{{ asset('admin/img/brands/logos/' . $editBrand['brand_logo']) }}"
                                     alt="Current Image">
-                                <a class="confirmDelete" title="Delete Image" href="javascript:void(0)" record="brand_logo"
+                                <a class="confirmDelete" title="Delete Image" href="javascript:void(0)" record="brand-logo"
                                     recordid="{{ $editBrand['id'] }}"><i class="fas fa-trash"></i></a>
                             @endif
                         </div>

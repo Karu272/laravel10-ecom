@@ -84,6 +84,11 @@
                             <p><i class="fas fa-female nav-icon"></i> Brands </p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ url('admin/banners/banners') }}" class="nav-link">
+                            <p><i class="fas fa-window-maximize nav-icon"></i> Banners </p>
+                        </a>
+                    </li>
                 </ul>
             </li>
         </div>
