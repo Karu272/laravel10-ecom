@@ -103,7 +103,7 @@
                                 <img id="existingImage" src="{{ asset('admin/img/categories/' . $editCat['image']) }}"
                                     alt="Current Image">
                                 <a class="confirmDelete" title="Delete Image" href="javascript:void(0)" record="categoryimg"
-                                    recordid="{{ $editCat['id'] }}"><i class="fas fa-trash"></i></a>
+                                    recordid="{{ $editCat['id'] }}" style="color: blue;"><i class="fas fa-trash"></i></a>
                             @endif
                         </div>
                         <label for="image">Upload New Image</label>
@@ -129,12 +129,26 @@
 
                                         // Initialize Cropper
                                         cropper = new Cropper(document.getElementById('cropperImage'), {
-                                            aspectRatio: 1, // You can adjust this ratio as needed
+                                            aspectRatio: NaN, // Set to NaN to allow freeform aspect ratio
                                             viewMode: 2,
                                             crop: function(event) {
                                                 var croppedCanvas = cropper.getCroppedCanvas();
                                                 $('#croppedImageData').val(croppedCanvas.toDataURL(
                                                     'image/jpeg'));
+                                            }
+                                        });
+
+                                        // Allow user to specify both width and height for cropping
+                                        $('#setCropDimensions').on('click', function() {
+                                            var width = parseFloat($('#cropWidth').val());
+                                            var height = parseFloat($('#cropHeight').val());
+
+                                            if (!isNaN(width) && !isNaN(height)) {
+                                                // Set the custom aspect ratio
+                                                cropper.setAspectRatio(width / height);
+                                            } else {
+                                                // Reset to freeform aspect ratio if invalid dimensions
+                                                cropper.setAspectRatio(NaN);
                                             }
                                         });
                                     };

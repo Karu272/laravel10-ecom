@@ -287,7 +287,7 @@
                                                 @endif
                                                 &nbsp;&nbsp;
                                                 <a title="Delete attribute" href="javascript:void(0)" class="confirmDelete"
-                                                    record="attribute" recordid="{{ $atr['id'] }}">
+                                                    record="attribute" recordid="{{ $atr['id'] }}" style="color: blue;">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             </td>

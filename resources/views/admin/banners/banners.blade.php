@@ -72,7 +72,7 @@
                                                 @if ($pagesModule['full_access'] == 1)
                                                     <a title="Delete banner" href="javascript:void(0)"
                                                         class="confirmDelete" record="banner"
-                                                        recordid="{{ $banner['id'] }}"><i class="fas fa-trash"></i></a>
+                                                        recordid="{{ $banner['id'] }}" style="color: blue;"><i class="fas fa-trash"></i></a>
                                                 @endif
                                             </td>
                                         </tr>

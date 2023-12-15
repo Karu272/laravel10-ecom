@@ -17,7 +17,7 @@
                             @if ($pagesModule['edit_access'] == 1 || $pagesModule['full_access'] == 1)
                                 <a href="{{ url('admin/categories/add-edit-category') }}"
                                     class="btn btn-block btn-success tblBtn">
-                                    Add / Edit</a>
+                                    Add </a>
                             @endif
                         </h3>
                         <div class="innerCon">
@@ -73,7 +73,7 @@
                                                 @if ($pagesModule['full_access'] == 1)
                                                     <a title="Delete category" href="javascript:void(0)"
                                                         class="confirmDelete" record="category"
-                                                        recordid="{{ $category['id'] }}"><i class="fas fa-trash"></i></a>
+                                                        recordid="{{ $category['id'] }}" style="color: blue;"><i class="fas fa-trash"></i></a>
                                                 @endif
                                             </td>
                                         </tr>

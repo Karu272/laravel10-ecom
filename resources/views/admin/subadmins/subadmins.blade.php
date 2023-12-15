@@ -16,7 +16,7 @@
                 <h3 style="margin-top: 10px">Subadmins
                     @if ($pagesModule['edit_access'] == 1 || $pagesModule['full_access'] == 1)
                         <a href="{{ URL('admin/subadmins/add-edit-subadmin') }}" class="btn btn-block btn-success tblBtn">
-                            Add / Edit</a>
+                            Add </a>
                     @endif
                 </h3>
                 <div class="innerCon">

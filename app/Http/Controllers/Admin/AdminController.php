@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use App\Models\Admin;
 use App\Models\CmsPage;
 use App\Models\AdminsRole;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Brand;
+use App\Models\User;
 use Auth;
 use Validator;
 use Hash;
@@ -19,7 +23,12 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        return view('admin.dashboard');
+        $categoriesCount = Category::get()->count();
+        $producsCount = Product::get()->count();
+        $brandsCount = Brand::get()->count();
+        $usersCount = User::get()->count();
+
+        return view('admin.dashboard', compact('categoriesCount','producsCount','brandsCount','usersCount'));
     }
 
     public function login(Request $request)
@@ -332,7 +341,7 @@ class AdminController extends Controller
             $subadmin->save();
 
 
-            return redirect()->route('subadmins.subadmins')->with('success_message', $message);
+            return redirect()->route('admin.subadmins.subadmins')->with('success_message', $message);
         }
 
         return view("admin.subadmins.add_edit_subadmin", compact("title", "subadmin"));

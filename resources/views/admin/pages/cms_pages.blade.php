@@ -16,7 +16,7 @@
                 <h3 style="margin-top: 10px"> CMS Page
                     @if ($pagesModule['edit_access'] == 1 || $pagesModule['full_access'] == 1)
                         <a href="{{ URL('admin/pages/add-edit-cmsPage') }}" class="btn btn-block btn-success tblBtn">
-                            Add / Edit</a>
+                            Add </a>
                     @endif
                 </h3>
                 <div class="innerCon">
@@ -64,7 +64,7 @@
                                         @endif
                                         @if ($pagesModule['full_access'] == 1)
                                             <a title="Delete CmsPage" href="javascript:void(0)" class="confirmDelete"
-                                                record="cmsPage" recordid="{{ $Cms['id'] }}"><i
+                                                record="cmsPage" recordid="{{ $Cms['id'] }}" style="color: blue;"><i
                                                     class="fas fa-trash"></i></a>
                                         @endif
                                     </td>

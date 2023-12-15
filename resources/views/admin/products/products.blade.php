@@ -78,7 +78,7 @@
                                                 @if ($pagesModule['full_access'] == 1)
                                                     <a title="Delete product" href="javascript:void(0)"
                                                         class="confirmDelete" record="product"
-                                                        recordid="{{ $product['id'] }}">
+                                                        recordid="{{ $product['id'] }}" style="color: blue;">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
                                                 @endif

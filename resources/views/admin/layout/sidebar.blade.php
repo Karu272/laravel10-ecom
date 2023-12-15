@@ -75,13 +75,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('admin/products/products') }}" class="nav-link">
-                            <p><i class="fas fa-truck  nav-icon"></i> Products </p>
+                        <a href="{{ url('admin/brands/brands') }}" class="nav-link">
+                            <p><i class="fas fa-female nav-icon"></i> Brands </p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url('admin/brands/brands') }}" class="nav-link">
-                            <p><i class="fas fa-female nav-icon"></i> Brands </p>
+                        <a href="{{ url('admin/products/products') }}" class="nav-link">
+                            <p><i class="fas fa-truck  nav-icon"></i> Products </p>
                         </a>
                     </li>
                     <li class="nav-item">

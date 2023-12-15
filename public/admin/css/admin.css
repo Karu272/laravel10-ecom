@@ -17,12 +17,13 @@ body {
     color: white;
 }
 
-a {
-    color: #b9b9bd;
-}
-
 li {
     list-style: none;
+}
+
+.dashBgBox {
+    background: #4A5781;
+    padding: 5px 5px 5px 10px;
 }
 
 .marTop {
@@ -66,7 +67,10 @@ li {
     height: auto;
 }
 
-.nob:hover, .nob:visited {
+a {
+    color: white;
+}
+a:hover, a:visited {
     color: inherit; /* Use the default text color on hover */
     text-decoration: none; /* Remove underline on hover */
 }
@@ -95,6 +99,7 @@ li {
     float: right;
     display:inline-block;
     margin-bottom: 3%;
+    color: white !important;
 }
 
 
