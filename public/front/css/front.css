@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: black;
+}
+
+a {
+    color: black;
+}
+a:hover,
+a:visited {
+    color: inherit; /* Use the default text color on hover */
+    text-decoration: none; /* Remove underline on hover */
+}
+
+
+// carousel start
+.carousel-caption {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+}
+
+// carousel end
