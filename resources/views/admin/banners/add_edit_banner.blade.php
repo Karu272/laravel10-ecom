@@ -28,8 +28,10 @@
                     <div class="form-row">
                         <div class="form-group col-md-2">
                             <label for="type">Type</label>
-                            <input type="text" class="form-control" id="type" name="type" placeholder="Type type"
-                                @if (!empty($bannerData['type'])) value="{{ $bannerData['type'] }}" @endif>
+                            <select class="form-control" name="type" id="type">
+                                <option value="slider" @if (!empty($bannerData['type']) && $bannerData['type'] == 'slider') selected @endif>Slider</option>
+                                <option value="fixed" @if (!empty($bannerData['type']) && $bannerData['type'] == 'fixed') selected @endif>Fixed</option>
+                            </select>
                         </div>
                         <div class="form-group col-md-2">
                             <label for="link">Link</label>
@@ -60,6 +62,11 @@
                             @error('image')
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
+                            <br>
+                            @if (!empty($bannerData['image']))
+                                <img style="width: 100px;" src="{{ asset('admin/img/banners/' . $bannerData['image']) }}" alt="smallBanner">
+                            @endif
+                            <br>
                             <br>
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>

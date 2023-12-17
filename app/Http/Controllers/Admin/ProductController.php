@@ -284,6 +284,15 @@ class ProductController extends Controller
     // Method to delete a product
     public function destroy($id)
     {
+        // Call the destroyproVideo method to delete the product video
+        $this->destroyproVideo($id);
+
+        // Call the destroyproimg method to delete the product images
+        $this->destroyproimg($id);
+
+        // Call the destroyproimg method to delete the product attributes
+        $this->destroyattribute($id);
+
         // Delete
         Product::where('id', $id)->delete();
         $message = 'Product deleted successfully!';
@@ -300,9 +309,11 @@ class ProductController extends Controller
         // Get product video path
         $video_path = 'admin/products/videos/';
 
-        // Delete product video from products folder if exists
-        if (file_exists($video_path . $productVid->product_video)) {
-            unlink($video_path . $productVid->product_video);
+        // Delete product video from products folder if it exists
+        $video_file_path = $video_path . $productVid->product_video;
+
+        if (file_exists($video_file_path) && is_file($video_file_path)) {
+            unlink($video_file_path);
         }
 
         // Delete product video from products table

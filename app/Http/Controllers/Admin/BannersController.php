@@ -95,7 +95,7 @@ class BannersController extends Controller
                     // set path
                     $image_path = 'admin/img/banners/' . $imageName;
 
-                    Image::make($image_tmp)->resize(1500, 500)->save($image_path);
+                    Image::make($image_tmp)->save($image_path);
                     $bannerData->image = $imageName;
                 }
             }
@@ -112,6 +112,34 @@ class BannersController extends Controller
         }
 
         return view('admin.banners.add_edit_banner', compact("title", "bannerData"));
+    }
+
+    public function destroy($id)
+    {
+        // Get banner information
+        $banner = Banner::select('image')->where('id', $id)->first();
+
+        // Define image paths
+        $imagePaths = [
+            'admin/img/banners/'
+        ];
+
+        // Loop through each image path and delete the corresponding image file
+        foreach ($imagePaths as $path) {
+            $imageFullPath = public_path($path . $banner->image);
+
+            if (file_exists($imageFullPath)) {
+                unlink($imageFullPath);
+            }
+        }
+
+        // Delete the banner
+        Banner::where('id', $id)->delete();
+
+        $message = 'Banner deleted successfully!';
+        session()->flash('success_message', $message);
+
+        return redirect()->back();
     }
 
 }

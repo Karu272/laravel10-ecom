@@ -171,6 +171,9 @@ class CategoryController extends Controller {
     }
 
     public function destroy($id) {
+        // Call this to delete the images when delete a category
+        $this->destroycatimg($id);
+
         // Delete
         Category::where('id', $id)->delete();
         $message = 'Product deleted successfully!';
