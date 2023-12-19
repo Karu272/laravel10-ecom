@@ -26,6 +26,10 @@ class Product extends Model
         return $this->belongsTo('App\Models\Category', 'category_id')->with('parentcategory');
     }
 
+    public function brand() {
+        return $this->belongsTo('App\Models\Brand', 'brand_id');
+    }
+
     /**
      * Define a static method to retrieve product filters for clothing.
      *
