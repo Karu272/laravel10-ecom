@@ -29,6 +29,7 @@
                                         <th class="table__heading">Parent</th>
                                         <th class="table__heading">Family Color</th>
                                         <th class="table__heading">Featured</th>
+                                        <th class="table__heading">Bestseller</th>
                                         <th class="table__heading">Created</th>
                                         <th class="table__heading">Status</th>
                                         <th class="table__heading">Action</th>
@@ -50,6 +51,8 @@
                                                 {{ $product['family_color'] }}</td>
                                             <td class="table__content" data-heading="Is Featured">
                                                 {{ $product['is_featured'] }}</td>
+                                            <td class="table__content" data-heading="Is Featured">
+                                                {{ $product['is_bestseller'] }}</td>
                                             <td class="table__content" data-heading="Created at">
                                                 {{ date('F j, Y, g:i a', strtotime($product['created_at'])) }}</td>
                                             <td class="table__content" data-heading="Status">

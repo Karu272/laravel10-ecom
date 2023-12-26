@@ -12,12 +12,14 @@ class Category extends Model
     // this is send to products model
     public function parentcategory()
     {
-        return $this->hasOne('App\Models\Category', 'id', 'parent_id')->select('id', 'category_name', 'url')->where('status', 1);
+        return $this->hasOne(Category::class, 'parent_id', 'id')
+            ->select('id', 'category_name', 'url')
+            ->where('status', 1);
     }
 
     public function subcategories()
     {
-        return $this->hasMany('App\Models\Category', 'parent_id')->where('status', 1);
+        return $this->hasMany(Category::class, 'parent_id')->where('status', 1);
     }
 
     public static function getCategories()
@@ -31,4 +33,55 @@ class Category extends Model
         )->where('parent_id', 0)->where('status', 1)->get()->toArray();
         return $getCategories;
     }
+
+    public static function categoryDetails($url)
+    {
+        // Select specific columns from the Category model and eager load the 'subcategories' relationship
+        $categoryDetails = Category::select('id', 'parent_id', 'category_name', 'url')
+            ->with('subcategories.subcategories') // Eager load subsubcategories
+            ->where('url', $url) // Filter by the URL parameter
+            ->first() // Retrieve the first matching category
+            ->toArray(); // Convert the result to an array
+
+        // Initialize an array to store category IDs
+        $catIDs = array();
+
+        // Add the main category ID to the $catIDs array
+        $catIDs[] = $categoryDetails['id'];
+
+        // Loop through subcategories and add their IDs to the $catIDs array
+        foreach ($categoryDetails['subcategories'] as $subCat) {
+            $catIDs[] = $subCat['id'];
+
+            // Loop through subsubcategories and add their IDs to the $catIDs array
+            foreach ($subCat['subcategories'] as $subSubCat) {
+                $catIDs[] = $subSubCat['id'];
+            }
+        }
+
+        // Initialize breadcrumbs string
+        $breadcrumbs = '';
+
+        // Start with the current category
+        $currentCategory = $categoryDetails;
+
+        // Loop through each level of the hierarchy until the parent_id is 0
+        while ($currentCategory['parent_id'] !== 0) {
+            $breadcrumbs = '<a href="' . url($currentCategory['url']) . '"> ' . $currentCategory['category_name'] . ' </a>&nbsp;&rarr;&nbsp;' . $breadcrumbs;
+
+            // Fetch the parent category
+            $currentCategory = Category::select('id', 'parent_id', 'category_name', 'url')->find($currentCategory['parent_id'])->toArray();
+        }
+
+        // Add the main category to the breadcrumbs
+        $breadcrumbs = '<a href="' . url($currentCategory['url']) . '"> ' . $currentCategory['category_name'] . ' </a>&nbsp;&rarr;&nbsp;' . $breadcrumbs;
+
+        // Return an array containing category IDs and the complete category details
+        return array(
+            'catIDs' => $catIDs,
+            'categoryDetails' => $categoryDetails,
+            'breadcrumbs' => $breadcrumbs,
+        );
+    }
+
 }

@@ -23,12 +23,14 @@ class Product extends Model
      */
     public function category()
     {
-        return $this->belongsTo('App\Models\Category', 'category_id')->with('parentcategory');
+        return $this->belongsTo(Category::class)->with('parentcategory');
     }
 
-    public function brand() {
-        return $this->belongsTo('App\Models\Brand', 'brand_id');
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
     }
+
 
     /**
      * Define a static method to retrieve product filters for clothing.
@@ -58,7 +60,7 @@ class Product extends Model
      */
     public function images()
     {
-        return $this->hasMany('App\Models\Productimage');
+        return $this->hasMany(ProductImage::class);
     }
 
     /**
@@ -71,6 +73,6 @@ class Product extends Model
      */
     public function attributes()
     {
-        return $this->hasMany('App\Models\Attribute');
+        return $this->hasMany(Attribute::class);
     }
 }

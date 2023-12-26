@@ -1,3 +1,4 @@
+
 * {
     margin: 0;
     padding: 0;
@@ -13,7 +14,6 @@ a:visited {
     color: inherit; /* Use the default text color on hover */
     text-decoration: none; /* Remove underline on hover */
 }
-
 
 // carousel start
 .carousel-caption {
@@ -46,9 +46,161 @@ a:visited {
 // end
 
 // side menu start
+.boldtxt {
+    font-weight: 900 !important;
+    font-size: 4rem !important;
+}
+
 @media (max-width: 767px) {
     .text-center {
         text-align: center;
     }
 }
 // end
+
+// nav drop down menu START
+
+#mynavbar {
+    background: #FFE3FA !important;
+    z-index: 9999 !important;
+}
+
+/* All */
+#mynavbar-menu a {
+    display: block !important;
+    padding: 1rem !important;
+    text-decoration: none !important;
+    background: white !important;
+    z-index: 9999 !important;
+    font-weight: bold;
+}
+
+/* Top-level */
+#mynavbar > #mynavbar-menu > li > a {
+    display: inline-block !important;
+    color: var(--blue-gray-100) !important;
+    background: transparent !important;
+    transition: background var(--transition-timing)
+            var(--transition-timing-function),
+        color var(--transition-timing) var(--transition-timing-function) !important;
+        z-index: 9999 !important;
+}
+
+#mynavbar > #mynavbar-menu > li > a:hover,
+#mynavbar > #mynavbar-menu > li > a:focus {
+    background: #FFE3FA !important;
+    color: black !important;
+    z-index: 9999 !important;
+}
+
+#mynavbar-menu {
+    display: flex !important;
+    z-index: 9999 !important;
+}
+
+#mynavbar-menu,
+#mynavbar-menu ul {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+    z-index: 9999 !important;
+}
+
+/* Nested */
+#mynavbar-menu ul {
+    position: absolute !important;
+    left: 0 !important;
+    top: 100% !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 14rem !important;
+    box-shadow: 0 0.25rem 1.5rem hsla(200, 19%, 18%, 0.05) !important;
+    transition: visibility 0s var(--transition-timing-function)
+            var(--transition-timing),
+        opacity var(--transition-timing) var(--transition-timing-function) !important;
+        z-index: 9999 !important;
+}
+
+#mynavbar-menu ul a {
+    color: var(--blue-gray-600) !important;
+    transition: background var(--transition-timing)
+            var(--transition-timing-function),
+        color var(--transition-timing) var(--transition-timing-function) !important;
+        z-index: 9999 !important;
+}
+
+#mynavbar-menu ul a:hover,
+#mynavbar-menu ul a:focus {
+    background: #FFE3FA !important;
+    color: var(--blue-gray-900) !important;
+    z-index: 9999 !important;
+}
+
+#mynavbar-menu ul > li > ul {
+    left: 100% !important;
+    top: 0 !important;
+    z-index: 9999 !important;
+}
+
+#mynavbar-menu li {
+    position: relative !important;
+    z-index: 9999 !important;
+}
+
+/*
+    HACK: Prevents box shadow from child dropdowns
+    from overlapping its parent dropdown
+*/
+#mynavbar-menu li.has-children > a {
+    position: relative !important;
+    z-index: 9999 !important;
+}
+
+#mynavbar-menu li.has-children > a:after {
+    position: absolute !important;
+    content: "" !important;
+    top: 0 !important;
+    right: 0 !important;
+    height: 100% !important;
+    width: 1rem !important;
+    background: inherit !important;
+    z-index: 999 !important;
+    z-index: 9999 !important;
+}
+/* ENDHACK */
+
+#mynavbar-menu li:hover > ul,
+#mynavbar-menu li:focus-within > ul /* IE11+ only */ {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transition-delay: 0s !important;
+    z-index: 9999 !important;
+}
+
+// end
+
+/* Common styles for both navbars */
+.navbar {
+    display: none; /* Initially hide both navbars */
+}
+
+/* Styles for larger screens */
+@media screen and (min-width: 768px) {
+    #mynavbar {
+        display: block; /* Show the desktop navbar */
+    }
+    #myMobileNavbar {
+        display: none; /* Hide the mobile navbar */
+    }
+}
+
+/* Styles for smaller screens (mobile) */
+@media screen and (max-width: 767px) {
+    #mynavbar {
+        display: none; /* Hide the desktop navbar */
+    }
+    #myMobileNavbar {
+        display: block; /* Show the mobile navbar */
+    }
+}

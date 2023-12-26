@@ -148,6 +148,7 @@ class ProductController extends Controller
             $editPro->meta_title = $data['meta_title'];
             $editPro->meta_keywords = $data['meta_keywords'];
             $editPro->is_featured = !empty($data['is_featured']) ? $data['is_featured'] : "NO";
+            $editPro->is_bestseller = !empty($data['is_bestseller']) ? $data['is_bestseller'] : "NO";
 
             // Upload Product Video
             if ($request->hasFile('product_video')) {

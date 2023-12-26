@@ -154,20 +154,27 @@
                                 placeholder="Type Meta Title"
                                 @if (!empty($editPro['meta_title'])) value="{{ $editPro['meta_title'] }}" @endif>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label for="meta_keywords">Meta Keywords</label>
                             <input type="text" class="form-control" id="meta_keywords" name="meta_keywords"
                                 placeholder="Type Meta Keywords"
                                 @if (!empty($editPro['meta_keywords'])) value="{{ $editPro['meta_keywords'] }}" @endif>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-2">
                             <label for="is_featured">Is Featured</label>
                             <select class="form-control" id="is_featured" name="is_featured">
                                 <option value="YES" @if ($editPro['is_featured'] == 'YES') selected @endif>YES</option>
                                 <option value="NO" @if ($editPro['is_featured'] == 'NO') selected @endif>NO</option>
                             </select>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-2">
+                            <label for="is_bestseller">Is Bestseller</label>
+                            <select class="form-control" id="is_bestseller" name="is_bestseller">
+                                <option value="YES" @if ($editPro['is_bestseller'] == 'YES') selected @endif>YES</option>
+                                <option value="NO" @if ($editPro['is_bestseller'] == 'NO') selected @endif>NO</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
                             <label for="product_video">Video</label>
                             <input type="file" class="form-control" id="product_video" name="product_video">
                             @if (!empty($editPro['product_video']))

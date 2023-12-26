@@ -131,7 +131,7 @@
                     </div>
                 @endforeach
 
-                @foreach ($newProducts as $item)
+                @foreach ($bestSellerProducts as $item)
                     <!-- Product Card Template -->
                     <div class="col-md-3 mb-4 category-product" data-category="best_sellers">
                         <div class="card" style="height: 100%;">
@@ -171,7 +171,7 @@
                     </div>
                 @endforeach
 
-                @foreach ($newProducts as $item)
+                @foreach ($discountProducts as $item)
                     <!-- Product Card Template -->
                     <div class="col-md-3 mb-4 category-product" data-category="discounted_products">
                         <div class="card" style="height: 100%;">

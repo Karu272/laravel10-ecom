@@ -2,15 +2,24 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\BannersController;
 
 use App\Http\Controllers\Front\IndexController;
+use App\Http\Controllers\Front\ProductController as FrontProductController;
+use App\Models\Category;
 
 Route::namespace('App\Http\Controllers\Front')->group(function () {
     // Home page route
     Route::get('/', [IndexController::class, 'index']);
+    // Listing products
+    $catURLs = Category::select('url')->where('status',1)->pluck('url');
+    //dd($catURLs);
+    foreach($catURLs as $key => $url) {
+        Route::get($url, [FrontProductController::class, 'listing']);
+    }
+
 });
 
 Route::prefix('admin')->group(function () {
@@ -47,15 +56,15 @@ Route::prefix('admin')->group(function () {
         Route::get('delete-category/{id}', [CategoryController::class, 'destroy']);
         Route::get('delete-categoryimg/{id}', [CategoryController::class, 'destroycatimg']);
         // Products
-        Route::get('products/products', [ProductController::class, 'index'])->name('admin.products.products');
-        Route::post('update-product-status', [ProductController::class, 'update']);
-        Route::match(['get', 'post'], 'products/add-edit-product/{id?}', [ProductController::class, 'edit'])->name('admin.products.add_edit_product');
-        Route::get('delete-product/{id}', [ProductController::class, 'destroy']);
-        Route::get('delete-product-video/{id}', [ProductController::class, 'destroyproVideo']);
-        Route::get('delete-productimg/{id}', [ProductController::class, 'destroyproimg']);
+        Route::get('products/products', [AdminProductController::class, 'index'])->name('admin.products.products');
+        Route::post('update-product-status', [AdminProductController::class, 'update']);
+        Route::match(['get', 'post'], 'products/add-edit-product/{id?}', [AdminProductController::class, 'edit'])->name('admin.products.add_edit_product');
+        Route::get('delete-product/{id}', [AdminProductController::class, 'destroy']);
+        Route::get('delete-product-video/{id}', [AdminProductController::class, 'destroyproVideo']);
+        Route::get('delete-productimg/{id}', [AdminProductController::class, 'destroyproimg']);
         // Attribute
-        Route::post('update-attribute-status', [ProductController::class, 'updateAtrStatus']);
-        Route::get('delete-attribute/{id}', [ProductController::class, 'destroyattribute']);
+        Route::post('update-attribute-status', [AdminProductController::class, 'updateAtrStatus']);
+        Route::get('delete-attribute/{id}', [AdminProductController::class, 'destroyattribute']);
         // Brands
         Route::get('brands/brands', [BrandController::class, 'index'])->name('admin.brands.brands');
         Route::post('update-brand-status', [BrandController::class, 'update']);
