@@ -31,8 +31,11 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- Costume js -->
-    <script src="{{ url('front/js/front.js') }}"></script>
-    <!-- // Costum js -->
+    <script src="{{ url('front/js/front.js') }}" defer></script>
+    <script>
+        var baseUrl = "{{ url('/') }}";
+    </script>
+    <!-- // Costum js
     <script>
         $(document).ready(function () {
             // Handle change event on the select element
@@ -42,6 +45,7 @@
             });
         });
     </script>
+    -->
 </body>
 
 </html>

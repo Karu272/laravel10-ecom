@@ -36,52 +36,60 @@ class Category extends Model
 
     public static function categoryDetails($url)
     {
-        // Select specific columns from the Category model and eager load the 'subcategories' relationship
+        // Retrieve the first matching category
         $categoryDetails = Category::select('id', 'parent_id', 'category_name', 'url')
             ->with('subcategories.subcategories') // Eager load subsubcategories
             ->where('url', $url) // Filter by the URL parameter
-            ->first() // Retrieve the first matching category
-            ->toArray(); // Convert the result to an array
+            ->first(); // Retrieve the first matching category
 
-        // Initialize an array to store category IDs
-        $catIDs = array();
+        // Check if a category was found
+        if ($categoryDetails) {
+            // Convert the result to an array
+            $categoryDetails = $categoryDetails->toArray();
 
-        // Add the main category ID to the $catIDs array
-        $catIDs[] = $categoryDetails['id'];
+            // Initialize an array to store category IDs
+            $catIDs = array();
 
-        // Loop through subcategories and add their IDs to the $catIDs array
-        foreach ($categoryDetails['subcategories'] as $subCat) {
-            $catIDs[] = $subCat['id'];
+            // Add the main category ID to the $catIDs array
+            $catIDs[] = $categoryDetails['id'];
 
-            // Loop through subsubcategories and add their IDs to the $catIDs array
-            foreach ($subCat['subcategories'] as $subSubCat) {
-                $catIDs[] = $subSubCat['id'];
+            // Loop through subcategories and add their IDs to the $catIDs array
+            foreach ($categoryDetails['subcategories'] as $subCat) {
+                $catIDs[] = $subCat['id'];
+
+                // Loop through subsubcategories and add their IDs to the $catIDs array
+                foreach ($subCat['subcategories'] as $subSubCat) {
+                    $catIDs[] = $subSubCat['id'];
+                }
             }
-        }
 
-        // Initialize breadcrumbs string
-        $breadcrumbs = '';
+            // Initialize breadcrumbs string
+            $breadcrumbs = '';
 
-        // Start with the current category
-        $currentCategory = $categoryDetails;
+            // Start with the current category
+            $currentCategory = $categoryDetails;
 
-        // Loop through each level of the hierarchy until the parent_id is 0
-        while ($currentCategory['parent_id'] !== 0) {
+            // Loop through each level of the hierarchy until the parent_id is 0
+            while ($currentCategory['parent_id'] !== 0) {
+                $breadcrumbs = '<a href="' . url($currentCategory['url']) . '"> ' . $currentCategory['category_name'] . ' </a>&nbsp;&rarr;&nbsp;' . $breadcrumbs;
+
+                // Fetch the parent category
+                $currentCategory = Category::select('id', 'parent_id', 'category_name', 'url')->find($currentCategory['parent_id'])->toArray();
+            }
+
+            // Add the main category to the breadcrumbs
             $breadcrumbs = '<a href="' . url($currentCategory['url']) . '"> ' . $currentCategory['category_name'] . ' </a>&nbsp;&rarr;&nbsp;' . $breadcrumbs;
 
-            // Fetch the parent category
-            $currentCategory = Category::select('id', 'parent_id', 'category_name', 'url')->find($currentCategory['parent_id'])->toArray();
+            // Return an array containing category IDs and the complete category details
+            return [
+                'catIDs' => $catIDs,
+                'categoryDetails' => $categoryDetails,
+                'breadcrumbs' => $breadcrumbs,
+            ];
         }
 
-        // Add the main category to the breadcrumbs
-        $breadcrumbs = '<a href="' . url($currentCategory['url']) . '"> ' . $currentCategory['category_name'] . ' </a>&nbsp;&rarr;&nbsp;' . $breadcrumbs;
-
-        // Return an array containing category IDs and the complete category details
-        return array(
-            'catIDs' => $catIDs,
-            'categoryDetails' => $categoryDetails,
-            'breadcrumbs' => $breadcrumbs,
-        );
+        // Return an empty array if no category is found
+        return [];
     }
 
 }

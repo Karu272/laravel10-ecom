@@ -1,41 +1,28 @@
 $(document).ready(function () {
-    //------------- Sort  ------
- // Handle change event on the select element
- $('#sort').on('change', function() {
-    // Get the selected sort option
-    var selectedSort = $(this).val();
+     //------------- Sort ------
+     var baseUrl = "{{ url('/') }}";
+     $('#sort').on('change', function () {
+        var selectedSort = $(this).val();
 
-    // Sort the products based on the selected option
-    sortProducts(selectedSort);
-});
-
-// Function to sort products based on the selected option
-function sortProducts(sortOption) {
-    var container = $('#products-listing-container');
-
-    // Clone the product cards
-    var products = container.find('.category-product').clone();
-
-    // Sort the cloned products based on the selected option
-    if (sortOption === 'product_latest') {
-        products.sort(function(a, b) {
-            return parseInt($(b).data('product-id')) - parseInt($(a).data('product-id'));
+        // Make an AJAX request
+        $.ajax({
+            url: baseUrl + '/ajax-listing', // Use the baseUrl variable to construct the URL
+            type: 'GET',
+            data: { sort: selectedSort },
+            success: function (response) {
+                // Check if 'catIDs' key is present in the response
+                if ('catIDs' in response) {
+                    // Your existing logic here
+                } else {
+                    // Handle the case where 'catIDs' key is not present
+                    console.error('Category not found in the response');
+                }
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
         });
-    } else if (sortOption === 'lowest_price') {
-        products.sort(function(a, b) {
-            return parseFloat($(a).data('product-price')) - parseFloat($(b).data('product-price'));
-        });
-    } else if (sortOption === 'best_selling') {
-        // Add your logic for best selling sorting
-        // ...
-    } else if (sortOption === 'highest_price') {
-        // Add your logic for highest price sorting
-        // ...
-    }
-
-    // Empty the container and append the sorted products
-    container.empty().append(products);
-}
+    });
     // --------------- END --------------
 
     // ------- product card start -------

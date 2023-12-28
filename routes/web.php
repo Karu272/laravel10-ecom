@@ -19,6 +19,7 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     foreach($catURLs as $key => $url) {
         Route::get($url, [FrontProductController::class, 'listing']);
     }
+    Route::get('/ajax-listing', 'ProductController@ajaxListing')->name('ajax-listing');
 
 });
 
