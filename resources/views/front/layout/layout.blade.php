@@ -32,10 +32,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- Costume js -->
     <script src="{{ url('front/js/front.js') }}" defer></script>
-    <script>
-        var baseUrl = "{{ url('/') }}";
-    </script>
-    <!-- // Costum js
+    <!-- // Costum js -->
     <script>
         $(document).ready(function () {
             // Handle change event on the select element
@@ -45,7 +42,6 @@
             });
         });
     </script>
-    -->
 </body>
 
 </html>

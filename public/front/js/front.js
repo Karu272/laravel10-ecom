@@ -1,28 +1,6 @@
 $(document).ready(function () {
      //------------- Sort ------
-     var baseUrl = "{{ url('/') }}";
-     $('#sort').on('change', function () {
-        var selectedSort = $(this).val();
 
-        // Make an AJAX request
-        $.ajax({
-            url: baseUrl + '/ajax-listing', // Use the baseUrl variable to construct the URL
-            type: 'GET',
-            data: { sort: selectedSort },
-            success: function (response) {
-                // Check if 'catIDs' key is present in the response
-                if ('catIDs' in response) {
-                    // Your existing logic here
-                } else {
-                    // Handle the case where 'catIDs' key is not present
-                    console.error('Category not found in the response');
-                }
-            },
-            error: function (error) {
-                console.error('Error:', error);
-            }
-        });
-    });
     // --------------- END --------------
 
     // ------- product card start -------
