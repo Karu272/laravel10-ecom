@@ -29,7 +29,6 @@ class IndexController extends Controller
             ->limit(4)
             ->get()
             ->toArray();
-        //dd($randomProducts);
 
         // Last 4
         $newProducts = Product::with(['brand', 'images'])

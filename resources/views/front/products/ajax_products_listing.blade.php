@@ -1,6 +1,6 @@
 @foreach ($categoryProducts as $item)
     <!-- Product 1 -->
-    <div class="col-md-6 col-lg-3 mb-4">
+    <div class="col-md-6 col-lg-3 mb-4 ">
         <br>
         <div class="card" style="height: 100%;">
             <!-- Product Image -->
