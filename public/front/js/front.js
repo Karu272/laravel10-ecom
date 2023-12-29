@@ -1,10 +1,10 @@
 $(document).ready(function () {
      //------------- Sort ------
-
+/*
     $("#sort").on("change", function() {
         this.form.submit();
     });
-
+*/
     // --------------- END --------------
 
     // ------- product card start -------

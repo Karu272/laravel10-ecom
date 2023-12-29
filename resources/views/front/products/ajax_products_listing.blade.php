@@ -44,3 +44,11 @@
         </div>
     </div>
 @endforeach
+<br>
+<div class="here">
+    @if (isset($request['sort']))
+        {{ $categoryProducts->appends(['sort' => $request['sort']])->links() }}
+    @else
+        {{ $categoryProducts->links() }}
+    @endif
+</div>

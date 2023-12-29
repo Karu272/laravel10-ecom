@@ -4,15 +4,17 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 use Route;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Banner;
 use Illuminate\Pagination\Paginator;
 
+
 class ProductController extends Controller
 {
-    public function listing()
+    public function listing(Request $request)
     {
         // Getting the banners
         $homeSliderBanner = Banner::where('type', 'slider')->where('status', 1)->orderBy('sort', 'ASC')->get()->toArray();
@@ -32,25 +34,46 @@ class ProductController extends Controller
                 ->whereIn('category_id', $getCategoriesDetails['catIDs'])
                 ->where('status', 1);
 
-            if (isset($_GET['sort']) && !empty($_GET['sort'])) {
-                if ($_GET['sort'] == "product_latest") {
-                    $categoryProducts->orderByDesc('id');
-                } else if ($_GET['sort'] == "lowest_price") {
-                    $categoryProducts->orderBy('final_price', 'ASC');
-                } else if ($_GET['sort'] == "best_selling") {
-                    $categoryProducts->where('is_bestseller', 'YES');
-                } else if ($_GET['sort'] == "highest_price") {
-                    $categoryProducts->orderBy('final_price', 'DESC');
-                } else if ($_GET['sort'] == "featured_items") {
-                    $categoryProducts->where('is_featured', 'YES');
-                } else if ($_GET['sort'] == "discounted_items") {
-                    $categoryProducts->where('product_discount', '>', 0);
+            // Handle sorting based on the 'sort' parameter
+            if ($request->has('sort') && !empty($request->input('sort'))) {
+                $sortValue = $request->input('sort');
+
+                switch ($sortValue) {
+                    case "product_latest":
+                        $categoryProducts->orderByDesc('id');
+                        break;
+                    case "lowest_price":
+                        $categoryProducts->orderBy('final_price', 'ASC');
+                        break;
+                    case "best_selling":
+                        $categoryProducts->where('is_bestseller', 'YES');
+                        break;
+                    case "highest_price":
+                        $categoryProducts->orderBy('final_price', 'DESC');
+                        break;
+                    case "featured_items":
+                        $categoryProducts->where('is_featured', 'YES');
+                        break;
+                    case "discounted_items":
+                        $categoryProducts->where('product_discount', '>', 0);
+                        break;
+                    default:
+                        // Handle other cases or no sorting
+                        break;
                 }
             }
 
             $categoryProducts = $categoryProducts->paginate(4);
 
-            // If it's a regular request, return the view as usual
+            if($request->ajax()){
+                return response()->json([
+                    'view' => (String)View::make('front.products.ajax_products_listing', compact('getCategoriesDetails',
+                    'categoryProducts',
+                    'categories',
+                    'homeSliderBanner',
+                    'url'))
+                ]);
+            }else {
             return view('front.products.listing', compact(
                 'getCategoriesDetails',
                 'categoryProducts',
@@ -58,6 +81,7 @@ class ProductController extends Controller
                 'homeSliderBanner',
                 'url',
             ));
+            }
 
         } else {
             abort(404);

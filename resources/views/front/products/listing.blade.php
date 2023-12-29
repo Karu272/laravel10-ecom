@@ -7,7 +7,8 @@
             <nav class="mt-4" aria-label="breadcrumb">
                 <ol style="background-color: white;" class="breadcrumb">
                     <form name="sortProducts" id="sortProducts">
-                        <select name="sort" id="sort" class="select_item">
+                        <input type="hidden" name="url" id="url" value="{{ $url }}">
+                        <select name="sort" id="sort" class="select_item getsort">
                             <option value="">Sorting</option>
                             <option value="product_latest" @if (isset($_GET['sort']) && $_GET['sort'] == 'product_latest') selected="" @endif>Latest
                                 Products</option>
@@ -29,10 +30,8 @@
                 </ol>
             </nav>
         </div>
-        <div class="row">
+        <div class="row" id="appendProducts">
             @include('front.products.ajax_products_listing')
         </div>
-        <br>
-        <div class="here">{{ $categoryProducts->links() }}</div>
     </div>
 @endsection
