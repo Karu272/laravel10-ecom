@@ -1,15 +1,9 @@
 $(document).ready(function () {
      //------------- Sort ------
-     $.ajaxSetup({
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-        }
-    });
 
     $("#sort").on("change", function() {
         this.form.submit();
     });
-
 
     // --------------- END --------------
 
