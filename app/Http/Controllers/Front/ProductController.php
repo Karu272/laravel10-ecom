@@ -56,6 +56,7 @@ class ProductController extends Controller
                 'categoryProducts',
                 'categories',
                 'homeSliderBanner',
+                'url',
             ));
 
         } else {
