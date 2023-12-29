@@ -12,7 +12,7 @@ use Illuminate\Pagination\Paginator;
 
 class ProductController extends Controller
 {
-    public function listing(Request $request)
+    public function listing()
     {
         // Getting the banners
         $homeSliderBanner = Banner::where('type', 'slider')->where('status', 1)->orderBy('sort', 'ASC')->get()->toArray();
@@ -32,19 +32,20 @@ class ProductController extends Controller
                 ->whereIn('category_id', $getCategoriesDetails['catIDs'])
                 ->where('status', 1);
 
-            // Check the sort option
-            if ($request->sort == "product_latest") {
-                $categoryProducts->orderByDesc('id');
-            } else if ($request->sort == "lowest_price") {
-                $categoryProducts->orderBy('final_price', 'ASC');
-            } else if ($request->sort == "best_selling") {
-                $categoryProducts->where('is_bestseller', 'YES');
-            } else if ($request->sort == "highest_price") {
-                $categoryProducts->orderBy('final_price', 'DESC');
-            } else if ($request->sort == "featured_items") {
-                $categoryProducts->where('is_featured', 'YES');
-            } else if ($request->sort == "discounted_items") {
-                $categoryProducts->where('product_discount', '>', 0);
+            if (isset($_GET['sort']) && !empty($_GET['sort'])) {
+                if ($_GET['sort'] == "product_latest") {
+                    $categoryProducts->orderByDesc('id');
+                } else if ($_GET['sort'] == "lowest_price") {
+                    $categoryProducts->orderBy('final_price', 'ASC');
+                } else if ($_GET['sort'] == "best_selling") {
+                    $categoryProducts->where('is_bestseller', 'YES');
+                } else if ($_GET['sort'] == "highest_price") {
+                    $categoryProducts->orderBy('final_price', 'DESC');
+                } else if ($_GET['sort'] == "featured_items") {
+                    $categoryProducts->where('is_featured', 'YES');
+                } else if ($_GET['sort'] == "discounted_items") {
+                    $categoryProducts->where('product_discount', '>', 0);
+                }
             }
 
             $categoryProducts = $categoryProducts->paginate(4);
@@ -55,7 +56,7 @@ class ProductController extends Controller
                 'categoryProducts',
                 'categories',
                 'homeSliderBanner',
-            ))->with('sort', $request->sort);
+            ));
 
         } else {
             abort(404);

@@ -16,8 +16,8 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     // Listing products
     $catURLs = Category::select('url')->where('status',1)->pluck('url');
     //dd($catURLs);
-    foreach($catURLs as $key => $url) {
-        Route::get($url, [FrontProductController::class, 'listing']);
+    foreach($catURLs as $url) {
+        Route::get('/' . $url, [FrontProductController::class, 'listing']);
     }
 
 });
