@@ -26,6 +26,8 @@
                 <p class="card-text text-muted category-brand">{{ $item['brand']['brand_name'] }}</p>
                 <!-- Product Name -->
                 <h5 class="card-title category-product-name">{{ $item['product_name'] }}</h5>
+                <!-- Product Color -->
+                <p class="card-text text-muted category-brand">{{ $item['family_color'] }}</p>
                 <!-- Prices -->
                 <div class="d-flex justify-content-between">
                     @if ($item['product_discount'] > 0)
@@ -44,11 +46,19 @@
         </div>
     </div>
 @endforeach
+
 <br>
-<div class="here">
-    @if (isset($request['sort']))
-        {{ $categoryProducts->appends(['sort' => $request['sort']])->links() }}
-    @else
-        {{ $categoryProducts->links() }}
-    @endif
-</div>
+<?php if(!isset($_GET['color'])){
+    $_GET['color'] = "";
+    }
+    if(!isset($_GET['sort'])){
+    $_GET['sort'] = "";
+    }
+    ?>
+
+    {{ $categoryProducts->appends([
+        'sort' => $_GET['sort'],
+        'color' => $_GET['color'],
+    ])->links() }}
+
+

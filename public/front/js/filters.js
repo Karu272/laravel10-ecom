@@ -101,6 +101,14 @@ $(document).ready(function () {
         RefreshFilters("yes");
     });
 
+    $(document).on("click", ".filterAjax", function () {
+        // ... other code ...
+
+        console.log("Selected color values:", queryStringObject["color"]);
+
+        // ... other code ...
+    });
+
     function RefreshFilters(type) {
         var queryStringObject = {};
 
@@ -142,45 +150,57 @@ $(document).ready(function () {
         $("body").css({ overflow: "hidden" });
         let searchParams = new URLSearchParams(window.location.search);
 
-        var queryValue = "";
+        if (searchParams.has("q")) {
+            let parameterQuery = searchParams.get("q");
+            var queryString = "?q=" + parameterQuery;
+        } else {
+            var queryString = "";
+        }
 
         for (var key in queryStringObject) {
+            if (queryString === "") {
+                queryString += "?" + key + "=";
+            } else {
+                queryString += "&" + key + "=";
+            }
+
+            var queryValue = "";
+
             for (var i in queryStringObject[key]) {
-                if (queryValue == "") {
+                if (queryValue === "") {
                     queryValue += queryStringObject[key][i];
                 } else {
                     queryValue += "~" + queryStringObject[key][i];
                 }
             }
+            queryString += queryValue;
         }
-
-        if (queryValue !== "") {
-            searchParams.set("sort", queryValue);
-        } else {
-            searchParams.delete("sort");
-        }
-
-        var newurl =
-            window.location.protocol +
-            "//" +
-            window.location.host +
-            window.location.pathname +
-            "?" +
-            searchParams.toString();
 
         if (history.pushState) {
-            window.history.pushState({ path: newurl }, "", newurl);
-        }
+            var newurl =
+                window.location.protocol +
+                "//" +
+                window.location.host +
+                window.location.pathname;
 
-        $.ajax({
-            url: newurl,
-            type: "get",
-            dataType: "json",
-            success: function (resp) {
-                $("#appendProducts").html(resp.view);
-                document.body.style.overflow = "scroll";
-            },
-            error: function () {},
-        });
+            if (queryString !== "") {
+                if (newurl.indexOf("?") >= 0) {
+                    newurl = newurl + "&" + queryString;
+                } else {
+                    newurl = newurl + queryString;
+                }
+            }
+
+            $.ajax({
+                url: newurl,
+                type: "get",
+                dataType: "json",
+                success: function (resp) {
+                    $("#appendProducts").html(resp.view);
+                    document.body.style.overflow = "scroll";
+                },
+                error: function () {},
+            });
+        }
     }
 });

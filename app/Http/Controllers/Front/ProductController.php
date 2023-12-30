@@ -9,6 +9,7 @@ use Route;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Banner;
+use App\Models\ProductsFilter;
 use Illuminate\Pagination\Paginator;
 
 
@@ -25,12 +26,13 @@ class ProductController extends Controller
         $url = Route::getFacadeRoot()->current()->uri;
 
         $categoryCount = Category::where(['url' => $url, 'status' => 1])->count();
+
         if ($categoryCount > 0) {
             // Get Category details
             $getCategoriesDetails = Category::categoryDetails($url);
+
             // Get Categories and sub products categories
             $categoryProducts = Product::with(['brand', 'images'])
-                ->select('products.*', 'final_price', 'is_featured', 'is_bestseller', 'product_discount')
                 ->whereIn('category_id', $getCategoriesDetails['catIDs'])
                 ->where('status', 1);
 
@@ -63,26 +65,41 @@ class ProductController extends Controller
                 }
             }
 
+           if(isset($request['color']) && !empty($request['color'])){
+            $colors = explode('~', $request['color']);
+            $categoryProducts->whereIn('products.family_color', $colors);
+           }
+
+
             $categoryProducts = $categoryProducts->paginate(4);
 
-            if($request->ajax()){
+            if ($request->ajax()) {
+                // If it's an Ajax request, return JSON
                 return response()->json([
-                    'view' => (String)View::make('front.products.ajax_products_listing', compact('getCategoriesDetails',
-                    'categoryProducts',
-                    'categories',
-                    'homeSliderBanner',
-                    'url'))
+                    'view' => (string) View::make(
+                        'front.products.ajax_products_listing',
+                        compact(
+                            'getCategoriesDetails',
+                            'categoryProducts',
+                            'categories',
+                            'homeSliderBanner',
+                            'url',
+                        )
+                    )
                 ]);
-            }else {
-            return view('front.products.listing', compact(
-                'getCategoriesDetails',
-                'categoryProducts',
-                'categories',
-                'homeSliderBanner',
-                'url',
-            ));
+            } else {
+                // If it's a regular request, return HTML
+                return view(
+                    'front.products.listing',
+                    compact(
+                        'getCategoriesDetails',
+                        'categoryProducts',
+                        'categories',
+                        'homeSliderBanner',
+                        'url',
+                    )
+                );
             }
-
         } else {
             abort(404);
         }
