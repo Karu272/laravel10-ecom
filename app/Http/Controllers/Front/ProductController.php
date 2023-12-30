@@ -12,7 +12,6 @@ use App\Models\Banner;
 use App\Models\ProductsFilter;
 use Illuminate\Pagination\Paginator;
 
-
 class ProductController extends Controller
 {
     public function listing(Request $request)
@@ -65,11 +64,13 @@ class ProductController extends Controller
                 }
             }
 
-           if(isset($request['color']) && !empty($request['color'])){
-            $colors = explode('~', $request['color']);
-            $categoryProducts->whereIn('products.family_color', $colors);
-           }
+            // Fetch colors using ProductsFilter model
+            $colors = ProductsFilter::getColors($getCategoriesDetails['catIDs']);
 
+            if (isset($request['color']) && !empty($request['color'])) {
+                $colors = explode('~', $request['color']);
+                $categoryProducts->whereIn('products.family_color', $colors);
+            }
 
             $categoryProducts = $categoryProducts->paginate(4);
 
@@ -84,6 +85,7 @@ class ProductController extends Controller
                             'categories',
                             'homeSliderBanner',
                             'url',
+                            'colors',
                         )
                     )
                 ]);
@@ -97,6 +99,7 @@ class ProductController extends Controller
                         'categories',
                         'homeSliderBanner',
                         'url',
+                        'colors',
                     )
                 );
             }
@@ -104,5 +107,4 @@ class ProductController extends Controller
             abort(404);
         }
     }
-
 }

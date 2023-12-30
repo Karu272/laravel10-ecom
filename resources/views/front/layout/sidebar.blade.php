@@ -1,4 +1,3 @@
-<?php use App\Models\ProductsFilter; ?>
 @if (!request()->is('/') && !request()->is(url('/')))
     <br>
     <div class="col-md-3 d-none d-md-block">
@@ -63,9 +62,8 @@
                 <h2 style="text-align: center;" class="ml-sm-0">Color</h2>
                 <div class="row mb-5 ml-sm-0">
                     <div class="col-md-12">
-                        <?php $getColors = ProductsFilter::getColors($getCategoriesDetails['catIDs']); ?>
                         <ul class="nav flex-column">
-                            @foreach ($getColors as $key => $color)
+                            @foreach ($colors as $key => $color)
                                 <li class="d-flex align-items-center">
                                     <input type="checkbox" id="color{{ $key }}" name="color"
                                         value="{{ $color }}" class="filterAjax">

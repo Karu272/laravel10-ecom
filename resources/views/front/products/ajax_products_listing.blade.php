@@ -48,14 +48,14 @@
 @endforeach
 
 <br>
-<?php if(!isset($_GET['color'])){
+<?php if
+(!isset($_GET['color'])){
     $_GET['color'] = "";
     }
     if(!isset($_GET['sort'])){
     $_GET['sort'] = "";
     }
-    ?>
-
+?>
     {{ $categoryProducts->appends([
         'sort' => $_GET['sort'],
         'color' => $_GET['color'],

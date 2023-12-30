@@ -42,59 +42,59 @@
     <!-- Flex container for brand and toggle button -->
     <div class="d-flex justify-content-between w-100">
         <!-- Navbar brand -->
-        <a class="navbar-brand" href="{{ url('/') }}"><img style="width: 20%;" src="{{ asset('front/img/logos/toplogo.png') }}"
-            alt="toplogo"></a>
+        <a class="navbar-brand" href="{{ url('/') }}"><img style="width: 20%;"
+                src="{{ asset('front/img/logos/toplogo.png') }}" alt="toplogo"></a>
         <!-- Collapse button -->
         <button class="navbar-toggler toggler-example" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false"
-                aria-label="Toggle navigation"><span class="dark-blue-text"><i class="fas fa-bars fa-1x"></i></span></button>
+            data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false"
+            aria-label="Toggle navigation"><span class="dark-blue-text"><i
+                    class="fas fa-bars fa-1x"></i></span></button>
     </div>
     <!-- Collapsible content -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent1">
         <!-- Links -->
         <ul class="navbar-nav">
             @foreach ($categories as $category)
-                        <li class="align-self-center nav-item">
-                            <a class="nav-link mb-1 boldtxt" data-toggle="collapse"
-                                href="#{{ strtolower(str_replace(' ', '', $category['category_name'])) }}"
-                                aria-expanded="false">
-                                &hearts;&nbsp;{{ $category['category_name'] }}
-                            </a>
-                            <div class="collapse"
-                                id="{{ strtolower(str_replace(' ', '', $category['category_name'])) }}">
-                                @if (isset($category['subcategories']) && count($category['subcategories']) > 0)
-                                    <ul class="nav flex-column ml-3">
-                                        @foreach ($category['subcategories'] as $subcategory)
-                                            <li class="nav-item">
-                                                <a class="nav-link mb-1" data-toggle="collapse"
-                                                    href="#{{ strtolower(str_replace(' ', '', $subcategory['category_name'])) }}"
-                                                    aria-expanded="false">
-                                                    &nbsp;&rarr;{{ $subcategory['category_name'] }}
-                                                </a>
-                                                <div class="collapse"
-                                                    id="{{ strtolower(str_replace(' ', '', $subcategory['category_name'])) }}">
-                                                    @if (isset($subcategory['subcategories']) && count($subcategory['subcategories']) > 0)
-                                                        <ul class="nav flex-column ml-3">
-                                                            @foreach ($subcategory['subcategories'] as $subsubcategory)
-                                                                <li class="nav-item">
-                                                                    <a class="nav-link mb-1"
-                                                                        href="{{ $subsubcategory['url'] }}">
-                                                                        &nbsp;&rarr;{{ $subsubcategory['category_name'] }}
-                                                                    </a>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    @endif
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @endif
-                            </div>
-                        </li>
-                    @endforeach
+                <li class="align-self-center nav-item">
+                    <a class="nav-link mb-1 boldtxt" data-toggle="collapse"
+                        href="#{{ strtolower(str_replace(' ', '', $category['category_name'])) }}"
+                        aria-expanded="false">
+                        &hearts;&nbsp;{{ $category['category_name'] }}
+                    </a>
+                    <div class="collapse" id="{{ strtolower(str_replace(' ', '', $category['category_name'])) }}">
+                        @if (isset($category['subcategories']) && count($category['subcategories']) > 0)
+                            <ul class="nav flex-column ml-3">
+                                @foreach ($category['subcategories'] as $subcategory)
+                                    <li class="nav-item">
+                                        <a class="nav-link mb-1" data-toggle="collapse"
+                                            href="#{{ strtolower(str_replace(' ', '', $subcategory['category_name'])) }}"
+                                            aria-expanded="false">
+                                            &nbsp;&rarr;{{ $subcategory['category_name'] }}
+                                        </a>
+                                        <div class="collapse"
+                                            id="{{ strtolower(str_replace(' ', '', $subcategory['category_name'])) }}">
+                                            @if (isset($subcategory['subcategories']) && count($subcategory['subcategories']) > 0)
+                                                <ul class="nav flex-column ml-3">
+                                                    @foreach ($subcategory['subcategories'] as $subsubcategory)
+                                                        <li class="nav-item">
+                                                            <a class="nav-link mb-1"
+                                                                href="{{ $subsubcategory['url'] }}">
+                                                                &nbsp;&rarr;{{ $subsubcategory['category_name'] }}
+                                                            </a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            @endif
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </div>
+                </li>
+            @endforeach
         </ul>
-        <!-- Links -->
+        <!-- // Links -->
     </div>
     <!-- Collapsible content -->
 </nav>
