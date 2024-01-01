@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Product;
+use App\Models\Attribute;
+use App\Models\Brand;
 
 class ProductsFilter extends Model
 {
@@ -16,5 +18,20 @@ class ProductsFilter extends Model
         $getProductColors = Product::select('family_color')->whereIn('id',$getProductIds)->groupBy('family_color')->pluck('family_color');
         // dd($getProductColors);
         return $getProductColors;
+    }
+
+    public static function getSizes($catIds) {
+        $getProductIds = Product::select('id')->whereIn('category_id',$catIds)->pluck('id');
+        $getProductSizes = Attribute::select('size')->where('status', 1)->whereIn('product_id',$getProductIds)->groupBy('size')->pluck('size');
+         // dd($getProductSizes);
+        return $getProductSizes;
+    }
+
+    public static function getBrands($catIds) {
+        $getProductIds = Product::select('id')->whereIn('category_id',$catIds)->pluck('id');
+        $getProductBrandIds = Product::select('brand_id')->whereIn('id',$getProductIds)->groupBy('brand_id')->pluck('brand_id');
+        $getProductBrands = Brand::select('id','brand_name')->where('status', 1)->whereIn('id', $getProductBrandIds)->orderBy('brand_name','ASC')->get()->toArray();
+        //dd($getProductBrands);
+        return $getProductBrands;
     }
 }

@@ -48,17 +48,32 @@
 @endforeach
 
 <br>
-<?php if
-(!isset($_GET['color'])){
+<?php
+if(!isset($_GET['color'])){
     $_GET['color'] = "";
     }
-    if(!isset($_GET['sort'])){
+if(!isset($_GET['sort'])){
     $_GET['sort'] = "";
     }
+if(!isset($_GET['size'])){
+    $_GET['size'] = "";
+    }
+if(!isset($_GET['brand'])){
+    $_GET['brand'] = "";
+    }
+if(!isset($_GET['price'])){
+    $_GET['price'] = "";
+    }
 ?>
+<div class="paginate">
     {{ $categoryProducts->appends([
         'sort' => $_GET['sort'],
         'color' => $_GET['color'],
+        'size' => $_GET['size'],
+        'brand' => $_GET['brand'],
+        'price' => $_GET['price'],
     ])->links() }}
+</div>
+
 
 
