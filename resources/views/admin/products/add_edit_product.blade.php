@@ -234,7 +234,7 @@
                             </select>
                         </div>
                         <div class="form-group col-md-2">
-                            <label for="occassion">Occasion</label>
+                            <label for="occassion">Occassion</label>
                             <select name="occassion" class="form-control">
                                 <option value="">Select</option>
                                 @foreach ($productsFilters['occassionArray'] as $occassion)

@@ -1,10 +1,9 @@
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     color: black;
-    font-family: Georgia, serif;
-    font-weight: bold;
 }
 
 a {
@@ -62,7 +61,7 @@ a:visited {
 // nav drop down menu START
 
 #mynavbar {
-    background: #ffe3fa !important;
+    background: #FFE3FA !important;
     z-index: 9999 !important;
 }
 
@@ -84,12 +83,12 @@ a:visited {
     transition: background var(--transition-timing)
             var(--transition-timing-function),
         color var(--transition-timing) var(--transition-timing-function) !important;
-    z-index: 9999 !important;
+        z-index: 9999 !important;
 }
 
 #mynavbar > #mynavbar-menu > li > a:hover,
 #mynavbar > #mynavbar-menu > li > a:focus {
-    background: #ffe3fa !important;
+    background: #FFE3FA !important;
     color: black !important;
     z-index: 9999 !important;
 }
@@ -119,7 +118,7 @@ a:visited {
     transition: visibility 0s var(--transition-timing-function)
             var(--transition-timing),
         opacity var(--transition-timing) var(--transition-timing-function) !important;
-    z-index: 9999 !important;
+        z-index: 9999 !important;
 }
 
 #mynavbar-menu ul a {
@@ -127,12 +126,12 @@ a:visited {
     transition: background var(--transition-timing)
             var(--transition-timing-function),
         color var(--transition-timing) var(--transition-timing-function) !important;
-    z-index: 9999 !important;
+        z-index: 9999 !important;
 }
 
 #mynavbar-menu ul a:hover,
 #mynavbar-menu ul a:focus {
-    background: #ffe3fa !important;
+    background: #FFE3FA !important;
     color: var(--blue-gray-900) !important;
     z-index: 9999 !important;
 }
@@ -205,15 +204,3 @@ a:visited {
         display: block; /* Show the mobile navbar */
     }
 }
-
-/* Paginator */
-.paginate {
-    position: relative;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgb(252, 243, 255);
-    padding: 10px;
-    z-index: 999;
-}
-/* // Paginator */
