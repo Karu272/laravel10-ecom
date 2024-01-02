@@ -8,6 +8,7 @@
         <div class="container-fluid">
             <div style="border: 1px solid #ccc; box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.2);">
                 <h2 style="text-align: center;" class="ml-sm-0">Categories</h2>
+                <hr>
                 <!-- Add your side menu content here -->
                 <div class="row mb-5 ml-sm-0">
                     <div class="col-md-12">
@@ -60,6 +61,7 @@
             <br>
             <div style="border: 1px solid #ccc; box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.2);">
                 <h2 style="text-align: center;" class="ml-sm-0">Color</h2>
+                <hr>
                 <div class="row mb-5 ml-sm-0">
                     <div class="col-md-12">
                         <ul class="nav flex-column">
@@ -71,6 +73,102 @@
                                         style="background-color: {{ $color }}; width: 20px; height: 20px; border: 1px solid #000;"
                                         for="color{{ $key }}" title="{{ $color }}"
                                         class="ml-2"></label>&nbsp;&nbsp;{{ $color }}
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div style="border: 1px solid #ccc; box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.2);">
+                <h2 style="text-align: center;" class="ml-sm-0">Sizes</h2>
+                <hr>
+                <div class="row mb-5 ml-sm-0">
+                    <div class="col-md-12">
+                        <ul class="nav flex-column">
+                            @foreach ($sizes as $key => $size)
+                            <?php
+                            if (isset($_GET['size']) && !empty($_GET['size'])) {
+                                    $sizes = explode('~', $_GET['size']);
+                                    if(!empty($sizes) &&  in_array($size, $sizes)){
+                                        $sizecheck = "checked";
+                                    }else{
+                                        $sizecheck = "";
+                                    }
+                                }else {
+                                    $sizecheck = "";
+                                }
+                            ?>
+                                <li class="d-flex align-items-center">
+                                    <input type="checkbox" id="size{{ $key }}" name="size"
+                                        value="{{ $size }}" class="filterAjax" {{ $sizecheck }}>
+                                    <label
+                                        for="size{{ $key }}" title="{{ $size }}"
+                                        class="ml-2"></label>&nbsp;&nbsp;{{ $size }}
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div style="border: 1px solid #ccc; box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.2);">
+                <h2 style="text-align: center;" class="ml-sm-0">Brands</h2>
+                <hr>
+                <div class="row mb-5 ml-sm-0">
+                    <div class="col-md-12">
+                        <ul class="nav flex-column">
+                            @foreach ($brands as $brand)
+                            <?php
+                            if (isset($_GET['brand']) && !empty($_GET['brand'])) {
+                                    $brands = explode('~', $_GET['brand']);
+                                    if(!empty($brands) &&  in_array($brand, $brands)){
+                                        $brandcheck = "checked";
+                                    }else{
+                                        $brandcheck = "";
+                                    }
+                                }else {
+                                    $brandcheck = "";
+                                }
+                            ?>
+                                <li class="d-flex align-items-center">
+                                    <input type="checkbox" id="brand{{ $key }}" name="brand"
+                                        value="{{ $brand['id'] }}" class="filterAjax" {{ $brandcheck }}>
+                                    <label
+                                        for="brand{{ $key }}"
+                                        class="ml-2"></label>&nbsp;&nbsp;{{ $brand['brand_name'] }}
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div style="border: 1px solid #ccc; box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.2);">
+                <h2 style="text-align: center;" class="ml-sm-0">Prices</h2>
+                <hr>
+                <div class="row mb-5 ml-sm-0">
+                    <div class="col-md-12">
+                        <ul class="nav flex-column">
+                            @foreach ($prices as $price)
+                            <?php
+                            if (isset($_GET['price']) && !empty($_GET['price'])) {
+                                    $prices = explode('~', $_GET['price']);
+                                    if(!empty($prices) &&  in_array($price, $prices)){
+                                        $pricecheck = "checked";
+                                    }else{
+                                        $pricecheck = "";
+                                    }
+                                }else {
+                                    $pricecheck = "";
+                                }
+                            ?>
+                                <li class="d-flex align-items-center">
+                                    <input type="checkbox" id="price{{ $key }}" name="price"
+                                        value="{{ $price }}" class="filterAjax" {{ $pricecheck }}>
+                                    <label
+                                        for="price{{ $key }}"
+                                        class="ml-2"></label>&nbsp;&nbsp;{{ $price }}
                                 </li>
                             @endforeach
                         </ul>

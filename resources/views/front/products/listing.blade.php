@@ -28,7 +28,7 @@
                             href="{{ url('/') }}">Home</a>&nbsp;&rarr;<?php echo $getCategoriesDetails['breadcrumbs']; ?>
                     </li>
                 </ol>
-                <div class="d-md-none"> <!-- Hide on medium and larger screens -->
+                <div style="background-color: white;" class="d-md-none"> <!-- Hide on medium and larger screens -->
                     <form class="form-check">
                         @foreach ($colors as $key => $color)
                             <?php
@@ -47,6 +47,72 @@
                                 <input type="checkbox" id="color{{ $key }}" name="color" value="{{ $color }}" class="form-check-input filterAjax" {{ $colorcheck }}>
                                 <label class="form-check-label" for="color{{ $key }}" title="{{ $color }}" style="background-color: {{ $color }}; width: 20px; height: 20px; border: 1px solid #000;"></label>
                                 <small class="ml-2">{{ $color }}</small>
+                            </div>
+                        @endforeach
+                    </form>
+                </div>
+                <hr>
+                <div style="background-color: white;" class="d-md-none"> <!-- Hide on medium and larger screens -->
+                    <form class="form-check">
+                        <span>Size</span>
+                        @foreach ($sizes as $key => $size)
+                            <?php
+                            if (isset($_GET['size']) && !empty($_GET['size'])) {
+                                    $sizes = explode('~', $_GET['size']);
+                                    if(!empty($sizes) &&  in_array($size, $sizes)){
+                                        $sizecheck = "checked";
+                                    }else{
+                                        $sizecheck = "";
+                                    }
+                                }else {
+                                    $sizecheck = "";
+                                }
+                            ?>
+                            <div class="form-check-inline mx-2 my-1">
+                                <input type="checkbox" id="size{{ $key }}" name="size" value="{{ $size }}" class="form-check-input filterAjax" {{ $sizecheck }}>
+                                <small class="ml-2">{{ $size }}</small>
+                            </div>
+                        @endforeach
+                ||&nbsp;&nbsp;<span>Brands</span>
+                        @foreach ($brands as $key => $brand)
+                            <?php
+                            if (isset($_GET['brand']) && !empty($_GET['brand'])) {
+                                    $brands = explode('~', $_GET['brand']);
+                                    if(!empty($brands) &&  in_array($brand, $brands)){
+                                        $brandcheck = "checked";
+                                    }else{
+                                        $brandcheck = "";
+                                    }
+                                }else {
+                                    $brandcheck = "";
+                                }
+                            ?>
+                            <div class="form-check-inline mx-2 my-1">
+                                <input type="checkbox" id="brand{{ $key }}" name="brand" value="{{ $brand['id'] }}" class="form-check-input filterAjax" {{ $brandcheck }}>
+                                <small class="ml-2">{{ $brand['brand_name'] }}</small>
+                            </div>
+                        @endforeach
+                    </form>
+                </div>
+                <div style="background-color: white;" class="d-md-none"> <!-- Hide on medium and larger screens -->
+                    <form class="form-check">
+                        <span>Prices</span>
+                        @foreach ($prices as $key => $price)
+                            <?php
+                            if (isset($_GET['price']) && !empty($_GET['price'])) {
+                                    $prices = explode('~', $_GET['price']);
+                                    if(!empty($prices) &&  in_array($price, $prices)){
+                                        $pricecheck = "checked";
+                                    }else{
+                                        $pricecheck = "";
+                                    }
+                                }else {
+                                    $pricecheck = "";
+                                }
+                            ?>
+                            <div class="form-check-inline mx-2 my-1">
+                                <input type="checkbox" id="price{{ $key }}" name="price" value="{{ $price }}" class="form-check-input filterAjax" {{ $pricecheck }}>
+                                <small class="ml-2">{{ $price }}</small>
                             </div>
                         @endforeach
                     </form>
