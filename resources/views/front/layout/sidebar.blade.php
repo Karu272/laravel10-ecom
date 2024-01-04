@@ -59,10 +59,31 @@
                 </div>
             </div>
             <br>
-            <div style="border: 1px solid #ccc; box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.2);">
-                <h2 style="text-align: center;" class="ml-sm-0">Color</h2>
+            <script>
+                function toggleCollapse(collapseId, iconId, contentId) {
+                    var iconElement = document.getElementById(iconId);
+                    var contentElement = document.getElementById(contentId);
+
+                    // Check if the content is visible or not
+                    var isContentVisible = contentElement.style.display === "block" || contentElement.style.display === "";
+
+                    if (isContentVisible) {
+                        contentElement.style.display = "none";
+                        iconElement.innerHTML = "&#8595;"; // Down arrow
+                    } else {
+                        contentElement.style.display = "block";
+                        iconElement.innerHTML = "&#8593;"; // Up arrow
+                    }
+                }
+            </script>
+            <!-- Color Section -->
+            <div id="collapsible-color" style="border: 1px solid #ccc; box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.2);">
+                <h2 style="text-align: center; cursor: pointer;" class="ml-sm-0"
+                    onclick="toggleCollapse('collapsible-color', 'collapse-color-icon', 'content-color')">
+                    Color<span id="collapse-color-icon" class="float-right">&#8593;</span>
+                </h2>
                 <hr>
-                <div class="row mb-5 ml-sm-0">
+                <div class="row mb-5 ml-sm-0" id="content-color">
                     <div class="col-md-12">
                         <ul class="nav flex-column">
                             @foreach ($colors as $key => $color)
@@ -80,30 +101,34 @@
                 </div>
             </div>
             <br>
-            <div style="border: 1px solid #ccc; box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.2);">
-                <h2 style="text-align: center;" class="ml-sm-0">Sizes</h2>
+
+            <!-- Sizes Section -->
+            <div id="collapsible-size" style="border: 1px solid #ccc; box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.2);">
+                <h2 style="text-align: center; cursor: pointer;" class="ml-sm-0"
+                    onclick="toggleCollapse('collapsible-size', 'collapse-size-icon', 'content-size')">
+                    Sizes<span id="collapse-size-icon" class="float-right">&#8593;</span>
+                </h2>
                 <hr>
-                <div class="row mb-5 ml-sm-0">
+                <div class="row mb-5 ml-sm-0" id="content-size">
                     <div class="col-md-12">
                         <ul class="nav flex-column">
                             @foreach ($sizes as $key => $size)
-                            <?php
-                            if (isset($_GET['size']) && !empty($_GET['size'])) {
+                                <?php
+                                if (isset($_GET['size']) && !empty($_GET['size'])) {
                                     $sizes = explode('~', $_GET['size']);
-                                    if(!empty($sizes) &&  in_array($size, $sizes)){
-                                        $sizecheck = "checked";
-                                    }else{
-                                        $sizecheck = "";
+                                    if (!empty($sizes) && in_array($size, $sizes)) {
+                                        $sizecheck = 'checked';
+                                    } else {
+                                        $sizecheck = '';
                                     }
-                                }else {
-                                    $sizecheck = "";
+                                } else {
+                                    $sizecheck = '';
                                 }
-                            ?>
+                                ?>
                                 <li class="d-flex align-items-center">
                                     <input type="checkbox" id="size{{ $key }}" name="size"
                                         value="{{ $size }}" class="filterAjax" {{ $sizecheck }}>
-                                    <label
-                                        for="size{{ $key }}" title="{{ $size }}"
+                                    <label for="size{{ $key }}" title="{{ $size }}"
                                         class="ml-2"></label>&nbsp;&nbsp;{{ $size }}
                                 </li>
                             @endforeach
@@ -112,30 +137,33 @@
                 </div>
             </div>
             <br>
-            <div style="border: 1px solid #ccc; box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.2);">
-                <h2 style="text-align: center;" class="ml-sm-0">Brands</h2>
+            <!-- Brands Section -->
+            <div id="collapsible-brands" style="border: 1px solid #ccc; box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.2);">
+                <h2 style="text-align: center; cursor: pointer;" class="ml-sm-0"
+                    onclick="toggleCollapse('collapsible-brands', 'collapse-brands-icon', 'content-brands')">
+                    Brands<span id="collapse-brands-icon" class="float-right">&#8593;</span>
+                </h2>
                 <hr>
-                <div class="row mb-5 ml-sm-0">
+                <div class="row mb-5 ml-sm-0" id="content-brands">
                     <div class="col-md-12">
                         <ul class="nav flex-column">
-                            @foreach ($brands as $brand)
-                            <?php
-                            if (isset($_GET['brand']) && !empty($_GET['brand'])) {
+                            @foreach ($brands as $key => $brand)
+                                <?php
+                                if (isset($_GET['brand']) && !empty($_GET['brand'])) {
                                     $brands = explode('~', $_GET['brand']);
-                                    if(!empty($brands) &&  in_array($brand, $brands)){
-                                        $brandcheck = "checked";
-                                    }else{
-                                        $brandcheck = "";
+                                    if (!empty($brands) && in_array($brand, $brands)) {
+                                        $brandcheck = 'checked';
+                                    } else {
+                                        $brandcheck = '';
                                     }
-                                }else {
-                                    $brandcheck = "";
+                                } else {
+                                    $brandcheck = '';
                                 }
-                            ?>
+                                ?>
                                 <li class="d-flex align-items-center">
                                     <input type="checkbox" id="brand{{ $key }}" name="brand"
                                         value="{{ $brand['id'] }}" class="filterAjax" {{ $brandcheck }}>
-                                    <label
-                                        for="brand{{ $key }}"
+                                    <label for="brand{{ $key }}"
                                         class="ml-2"></label>&nbsp;&nbsp;{{ $brand['brand_name'] }}
                                 </li>
                             @endforeach
@@ -144,30 +172,34 @@
                 </div>
             </div>
             <br>
-            <div style="border: 1px solid #ccc; box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.2);">
-                <h2 style="text-align: center;" class="ml-sm-0">Prices</h2>
+
+            <!-- Prices Section -->
+            <div id="collapsible-prices" style="border: 1px solid #ccc; box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.2);">
+                <h2 style="text-align: center; cursor: pointer;" class="ml-sm-0"
+                    onclick="toggleCollapse('collapsible-prices', 'collapse-prices-icon', 'content-prices')">
+                    Prices<span id="collapse-prices-icon" class="float-right">&#8593;</span>
+                </h2>
                 <hr>
-                <div class="row mb-5 ml-sm-0">
+                <div class="row mb-5 ml-sm-0" id="content-prices">
                     <div class="col-md-12">
                         <ul class="nav flex-column">
-                            @foreach ($prices as $price)
-                            <?php
-                            if (isset($_GET['price']) && !empty($_GET['price'])) {
+                            @foreach ($prices as $key => $price)
+                                <?php
+                                if (isset($_GET['price']) && !empty($_GET['price'])) {
                                     $prices = explode('~', $_GET['price']);
-                                    if(!empty($prices) &&  in_array($price, $prices)){
-                                        $pricecheck = "checked";
-                                    }else{
-                                        $pricecheck = "";
+                                    if (!empty($prices) && in_array($price, $prices)) {
+                                        $pricecheck = 'checked';
+                                    } else {
+                                        $pricecheck = '';
                                     }
-                                }else {
-                                    $pricecheck = "";
+                                } else {
+                                    $pricecheck = '';
                                 }
-                            ?>
+                                ?>
                                 <li class="d-flex align-items-center">
                                     <input type="checkbox" id="price{{ $key }}" name="price"
                                         value="{{ $price }}" class="filterAjax" {{ $pricecheck }}>
-                                    <label
-                                        for="price{{ $key }}"
+                                    <label for="price{{ $key }}"
                                         class="ml-2"></label>&nbsp;&nbsp;{{ $price }}
                                 </li>
                             @endforeach
@@ -175,6 +207,44 @@
                     </div>
                 </div>
             </div>
+            <br>
+
+            <!-- Dynamic Filters Section -->
+            @foreach ($dynamicFilters as $key => $filter)
+                <div id="collapsible-{{ strtolower($filter) }}"
+                    style="border: 1px solid #ccc; box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.2);">
+                    <h2 style="text-align: center; cursor: pointer;" class="ml-sm-0"
+                        onclick="toggleCollapse('collapsible-{{ strtolower($filter) }}', 'collapse-{{ strtolower($filter) }}-icon', 'content-{{ strtolower($filter) }}')">
+                        {{ ucwords($filter) }}<span id="collapse-{{ strtolower($filter) }}-icon"
+                            class="float-right">&#8593;</span>
+                    </h2>
+                    <hr>
+                    <div class="row mb-5 ml-sm-0" id="content-{{ strtolower($filter) }}">
+                        <div class="col-md-12">
+                            <ul class="nav flex-column">
+                                @foreach ($dynamicFilterValues[$filter] as $fkey => $value)
+                                    @php $checkFilter = "" @endphp
+                                    @if (isset($_GET[$filter]) && !empty($_GET[$filter]))
+                                        @php $explodeFilters = explode('~', $_GET[$filter]) @endphp
+                                        @if (in_array($value, $explodeFilters))
+                                            @php $checkFilter = "checked"; @endphp
+                                        @endif
+                                    @endif
+                                    <li class="d-flex align-items-center">
+                                        <input type="checkbox" id="filter{{ $fkey }}"
+                                            name="{{ $filter }}" value="{{ $value }}"
+                                            class="filterAjax" {{ $checkFilter }}>
+                                        <label class="ml-2"
+                                            for="filter{{ $fkey }}"></label>&nbsp;&nbsp;{{ $value }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            @endforeach
+
         </div>
     </div>
 @endif
@@ -184,11 +254,13 @@
     <div class="col-md-3 d-none d-md-block">
         <br>
         <div class="col-md-12 text-center mb-3">
-            <img class="img-fluid" style="width: 45%;" src="{{ asset('front/img/logos/logo1.png') }}" alt="logo">
+            <img class="img-fluid" style="width: 45%;" src="{{ asset('front/img/logos/logo1.png') }}"
+                alt="logo">
         </div>
         <div class="container-fluid">
             <!-- Add your content here -->
-            <img class="img-fluid" style="width: 100%;" src="{{ asset('front/img/logos/69.jpg') }}" alt="largerlogo">
+            <img class="img-fluid" style="width: 100%;" src="{{ asset('front/img/logos/69.jpg') }}"
+                alt="largerlogo">
         </div>
     </div>
 @endif

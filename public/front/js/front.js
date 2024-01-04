@@ -1,10 +1,6 @@
 $(document).ready(function () {
-     //------------- Sort ------
-/*
-    $("#sort").on("change", function() {
-        this.form.submit();
-    });
-*/
+     //------------- Collapse filter ------
+
     // --------------- END --------------
 
     // ------- product card start -------

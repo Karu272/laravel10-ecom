@@ -213,7 +213,7 @@
                             <label for="pattern">Pattern</label>
                             <select name="pattern" class="form-control">
                                 <option value="">Select</option>
-                                @foreach ($productsFilters['petternArray'] as $pattern)
+                                @foreach ($productsFilters['patternArray'] as $pattern)
                                     <option value="{{ $pattern }}"
                                         @if ($editPro['pattern'] == $pattern) selected @endif>
                                         {{ $pattern }}
@@ -234,13 +234,13 @@
                             </select>
                         </div>
                         <div class="form-group col-md-2">
-                            <label for="occassion">Occassion</label>
-                            <select name="occassion" class="form-control">
+                            <label for="occasion">Occasion</label>
+                            <select name="occasion" class="form-control">
                                 <option value="">Select</option>
-                                @foreach ($productsFilters['occassionArray'] as $occassion)
-                                    <option value="{{ $occassion }}"
-                                        @if ($editPro['occassion'] == $occassion) selected @endif>
-                                        {{ $occassion }}
+                                @foreach ($productsFilters['occasionArray'] as $occasion)
+                                    <option value="{{ $occasion }}"
+                                        @if ($editPro['occasion'] == $occasion) selected @endif>
+                                        {{ $occasion }}
                                     </option>
                                 @endforeach
                             </select>

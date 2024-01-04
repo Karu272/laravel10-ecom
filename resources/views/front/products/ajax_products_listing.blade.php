@@ -64,6 +64,18 @@ if(!isset($_GET['brand'])){
 if(!isset($_GET['price'])){
     $_GET['price'] = "";
     }
+if(!isset($_GET['fit'])){
+    $_GET['fit'] = "";
+    }
+if(!isset($_GET['sleeve'])){
+    $_GET['sleeve'] = "";
+    }
+if(!isset($_GET['pattern'])){
+    $_GET['pattern'] = "";
+    }
+if(!isset($_GET['occasion'])){
+    $_GET['occasion'] = "";
+    }
 ?>
 <div class="paginate">
     {{ $categoryProducts->appends([
@@ -72,6 +84,10 @@ if(!isset($_GET['price'])){
         'size' => $_GET['size'],
         'brand' => $_GET['brand'],
         'price' => $_GET['price'],
+        'fit' => $_GET['fit'],
+        'sleeve' => $_GET['sleeve'],
+        'pattern' => $_GET['pattern'],
+        'occasion' => $_GET['occasion'],
     ])->links() }}
 </div>
 

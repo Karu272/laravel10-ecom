@@ -169,7 +169,7 @@ class ProductController extends Controller
             $editPro->sleeve = $data['sleeve'];
             $editPro->pattern = $data['pattern'];
             $editPro->fit = $data['fit'];
-            $editPro->occassion = $data['occassion'];
+            $editPro->occasion = $data['occasion'];
             $editPro->status = 1;
             $editPro->save();
 

@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('fabric')->nullable();
             $table->string('sleeve')->nullable();
             $table->string('fit')->nullable();
-            $table->string('occassion')->nullable();
+            $table->string('occasion')->nullable();
             $table->string('pattern')->nullable();
             $table->string('meta_title')->nullable();
             $table->string('meta_description')->nullable();

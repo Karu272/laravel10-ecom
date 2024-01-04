@@ -10,7 +10,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Banner;
 use App\Models\ProductsFilter;
-use Illuminate\Pagination\Paginator;
+
 
 class ProductController extends Controller
 {
@@ -33,7 +33,7 @@ class ProductController extends Controller
             // Get Categories and sub products categories
             $categoryProducts = Product::with(['brand', 'images'])
                 ->whereIn('category_id', $getCategoriesDetails['catIDs'])
-                ->select('products.*', 'fabric', 'sleeve', 'fit', 'occassion', 'pattern')
+                ->select('products.*', 'fabric', 'sleeve', 'fit', 'occasion', 'pattern')
                 ->where('products.status', 1);
 
 
@@ -65,7 +65,6 @@ class ProductController extends Controller
                         break;
                 }
             }
-
             // Fetch colors using ProductsFilter model
             $colors = ProductsFilter::getColors($getCategoriesDetails['catIDs']);
             // Fetch Sizes using ProductsFilter model
@@ -74,6 +73,21 @@ class ProductController extends Controller
             $brands = ProductsFilter::getBrands($getCategoriesDetails['catIDs']);
             // Fetch Brands using ProductsFilter model
             $prices = ['0-50', '50-100', '100-150', '150-200', '200-300', '300-400', '400-500'];
+            // Fetch special dynamic filters title
+            $dynamicFilters = ProductsFilter::getDynamicFilters($getCategoriesDetails['catIDs']);
+            // Fetch dynamic filters values
+            // Initialize an empty array to store dynamic filter values
+            $dynamicFilterValues = [];
+
+            // Loop through each dynamic filter defined in the $dynamicFilters array
+            foreach ($dynamicFilters as $key => $filter) {
+                // Call the selectedFilters method from the ProductsFilter model
+                // to retrieve the filter values for the current dynamic filter
+                $filterValues = ProductsFilter::selectedFilters($filter, $getCategoriesDetails['catIDs']);
+                // Assign the retrieved filter values to the $dynamicFilterValues array
+                // using the current dynamic filter as the key
+                $dynamicFilterValues[$filter] = $filterValues;
+            }
 
             // Update query for colors filter
             if (isset($request['color']) && !empty($request['color'])) {
@@ -115,6 +129,15 @@ class ProductController extends Controller
                 $categoryProducts->whereBetween('products.final_price', [$prices[0], $prices[$count - 1]]);
             }
 
+            // Update Query for Dynamic Filters
+            $filterTypes = ProductsFilter::filterTypes();
+            foreach ($filterTypes as $key => $filter) {
+                if($request->$filter){
+                    $explodeFilterVals = explode('~', $request->$filter);
+                    $categoryProducts->whereIn($filter, $explodeFilterVals);
+                }
+            }
+
             $categoryProducts = $categoryProducts->paginate(5);
 
             if ($request->ajax()) {
@@ -132,6 +155,8 @@ class ProductController extends Controller
                             'sizes',
                             'brands',
                             'prices',
+                            'dynamicFilters',
+                            'dynamicFilterValues',
                         )
                     )
                 ]);
@@ -149,6 +174,8 @@ class ProductController extends Controller
                         'sizes',
                         'brands',
                         'prices',
+                        'dynamicFilters',
+                        'dynamicFilterValues',
                     )
                 );
             }

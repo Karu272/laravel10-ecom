@@ -44,9 +44,9 @@ class Product extends Model
     {
         $productsFilters['fabricArray'] = ['Cotton', 'Polyester', 'Wool'];
         $productsFilters['sleeveArray'] = ['Full Sleeve', 'Half Sleeve', 'Sleeveless'];
-        $productsFilters['petternArray'] = ['Checked', 'Plain', 'Printed', 'Self', 'Solid'];
+        $productsFilters['patternArray'] = ['Checked', 'Plain', 'Printed', 'Self', 'Solid'];
         $productsFilters['fitArray'] = ['Regular', 'Slim', 'Plus'];
-        $productsFilters['occassionArray'] = ['Casual', 'Formal'];
+        $productsFilters['occasionArray'] = ['Casual', 'Formal'];
         return $productsFilters;
     }
 
