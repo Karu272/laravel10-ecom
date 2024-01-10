@@ -17,8 +17,6 @@
     <!-- Side Menu and Product Cards -->
     <div class="container-fluid mt-4">
         <div class="row">
-            <!-- Side Menu (Hidden on Mobile) -->
-            @include('front.layout.sidebar')
             <!-- Product Cards -->
             @yield('content')
         </div>

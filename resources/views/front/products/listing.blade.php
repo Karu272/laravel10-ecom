@@ -1,5 +1,7 @@
 @extends('front.layout.layout')
 @section('content')
+<!-- Side Menu (Hidden on Mobile) -->
+@include('front.layout.sidebar')
     <br>
     <div style="background-color: rgb(252, 243, 255);" class="col-md-9">
         <div class="mb-2 mt-1">

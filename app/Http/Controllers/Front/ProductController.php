@@ -183,4 +183,13 @@ class ProductController extends Controller
             abort(404);
         }
     }
+
+    public function detail() {
+        // Getting the banners
+        $homeSliderBanner = Banner::where('type', 'slider')->where('status', 1)->orderBy('sort', 'ASC')->get()->toArray();
+        // Fetching the categories and subcategories
+        $categories = Category::getCategories();
+
+        return view('front.products.detail', compact('categories','homeSliderBanner'));
+    }
 }

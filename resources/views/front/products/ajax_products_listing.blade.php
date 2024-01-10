@@ -2,6 +2,7 @@
     <!-- Product 1 -->
     <div class="col-md-6 col-lg-3 mb-4 ">
         <br>
+        <a href="{{ url('product/'. $item['id']) }}">
         <div class="card" style="height: 100%;">
             <!-- Product Image -->
             @php
@@ -44,6 +45,7 @@
                 </div>
             </div>
         </div>
+    </a>
     </div>
 @endforeach
 

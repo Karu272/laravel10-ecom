@@ -13,6 +13,14 @@ a:visited {
     color: inherit; /* Use the default text color on hover */
     text-decoration: none; /* Remove underline on hover */
 }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: bold;
+}
 
 // carousel start
 .carousel-caption {
@@ -212,3 +220,73 @@ a:visited {
     padding: 10px;
 }
 /* // Paginate */
+
+/* detials page */
+.detail-stock-green {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #28a745; /* Green background color */
+    color: #1e2d1c; /* Darker green text color */
+    border-radius: 25px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+}
+.detail-stock-orange {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #ffc500;
+    color: #de2702;
+    border-radius: 25px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+}
+
+.detail-size {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px; /* Rounded corners */
+    margin-right: 10px; /* Adjust spacing between elements */
+    cursor: pointer; /* Show pointer cursor on hover to indicate interactivity */
+}
+
+.social-icons i {
+    font-size: 24px; /* Adjust the icon size as needed */
+    margin-right: 10px; /* Adjust spacing between icons */
+    cursor: pointer; /* Show pointer cursor on hover to indicate interactivity */
+}
+
+.minusBtn,
+.plusBtn {
+    display: inline-block;
+    padding: 8px;
+    background-color: lightgrey;
+    color: black;
+    font-size: 25px; /* Adjust the font size as needed */
+    cursor: pointer;
+}
+
+.minusBtn {
+    border-top-left-radius: 50%; /* Round only the top-left corner */
+    border-bottom-left-radius: 50%; /* Round only the bottom-left corner */
+    margin-right: -1px !important;
+}
+.plusBtn {
+    border-top-right-radius: 50%; /* Round only the top-right corner */
+    border-bottom-right-radius: 50%; /* Round only the bottom-right corner */
+    margin-left: -16px !important;
+}
+
+.quantity {
+    display: inline-block;
+    padding: 8px;
+    border: 1px solid lightgrey;
+    background-color: lightgrey;
+    font-size: 25px; /* Adjust the font size as needed */
+}
+
+.btn1 {
+    display: inline-block;
+    height: 50%;
+    margin-top: 1%;
+}
+/* // detials page */

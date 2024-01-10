@@ -19,6 +19,8 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     foreach($catURLs as $url) {
         Route::get('/' . $url, [FrontProductController::class, 'listing']);
     }
+    // Detail page
+    Route::get('product/{id}', [FrontProductController::class, 'detail']);
 
 });
 
