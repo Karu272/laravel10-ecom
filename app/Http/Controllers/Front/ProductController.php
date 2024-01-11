@@ -132,7 +132,7 @@ class ProductController extends Controller
             // Update Query for Dynamic Filters
             $filterTypes = ProductsFilter::filterTypes();
             foreach ($filterTypes as $key => $filter) {
-                if($request->$filter){
+                if ($request->$filter) {
                     $explodeFilterVals = explode('~', $request->$filter);
                     $categoryProducts->whereIn($filter, $explodeFilterVals);
                 }
@@ -184,12 +184,54 @@ class ProductController extends Controller
         }
     }
 
-    public function detail() {
+    public function detail($id)
+    {
+        $productCount = Product::where('status',1)->where('id',$id)->count();
+        if($productCount == 0){
+            abort(404);
+        }
+
         // Getting the banners
         $homeSliderBanner = Banner::where('type', 'slider')->where('status', 1)->orderBy('sort', 'ASC')->get()->toArray();
         // Fetching the categories and subcategories
         $categories = Category::getCategories();
+        // Fetch all the data about the product
+        $productDetails = Product::with([
+            'category',
+            'brand',
+            'attributes',
+            'images'
+        ])->find($id)->toArray();
+        //dd($productDetails);
+        // Get Category details
+        $getCategoriesDetails = Category::categoryDetails($productDetails['category']['url']);
 
-        return view('front.products.detail', compact('categories','homeSliderBanner'));
+        // Get Group Products (Product colors)
+        $groupProducts = [];
+        if (!empty($productDetails['group_code'])) {
+            $groupProducts = Product::select('id', 'family_color')->where('id', '!=', $id)->where(['group_code' => $productDetails['group_code'], 'status' => 1])->get()->toArray();
+            //dd($groupProducts);
+        }
+
+        return view('front.products.detail', compact(
+            'categories',
+            'homeSliderBanner',
+            'productDetails',
+            'getCategoriesDetails',
+            'groupProducts',
+        )
+        );
+    }
+
+    public function getAttributePrice(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = $request->all();
+            //echo "<pre>"; print_r($data); die;
+            // Get the final price of the product based on if there is a discount or not from model product.php getAttributePrice() function
+            $getAttributePrice = Product::getAttributePrice($data['product_id'], $data['size']);
+            //echo "<pre>"; print_r($getAttributePrice); die;
+            return $getAttributePrice;
+        }
     }
 }

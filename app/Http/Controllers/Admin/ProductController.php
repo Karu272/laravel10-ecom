@@ -96,6 +96,15 @@ class ProductController extends Controller
                 'product_price' => 'required|numeric',
                 'product_color' => 'required|regex:/^[\pL\s\-]+$/u|max:200',
                 'family_color' => 'required|regex:/^[\pL\s\-]+$/u|max:200',
+                'product_weight' => 'required',
+                'group_code' => 'required|regex:/^[\w-]*$/|max:200',
+                'product_discount' => 'numeric',
+                'description' => 'required',
+                'wash_care' => 'required',
+                'meta_description' => 'required',
+                'keywords' => 'required',
+                'meta_title' => 'required',
+                'meta_keywords' => 'required',
             ];
 
             $customMessages = [
@@ -110,6 +119,15 @@ class ProductController extends Controller
                 'product_color.regex' => 'Valid color is required',
                 'family_color.required' => 'Family color is required',
                 'family_color.regex' => 'Valid Family color is required',
+                'product_weight.required' => 'Product weight is required',
+                'group_code.required' => 'Group code is required',
+                'group_code.regex' => 'Valid group code is required',
+                'description.required' => 'Description is required',
+                'wash_care.required' => 'Wash care is required',
+                'meta_description.required' => 'Meta description is required',
+                'keywords.required' => 'Keywords are required',
+                'meta_title.required' => 'Meta title is required',
+                'meta_keywords.required' => 'Meta keywords are required',
             ];
 
             $this->validate($request, $rules, $customMessages);
@@ -124,7 +142,7 @@ class ProductController extends Controller
             $editPro->product_weight = $data['product_weight'];
             $editPro->group_code = $data['group_code'];
             $editPro->product_price = $data['product_price'];
-            $editPro->product_discount = $data['product_discount'];
+            $editPro->product_discount = $data['product_discount'] ?? 0;
 
             // Calculate final price based on product discount and category discount
             if (!empty($data['product_discount']) && $data['product_discount'] > 0) {
@@ -155,15 +173,15 @@ class ProductController extends Controller
                 $video_tmp = $request->file('product_video');
                 if ($video_tmp->isValid()) {
                     // Upload Video
-                    $video_name = $video_tmp->getClientOriginalName();
                     $extension = $video_tmp->getClientOriginalExtension();
                     $videoName = rand(11, 9999) . '.' . $extension;
-                    $video_path = 'admin/products/videos';
-                    $video_tmp->move($video_path, $video_name);
-                    // Save video in products table
+                    $video_path = 'admin/videos/';
+                    $video_tmp->move($video_path, $videoName);
+                    // Save video name in products table
                     $editPro->product_video = $videoName;
                 }
             }
+
 
             $editPro->fabric = $data['fabric'];
             $editPro->sleeve = $data['sleeve'];
@@ -308,7 +326,7 @@ class ProductController extends Controller
         $productVid = Product::select('product_video')->where('id', $id)->first();
 
         // Get product video path
-        $video_path = 'admin/products/videos/';
+        $video_path = 'admin/videos/';
 
         // Delete product video from products folder if it exists
         $video_file_path = $video_path . $productVid->product_video;

@@ -289,4 +289,46 @@ h6 {
     height: 50%;
     margin-top: 1%;
 }
+
+/* Hide the default radio button */
+input[type="radio"].visually-hidden {
+    position: absolute;
+    left: -9999em;
+    cursor: pointer;
+}
+
+/* Style the label to look like a selected button */
+input[type="radio"]:checked + label {
+    background-color: black; /* Change to your desired background color */
+    color: #fff; /* Change to your desired text color */
+    cursor: pointer;
+}
+
+.color-cube {
+    display: inline-block;
+    width: 30px; /* Adjust the width as needed */
+    height: 30px; /* Adjust the height as needed */
+    border: 2px solid #ddd; /* Light grey border */
+    cursor: pointer;
+    transition: border-color 0.3s ease; /* Transition for border color change */
+}
+
+input[type="radio"]:checked + label.color-cube {
+    border-color: #3498db; /* Highlight color when marked */
+    cursor: pointer;
+}
+
+/* Hide the default radio button */
+input[type="radio"].visually-hidden {
+    position: absolute;
+    left: -9999em;
+    cursor: pointer;
+}
+
+.colorBtn {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
 /* // detials page */

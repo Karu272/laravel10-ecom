@@ -2,57 +2,85 @@
 @section('content')
     <br>
     <div style="background-color: rgb(252, 243, 255);" class="col-md-10 mx-auto">
+        <br>
         <div class="row">
             <!-- Move col-md-4 to the left of col-md-8 -->
             <div class="col-md-4">
-                <div class="breadccrums">
-                    <a href="">Home</a>
-                    <a href="">Category</a>
-                    <a href="">SubCategory</a>
-                    <a href="">Product</a>
-                </div>
+                <nav class="mt-4" aria-label="breadcrumb">
+                    <ol style="background-color: white;" class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a>&nbsp;&rarr;<?php echo $getCategoriesDetails['breadcrumbs']; ?>
+                        </li>
+                    </ol>
+                </nav>
                 <hr>
+                <!-- FIX THIS WITH JAVASCRIPT LATER -->
                 <div class="imgcard">
+                    <!-- Product Image -->
+                    @php
+                        $images = $productDetails['images'];
+                        $randomImage = null;
+
+                        if (!empty($images)) {
+                            $randomImageIndex = array_rand($images); // Get a random index
+                            $randomImage = $images[$randomImageIndex]['image']; // Use the 'image' key from the nested array
+                        }
+                    @endphp
                     <!-- Center and make largeimg span full width -->
                     <div class="row">
                         <div class="col-md-8 offset-md-2">
-                            <img src="{{ asset('admin/img/products/small/1809.jpg') }}" alt=""
-                                class="img-fluid largeimg">
+                            @if ($randomImage)
+                                <img src="{{ asset('admin/img/products/small/' . $randomImage) }}" alt="product image"
+                                    class="img-fluid largeimg">
+                            @else
+                                <img src="{{ asset('admin/img/no-img.png') }}" class="img-fluid largeimg" alt="No Image">
+                            @endif
                         </div>
                     </div>
                     <hr>
                     <div class="smallerrow row">
-                        <!-- Arrange small images horizontally using Bootstrap grid -->
-                        <div class="col-md-3">
-                            <img src="{{ asset('admin/img/products/small/4917.jpg') }}" alt=""
-                                class="img-fluid small1">
-                        </div>
-                        <div class="col-md-3">
-                            <img src="{{ asset('admin/img/products/small/4917.jpg') }}" alt=""
-                                class="img-fluid small2">
-                        </div>
-                        <div class="col-md-3">
-                            <img src="{{ asset('admin/img/products/small/4917.jpg') }}" alt=""
-                                class="img-fluid small3">
-                        </div>
-                        <div class="col-md-3">
-                            <img src="{{ asset('admin/img/products/small/4917.jpg') }}" alt=""
-                                class="img-fluid small4">
-                        </div>
+                        @foreach ($productDetails['images'] as $item)
+                            <!-- Arrange small images horizontally using Bootstrap grid -->
+                            @if ($loop->index < 4)
+                                <div class="col-md-3">
+                                    <!-- Limit to 4 images -->
+                                    @if (isset($item['image']))
+                                        <img src="{{ asset('admin/img/products/small/' . $item['image']) }}"
+                                            alt="small product image" class="img-fluid small1">
+                                    @else
+                                        <img src="{{ asset('admin/img/no-img.png') }}" class="img-fluid small1"
+                                            alt="No Image">
+                                    @endif
+                                </div>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
+                <!-- ///// FIX THIS WITH JAVASCRIPT LATER -->
             </div>
             <div class="col-md-8">
                 <div class="txtcard">
-                    <h2>Product Name</h2>
-                    <span class="d-flex align-items-end">
-                        <h1 class="mb-0" style="color: orange">1000kr</h1>
-                        <span class="d-flex align-items-end">&nbsp;&nbsp;&nbsp;
-                            <p class="mb-0 mr-3" style="color: orange">(10% off)</p>
-                        </span>
-                        <span class="d-flex align-items-end">
-                            <p class="mb-0 mr-3" style="text-decoration: line-through;">1100kr</p>
-                        </span>
+                    <div style="display: flex; align-items: center;">
+                        <p class="mb-0 mr-1">FROM</p>
+                        <h2 style="display: flex; align-items: center;">
+                            {{ $productDetails['brand']['brand_name'] }}
+                            <i class="fas fa-long-arrow-alt-right ml-2 mr-2"></i>
+                            {{ $productDetails['product_name'] }}
+                        </h2>
+                    </div>
+                    <span class="d-flex align-items-end getAttributePrice">&nbsp;&nbsp;&nbsp;
+                        @if (isset($productDetails['product_discount']))
+                            <h1 class="mb-0" style="color: orange">{{ $productDetails['final_price'] }}Kr</h1>
+                            <span class="d-flex align-items-end">&nbsp;&nbsp;&nbsp;
+                                <p class="mb-0 mr-3" style="color: orange">({{ $productDetails['product_discount'] }}% off)
+                                </p>
+                            </span>
+                            <span class="d-flex align-items-end">
+                                <p class="mb-0 mr-3" style="text-decoration: line-through;">
+                                    {{ $productDetails['product_price'] }}</p>
+                            </span>
+                        @else
+                            <h1 class="mb-0" style="color: orange">{{ $productDetails['final_price'] }}Kr</h1>
+                        @endif
                     </span>
                     <br>
                     <span class="d-flex">
@@ -62,7 +90,7 @@
                     <br>
                     <div class="description">
                         <h5>Description:</h5>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod. Quidem, quasi. Ea,</p>
+                        <p>{{ $productDetails['meta_description'] }}</p>
                     </div>
                     <br>
                     <a class="d-flex" href="#">
@@ -80,19 +108,29 @@
                     <br>
                     <span class="d-flex">
                         <h6 class="mr-3">Color:&nbsp;</h6>
-                        <p class="mr-3">Blue</p>
-                        <p class="mr-3">Green</p>
-                        <p class="mr-3">Red</p>
-                        <p class="mr-3">Yellow</p>
-                        <p class="mr-3">Orange</p>
+                        @if (count($groupProducts) > 0)
+                            @foreach ($groupProducts as $item)
+                                <a href="{{ url('product/' . $item['id']) }}">
+                                    <label style="background-color: {{ $item['family_color'] }};" for="folly"
+                                        class="mr-3 colorBtn"></label>
+                                </a>
+                            @endforeach
+                        @endif
                     </span>
                     <br>
-                    <span class="d-flex">
+                    <div class="d-flex">
                         <h6 class="mr-3">Size:&nbsp; </h6>
-                        <p class="mr-3 detail-size">S</p>
-                        <p class="mr-3 detail-size">M</p>
-                        <p class="mr-3 detail-size">L</p>
-                    </span>
+                        @foreach ($productDetails['attributes'] as $attribute)
+                            @if ($attribute['stock'] > 0 && $attribute['status'] === 1)
+                                <div class="mr-3 detail-size">
+                                    <input type="radio" id="{{ $attribute['size'] }}" value="{{ $attribute['size'] }}"
+                                        product-id="{{ $productDetails['id'] }}" class="getPrice visually-hidden"
+                                        name="size" checked>
+                                    <label for="{{ $attribute['size'] }}">{{ $attribute['size'] }}</label>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
                     <br>
                     <span class="d-flex">
                         <p class="minusBtn mr-3">-</p>
@@ -132,11 +170,117 @@
                         <div class="row" id="product-container">
                             <div class="col-md-3 mb-4 category-product" data-category="description">
                                 <h6>Description</h6>
-                                <p>Alalalalaalalal</p>
+                                <p>{{ $productDetails['description'] }}</p>
+                                <div class="container mt-4">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped">
+                                            <tbody>
+                                                @if (isset($productDetails['brand']['brand_name']))
+                                                    <tr>
+                                                        <td>Brand</td>
+                                                        <td>{{ $productDetails['brand']['brand_name'] }}</td>
+                                                    </tr>
+                                                @endif
+
+                                                @if (isset($productDetails['product_code']))
+                                                    <tr>
+                                                        <td>Product Code</td>
+                                                        <td>{{ $productDetails['product_code'] }}</td>
+                                                    </tr>
+                                                @endif
+
+                                                @if (isset($productDetails['product_color']))
+                                                    <tr>
+                                                        <td>Product Color</td>
+                                                        <td>{{ $productDetails['product_color'] }}</td>
+                                                    </tr>
+                                                @endif
+
+                                                @if (isset($productDetails['family_color']))
+                                                    <tr>
+                                                        <td>Family Color</td>
+                                                        <td>{{ $productDetails['family_color'] }}</td>
+                                                    </tr>
+                                                @endif
+
+                                                @if (isset($productDetails['product_weight']))
+                                                    <tr>
+                                                        <td>Product Weight</td>
+                                                        <td>{{ $productDetails['product_weight'] }}</td>
+                                                    </tr>
+                                                @endif
+
+                                                @if (isset($productDetails['group_code']))
+                                                    <tr>
+                                                        <td>Group Code</td>
+                                                        <td>{{ $productDetails['group_code'] }}</td>
+                                                    </tr>
+                                                @endif
+
+                                                @if (isset($productDetails['keywords']))
+                                                    <tr>
+                                                        <td>Keywords</td>
+                                                        <td>{{ $productDetails['keywords'] }}</td>
+                                                    </tr>
+                                                @endif
+
+                                                @if (isset($productDetails['fabric']))
+                                                    <tr>
+                                                        <td>Fabric</td>
+                                                        <td>{{ $productDetails['fabric'] }}</td>
+                                                    </tr>
+                                                @endif
+
+                                                @if (isset($productDetails['sleeve']))
+                                                    <tr>
+                                                        <td>Sleeve</td>
+                                                        <td>{{ $productDetails['sleeve'] }}</td>
+                                                    </tr>
+                                                @endif
+
+                                                @if (isset($productDetails['fit']))
+                                                    <tr>
+                                                        <td>Fit</td>
+                                                        <td>{{ $productDetails['fit'] }}</td>
+                                                    </tr>
+                                                @endif
+
+                                                @if (isset($productDetails['occasion']))
+                                                    <tr>
+                                                        <td>Occasion</td>
+                                                        <td>{{ $productDetails['occasion'] }}</td>
+                                                    </tr>
+                                                @endif
+
+                                                @if (isset($productDetails['pattern']))
+                                                    <tr>
+                                                        <td>Pattern</td>
+                                                        <td>{{ $productDetails['pattern'] }}</td>
+                                                    </tr>
+                                                @endif
+
+                                                @if (isset($productDetails['wash_care']))
+                                                    <tr>
+                                                        <td>Wash Care</td>
+                                                        <td>{{ $productDetails['wash_care'] }}</td>
+                                                    </tr>
+                                                @endif
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-3 mb-4 category-product" data-category="video">
                                 <h6>Video</h6>
-                                <p>video goes here</p>
+                                @if (isset($productDetails['product_video']) && !empty($productDetails['product_video']))
+                                    <video width="400" controls>
+                                        <source src="{{ url('admin/videos/' . $productDetails['product_video']) }}"
+                                            type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                @else
+                                    <p>Product video does not exist or is empty.</p>
+                                @endif
                             </div>
                             <div class="col-md-3 mb-4 category-product" data-category="reviews">
                                 <h6>Reviews</h6>
@@ -153,4 +297,5 @@
                 <br>
             </div>
         </div>
-    @endsection
+    </div>
+@endsection

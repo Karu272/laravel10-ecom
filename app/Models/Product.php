@@ -75,4 +75,27 @@ class Product extends Model
     {
         return $this->hasMany(Attribute::class);
     }
+
+    public static function getAttributePrice($product_id, $size)
+    {
+        $attributePrice = Attribute::where(['product_id' => $product_id, 'size' => $size])->first()->toArray();
+        $productDetails = Product::select(['product_discount', 'category_id', 'brand_id'])->where('id', $product_id)->first()->toArray();
+        $categoryDetails = Category::select(['category_discount'])->where('id', $productDetails['category_id'])->first()->toArray();
+        $brandDetails = Brand::select(['brand_discount'])->where('id', $productDetails['brand_id'])->first()->toArray();
+
+        $discount = 0;
+
+        if ($productDetails['product_discount'] > 0) {
+            $discount = $productDetails['product_discount'];
+        } elseif ($categoryDetails['category_discount'] > 0) {
+            $discount = $categoryDetails['category_discount'];
+        } elseif ($brandDetails['brand_discount'] > 0) {
+            $discount = $brandDetails['brand_discount'];
+        }
+
+        $final_price = $attributePrice['price'] - ($attributePrice['price'] * $discount / 100);
+
+        return ['product_price' => $attributePrice['price'], 'final_price' => $final_price, 'discount' => $discount];
+    }
+
 }
