@@ -98,7 +98,7 @@ class ProductController extends Controller
                 'family_color' => 'required|regex:/^[\pL\s\-]+$/u|max:200',
                 'product_weight' => 'required',
                 'group_code' => 'required|regex:/^[\w-]*$/|max:200',
-                'product_discount' => 'numeric',
+                'product_discount' => 'nullable|numeric',
                 'description' => 'required',
                 'wash_care' => 'required',
                 'meta_description' => 'required',
@@ -278,15 +278,23 @@ class ProductController extends Controller
             // Sort product images
             if ($id != '') {
                 if (isset($data['image'])) {
-                    foreach ($data['image'] as $key => $image) {
-                        $imageSort = isset($data['image_sort'][$key]) ? $data['image_sort'][$key] : null;
+                    try {
+                        foreach ($data['image'] as $key => $image) {
+                            // Check if 'image_sort' key exists in $data
+                            $imageSort = isset($data['image_sort'][$key]) ? $data['image_sort'][$key] : null;
 
-                        Productimage::where([
-                            'product_id' => $id,
-                            'image' => $image,
-                        ])->update([
-                                    'image_sort' => $data['image_sort'][$key]
-                                ]);
+                            Productimage::where([
+                                'product_id' => $id,
+                                'image' => $image,
+                            ])->update([
+                                        'image_sort' => $imageSort, // Use $imageSort instead of $data['image_sort'][$key]
+                                    ]);
+                        }
+                    } catch (\Exception $e) {
+                        // Handle the exception (e.g., log it, show a user-friendly error message)
+                        \Log::error('Error updating product images: ' . $e->getMessage());
+                        // You may also throw the exception again if you want it to propagate
+                        // throw $e;
                     }
                 }
             }

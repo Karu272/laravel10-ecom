@@ -1,7 +1,7 @@
 @extends('front.layout.layout')
 @section('content')
-<!-- Side Menu (Hidden on Mobile) -->
-@include('front.layout.sidebar')
+    <!-- Side Menu (Hidden on Mobile) -->
+    @include('front.layout.sidebar')
     <br>
     <div class="col-md-9" style="background-color: aliceblue">
         <div class="row">
@@ -56,40 +56,44 @@
                 @foreach ($randomProducts as $item)
                     <!-- Product Card Template -->
                     <div class="col-md-3 mb-4 category-product" data-category="all">
-                        <div class="card" style="height: 100%;">
-                            <!-- Product Image -->
-                            @if (is_array($item['images']) && count($item['images']) > 0)
-                                @php
-                                    $randomImageIndex = array_rand($item['images']); // Get a random index
-                                    $randomImage = $item['images'][$randomImageIndex]['image']; // Use the 'image' key from the nested array
-                                @endphp
-                                <img src="{{ asset('admin/img/products/medium/' . $randomImage) }}" class="card-img-top"
-                                    alt="Product Image" style="max-width: 100%; height: auto;">
-                            @else
-                                <img src="{{ asset('admin/img/no-img.png') }}" class="card-img-top" alt="No Image">
-                            @endif
-                            <div class="card-body">
-                                <!-- Brand Name -->
-                                <p class="card-text text-muted category-brand">{{ $item['brand']['brand_name'] }}</p>
-                                <!-- Product Name -->
-                                <h5 class="card-title category-product-name">{{ $item['product_name'] }}</h5>
-                                <!-- Prices -->
-                                <div class="d-flex justify-content-between">
-                                    @if ($item['product_discount'] > 0)
-                                        <p class="card-text category-new-price">
-                                            New Price: {{ $item['final_price'] }} ({{ $item['product_discount'] }}% off)
-                                        </p>
-                                        <p class="card-text text-muted category-old-price">
-                                            Old Price: <span
-                                                style="text-decoration: line-through;">{{ $item['product_price'] }}</span>
-                                            <span class="badge badge-danger">{{ $item['product_discount'] }}% off</span>
-                                        </p>
-                                    @else
-                                        <p class="card-text category-new-price">Price: {{ $item['product_price'] }}</p>
-                                    @endif
+                        <a href="{{ url('product/' . $item['id']) }}">
+                            <div class="card" style="height: 100%;">
+                                <!-- Product Image -->
+                                @if (is_array($item['images']) && count($item['images']) > 0)
+                                    @php
+                                        $randomImageIndex = array_rand($item['images']); // Get a random index
+                                        $randomImage = $item['images'][$randomImageIndex]['image']; // Use the 'image' key from the nested array
+                                    @endphp
+                                    <img src="{{ asset('admin/img/products/medium/' . $randomImage) }}" class="card-img-top"
+                                        alt="Product Image" style="max-width: 100%; height: auto;">
+                                @else
+                                    <img src="{{ asset('admin/img/no-img.png') }}" class="card-img-top" alt="No Image">
+                                @endif
+                                <div class="card-body">
+                                    <!-- Brand Name -->
+                                    <p class="card-text text-muted category-brand">{{ $item['brand']['brand_name'] }}</p>
+                                    <!-- Product Name -->
+                                    <h5 class="card-title category-product-name">{{ $item['product_name'] }}</h5>
+                                    <!-- Prices -->
+                                    <div class="d-flex justify-content-between">
+                                        @if ($item['product_discount'] > 0)
+                                            <p class="card-text category-new-price">
+                                                New Price: {{ $item['final_price'] }} ({{ $item['product_discount'] }}%
+                                                off)
+                                            </p>
+                                            <p class="card-text text-muted category-old-price">
+                                                Old Price: <span
+                                                    style="text-decoration: line-through;">{{ $item['product_price'] }}</span>
+                                                <span class="badge badge-danger">{{ $item['product_discount'] }}%
+                                                    off</span>
+                                            </p>
+                                        @else
+                                            <p class="card-text category-new-price">Price: {{ $item['product_price'] }}</p>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 @endforeach
 

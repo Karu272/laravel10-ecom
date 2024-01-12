@@ -10,6 +10,8 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Banner;
 use App\Models\ProductsFilter;
+use Session;
+use DB;
 
 
 class ProductController extends Controller
@@ -186,8 +188,8 @@ class ProductController extends Controller
 
     public function detail($id)
     {
-        $productCount = Product::where('status',1)->where('id',$id)->count();
-        if($productCount == 0){
+        $productCount = Product::where('status', 1)->where('id', $id)->count();
+        if ($productCount == 0) {
             abort(404);
         }
 
@@ -213,14 +215,46 @@ class ProductController extends Controller
             //dd($groupProducts);
         }
 
-        return view('front.products.detail', compact(
-            'categories',
-            'homeSliderBanner',
-            'productDetails',
-            'getCategoriesDetails',
-            'groupProducts',
-        )
+        // Get related products in a slideshow
+        $relatedProducts = Product::with('brand', 'images')->where('category_id', $productDetails['category']['id'])->where('id', '!=', $id)->limit(4)->inRandomOrder()->get()->toArray();
+//dd($relatedProducts);
+
+        // Set Session for recently viewed products
+        if(empty(Session::get('session_id'))){
+            $session_id = md5(uniqid(rand(), true));
+        } else {
+            $session_id = Session::get('session_id');
+        }
+        Session::put('session_id', $session_id);
+        //Insert product in recently_viewed_items table if it does not exist
+        $countRecentlyViewedItems =DB::table('recently_viewed_items')->where(['product_id' => $id,'session_id' => $session_id])->count();
+        if($countRecentlyViewedItems == 0){
+            DB::table('recently_viewed_items')->insert(['product_id' => $id,'session_id' => $session_id]);
+        }
+        // Get Recently viewed products Ids
+        $recentlyViewedProductsIds = DB::table('recently_viewed_items')->select('product_id')->where('product_id', '!=', $id)->where('session_id', $session_id)->inRandomOrder()->get()->take(4)->pluck('product_id');
+        //dd($recentlyViewedProductsIds);
+        // Get Recently viewed products
+        $recentlyViewedProducts = Product::with('brand', 'images')->whereIn('id', $recentlyViewedProductsIds)->get()->toArray();
+
+        return view(
+            'front.products.detail',
+            compact(
+                'categories',
+                'homeSliderBanner',
+                'productDetails',
+                'getCategoriesDetails',
+                'groupProducts',
+                'relatedProducts',
+                'recentlyViewedProducts',
+            )
         );
+    }
+
+    public function cleanupRecentlyViewedItems()
+    {
+        $expirationDate = now()->subDays(1); // Adjust the number of days as needed
+        DB::table('recently_viewed_items')->where('created_at', '<', $expirationDate)->delete();
     }
 
     public function getAttributePrice(Request $request)
