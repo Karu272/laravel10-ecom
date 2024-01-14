@@ -7,7 +7,7 @@
             <div class="row justify-content-center">
                 <!-- Move col-md-4 to the left of col-md-8 -->
                 <div class="col-md-4 ">
-                    <nav class="mt-4" aria-label="breadcrumb">
+                    <nav  class="mt-4" aria-label="breadcrumb">
                         <ol style="background-color: white;" class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a>&nbsp;&rarr;<?php echo $getCategoriesDetails['breadcrumbs']; ?>
                             </li>
@@ -61,28 +61,27 @@
                 </div>
                 <div class="col-md-4 ">
                     <div class="txtcard">
+                        <div class="print-error-msg"></div>
+                        <div class="print-success-msg"></div>
                         <div style="display: flex; align-items: center;">
                             <p class="mb-0 mr-1">FROM</p>
                             <h2 style="display: flex; align-items: center;">
                                 {{ $productDetails['brand']['brand_name'] }}
-                                <i class="fas fa-long-arrow-alt-right ml-2 mr-2"></i>
+                                <i class="fas fa-long-arrow-alt-right ml-2 mr-2 mb-0"></i>
                                 {{ $productDetails['product_name'] }}
                             </h2>
                         </div>
                         <span class="d-flex align-items-end getAttributePrice">&nbsp;&nbsp;&nbsp;
-                            @if (isset($productDetails['product_discount']))
-                                <h1 class="mb-0" style="color: orange">{{ $productDetails['final_price'] }}Kr</h1>
+                            <h1 class="mb-0" style="color: orange">{{ $productDetails['final_price'] }}Kr</h1>
+                            @if (isset($productDetails['product_discount']) && $productDetails['product_discount'] > 0)
                                 <span class="d-flex align-items-end">&nbsp;&nbsp;&nbsp;
-                                    <p class="mb-0 mr-3" style="color: orange">({{ $productDetails['product_discount'] }}%
-                                        off)
-                                    </p>
+                                    <p class="mb-0 mr-3" style="color: orange">{{ $productDetails['product_discount'] }}%
+                                        off</p>
                                 </span>
                                 <span class="d-flex align-items-end">
                                     <p class="mb-0 mr-3" style="text-decoration: line-through;">
                                         {{ $productDetails['product_price'] }}</p>
                                 </span>
-                            @else
-                                <h1 class="mb-0" style="color: orange">{{ $productDetails['final_price'] }}Kr</h1>
                             @endif
                         </span>
                         <br>
@@ -92,7 +91,7 @@
                         </span>
                         <br>
                         <div class="d-flex flex-column align-items-start">
-                            <h5 >Description:</h5>
+                            <h5>Description:</h5>
                             <p>{{ $productDetails['meta_description'] }}</p>
                         </div>
                         <br>
@@ -109,38 +108,41 @@
                             <i class="fab fa-google-plus"></i>
                         </span>
                         <br>
-                        <span class="d-flex">
-                            <h6 class="mr-3">Color:&nbsp;</h6>
-                            @if (count($groupProducts) > 0)
-                                @foreach ($groupProducts as $item)
-                                    <a href="{{ url('product/' . $item['id']) }}">
-                                        <label style="background-color: {{ $item['family_color'] }};" for="folly"
-                                            class="mr-3 colorBtn"></label>
-                                    </a>
-                                @endforeach
-                            @endif
-                        </span>
-                        <br>
-                        <div class="d-flex">
-                            <h6 class="mr-3">Size:&nbsp; </h6>
-                            @foreach ($productDetails['attributes'] as $attribute)
-                                @if ($attribute['stock'] > 0 && $attribute['status'] === 1)
-                                    <div class="mr-3 detail-size">
-                                        <input type="radio" id="{{ $attribute['size'] }}"
-                                            value="{{ $attribute['size'] }}" product-id="{{ $productDetails['id'] }}"
-                                            class="getPrice visually-hidden" name="size" checked>
-                                        <label for="{{ $attribute['size'] }}">{{ $attribute['size'] }}</label>
-                                    </div>
+                        <form name="addToCart" id="addToCart" action="javascript:;">
+                            <input type="hidden" name="product_id" value="{{ $productDetails['id'] }}">
+                            <span class="d-flex">
+                                <h6 class="mr-3">Color:&nbsp;</h6>
+                                @if (count($groupProducts) > 0)
+                                    @foreach ($groupProducts as $item)
+                                        <a href="{{ url('product/' . $item['id']) }}">
+                                            <label style="background-color: {{ $item['family_color'] }};"
+                                                class="mr-3 colorBtn"></label>
+                                        </a>
+                                    @endforeach
                                 @endif
-                            @endforeach
-                        </div>
-                        <br>
-                        <span class="d-flex">
-                            <p class="minusBtn mr-3">-</p>
-                            <p class="quantity mr-3">5</p>
-                            <p class="plusBtn mr-3">+</p>
-                            <button class="mr-3 btn btn-success btn1" type="submit">Add to Cart</button>
-                        </span>
+                            </span>
+                            <br>
+                            <div class="d-flex">
+                                <h6 class="mr-3">Size:&nbsp; </h6>
+                                @foreach ($productDetails['attributes'] as $attribute)
+                                    @if ($attribute['stock'] > 0 && $attribute['status'] === 1)
+                                        <div class="mr-3 detail-size">
+                                            <input type="radio" id="{{ $attribute['size'] }}"
+                                                value="{{ $attribute['size'] }}" product-id="{{ $productDetails['id'] }}"
+                                                class="getPrice visually-hidden" name="size" required>
+                                            <label for="{{ $attribute['size'] }}">{{ $attribute['size'] }}</label>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                            <br>
+                            <span class="d-flex">
+                                <p class="minusBtn mr-3">-</p>
+                                <input name="qty" value="1" data-min="1" data-max="100" class="quantity mr-3">
+                                <p class="plusBtn mr-3">+</p>
+                                <button class="mr-3 btn btn-success btn1" type="submit">Add to Cart</button>
+                            </span>
+                        </form>
                         <br>
                         <div class="d-flex flex-column align-items-start">
                             <h6>Product Policy:</h6>

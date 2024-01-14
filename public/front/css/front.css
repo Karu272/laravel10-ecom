@@ -281,7 +281,9 @@ h6 {
     padding: 8px;
     border: 1px solid lightgrey;
     background-color: lightgrey;
-    font-size: 25px; /* Adjust the font size as needed */
+    text-align: center;
+    width: 8%;
+    height: 3.4rem;
 }
 
 .btn1 {
@@ -329,6 +331,8 @@ input[type="radio"].visually-hidden {
     width: 30px;
     height: 30px;
     cursor: pointer;
+    border: 1px solid black;
+    padding: 10px;
 }
 
 /* // detials page */

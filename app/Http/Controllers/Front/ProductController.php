@@ -10,8 +10,11 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Banner;
 use App\Models\ProductsFilter;
+use App\Models\Attribute;
+use App\Models\Cart;
 use Session;
 use DB;
+use Auth;
 
 
 class ProductController extends Controller
@@ -266,6 +269,76 @@ class ProductController extends Controller
             $getAttributePrice = Product::getAttributePrice($data['product_id'], $data['size']);
             //echo "<pre>"; print_r($getAttributePrice); die;
             return $getAttributePrice;
+        }
+    }
+
+    public function addToCart(Request $request){
+        if($request->isMethod('post')){
+            $data = $request->all();
+            //echo "<pre>"; print_r($data); die;
+
+            // Fetch data from the productStock() function in app\Models\Attribute.php
+            $productStock = Attribute::productStock($data['product_id'], $data['size']);
+            // Check if the product is in stock or not
+            if($data['qty'] > $productStock){
+                $message = "Required Quantity is not available";
+                return response()->json(['status' => false,'message' => $message]);
+            }
+
+            // Fetch data from the productStatus() function in app\Models\Product.php
+            $productStatus = Product::productStatus($data['product_id']);
+            // Check if the product is active or not
+            if($productStatus == 0){
+                $message = "Product is not available";
+                return response()->json(['status' => false,'message' => $message]);
+            }
+
+            // Generate Session Id if it does not exist
+            $session_id = Session::get('session_id');
+            if(empty($session_id)){
+                $session_id = Session::getId();
+                Session::put('session_id', $session_id);
+            } else {
+                $session_id = Session::get('session_id');
+            }
+            // Look in concole Network -> Name -> Preview
+            // echo $session_id; die;
+
+            // Check if the product is already in the cart
+            if(Auth::check()){
+                // User is logged in
+                $user_id = Auth::user()->id;
+                $countProducts = Cart::where([
+                    'product_id' => $data['product_id'],
+                    'product_size' => $data['size'],
+                    'user_id' => $user_id])
+                    ->count();
+            }else{
+                // User is not logged in
+                $user_id = 0;
+                $countProducts = Cart::where([
+                    'product_id' => $data['product_id'],
+                    'product_size' => $data['size'],
+                    'session_id' => $session_id])
+                    ->count();
+            }
+            if($countProducts > 0){
+                $message = "Product already exists in the cart";
+                return response()->json(['status' => false,'message' => $message]);
+            }
+
+            // Save the product in Cart
+            $item = new Cart;
+            $item->session_id = $session_id;
+            if(Auth::check()){
+                $item->user_id = Auth::user()->id;
+            }
+            $item->product_id = $data['product_id'];
+            $item->product_size = $data['size'];
+            $item->product_qty = $data['qty'];
+            $item->save();
+            $message = "Product has been added to the cart";
+            return response()->json(['status' => true,'message' => $message]);
         }
     }
 }

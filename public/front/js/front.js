@@ -25,6 +25,34 @@ $(document).ready(function () {
     });
     // --------------- END --------------
 
+    //------------- Details stock update depending on size ------
+
+    // --------------- END --------------
+
+    // ------------- Details plus and minus button
+    $(".minusBtn").click(function () {
+        // Get the current value
+        var currentValue = parseInt($(".quantity").val());
+
+        // Check if the current value is greater than the minimum
+        if (currentValue > parseInt($(".quantity").data("min"))) {
+            // Decrease the value
+            $(".quantity").val(currentValue - 1);
+        }
+    });
+
+    $(".plusBtn").click(function () {
+        // Get the current value
+        var currentValue = parseInt($(".quantity").val());
+
+        // Check if the current value is less than the maximum
+        if (currentValue < parseInt($(".quantity").data("max"))) {
+            // Increase the value
+            $(".quantity").val(currentValue + 1);
+        }
+    });
+    // --------------- END --------------
+
     // ------- product card start -------
 
     // Function to show products based on the selected category
@@ -46,4 +74,33 @@ $(document).ready(function () {
     showProducts("all");
 
     // --------------- END -------------
+
+    // ----------- Add to cart -----------
+    $("#addToCart").submit(function () {
+        var formData = $(this).serialize();
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            url: "/add-to-cart",
+            type: "POST",
+            data: formData,
+            success: function (data) {
+                if(data.status == true){
+                    $('.print-success-msg').show();
+                    $('.print-success-msg').delay(3000).fadeOut('slow');
+                    $('.print-success-msg').html("<div class='alert alert-success' role='alert'><strong>Success!! </strong>"+ data.message +"</div>");
+                } else {
+                    $('.print-error-msg').show();
+                    $('.print-error-msg').delay(3000).fadeOut('slow');
+                    $('.print-error-msg').html("<div class='alert alert-danger' role='alert'><strong>Error!! </strong>"+ data.message +"</div>");
+                }
+            }, error: function () {
+                alert("error");
+            }
+        })
+    });
+    // -------------- END ----------------
+
 });
+

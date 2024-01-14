@@ -1,7 +1,7 @@
 <!-- Top Navigation Bar -->
 <nav id="mynavbar">
     <ul id="mynavbar-menu">
-        <a href="{{ url('/') }}"><img style="width: 20%;" src="{{ asset('front/img/logos/toplogo.png') }}"
+        <a style="width: 20%;" href="{{ url('/') }}"><img style="width: 70%;" src="{{ asset('front/img/logos/toplogo.png') }}"
                 alt="toplogo"></a>
         <li><a href="{{ url('/') }}">Home</a></li>
         <li class="has-children">

@@ -23,7 +23,8 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     Route::get('product/{id}', [FrontProductController::class, 'detail']);
     // Attribute Ajax size vs price update
     Route::post('get-attribute-price', [FrontProductController::class, 'getAttributePrice']);
-
+    // Add to Cart route
+    Route::post('/add-to-cart', [FrontProductController::class, 'addToCart']);
 
 
 });

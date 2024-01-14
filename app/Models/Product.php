@@ -98,4 +98,8 @@ class Product extends Model
         return ['product_price' => $attributePrice['price'], 'final_price' => $final_price, 'discount' => $discount];
     }
 
+    public static function productStatus($product_id) {
+        $productStatus = Product::select('status')->where('id', $product_id)->first();
+        return $productStatus->status;
+    }
 }
