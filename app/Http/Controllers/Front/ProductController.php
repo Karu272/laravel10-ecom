@@ -341,4 +341,18 @@ class ProductController extends Controller
             return response()->json(['status' => true,'message' => $message]);
         }
     }
+
+    public function cart(){
+        // Getting the banners
+        $homeSliderBanner = Banner::where('type', 'slider')->where('status', 1)->orderBy('sort', 'ASC')->get()->toArray();
+        // Fetching the categories and subcategories
+        $categories = Category::getCategories();
+        // Fetch all the data about the product
+
+        // Get the cart items
+        $getCartItems = Cart::getCartItems();
+        //dd($getCartItems);
+
+        return view('front.products.cart',compact('categories','homeSliderBanner','getCartItems'));
+    }
 }

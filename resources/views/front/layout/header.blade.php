@@ -1,8 +1,8 @@
 <!-- Top Navigation Bar -->
 <nav id="mynavbar">
     <ul id="mynavbar-menu">
-        <a style="width: 20%;" href="{{ url('/') }}"><img style="width: 70%;" src="{{ asset('front/img/logos/toplogo.png') }}"
-                alt="toplogo"></a>
+        <a style="width: 20%;" href="{{ url('/') }}"><img style="width: 70%;"
+                src="{{ asset('front/img/logos/toplogo.png') }}" alt="toplogo"></a>
         <li><a href="{{ url('/') }}">Home</a></li>
         <li class="has-children">
             <a href="#" aria-haspopup="true">Categories</a>
@@ -34,7 +34,7 @@
             </ul>
         </li>
         <li><a href="#!">Login</a></li>
-        <li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
+        <li><a href="{{ url('/cart') }}"><i class="fas fa-shopping-cart"></i></a></li>
     </ul>
 </nav>
 <!-- Mobile Navbar-->

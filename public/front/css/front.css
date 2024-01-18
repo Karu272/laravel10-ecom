@@ -258,32 +258,27 @@ h6 {
 .minusBtn,
 .plusBtn {
     display: inline-block;
-    padding: 8px;
-    background-color: lightgrey;
-    color: black;
-    font-size: 25px; /* Adjust the font size as needed */
+    border: 1px solid;
     cursor: pointer;
+    background-color: white;
 }
 
 .minusBtn {
     border-top-left-radius: 50%; /* Round only the top-left corner */
     border-bottom-left-radius: 50%; /* Round only the bottom-left corner */
-    margin-right: -1px !important;
+    width: 6%;
 }
 .plusBtn {
     border-top-right-radius: 50%; /* Round only the top-right corner */
     border-bottom-right-radius: 50%; /* Round only the bottom-right corner */
-    margin-left: -16px !important;
+    width: 6%;
 }
 
 .quantity {
     display: inline-block;
-    padding: 8px;
-    border: 1px solid lightgrey;
-    background-color: lightgrey;
+    border: 1px solid;
     text-align: center;
-    width: 8%;
-    height: 3.4rem;
+    width: 6%;
 }
 
 .btn1 {
@@ -336,3 +331,6 @@ input[type="radio"].visually-hidden {
 }
 
 /* // detials page */
+
+
+

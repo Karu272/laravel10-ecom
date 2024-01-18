@@ -136,11 +136,11 @@
                                 @endforeach
                             </div>
                             <br>
-                            <span class="d-flex">
-                                <p class="minusBtn mr-3">-</p>
-                                <input name="qty" value="1" data-min="1" data-max="100" class="quantity mr-3">
-                                <p class="plusBtn mr-3">+</p>
-                                <button class="mr-3 btn btn-success btn1" type="submit">Add to Cart</button>
+                            <span class="d-flex align-items-center">
+                                <p class="minusBtn mb-0">-</p>
+                                <input name="qty" value="1" data-min="1" data-max="100" class="quantity">
+                                <p class="plusBtn mb-0">+</p>
+                                <button class="ml-3 btn btn-success btn1" type="submit">Add to Cart</button>
                             </span>
                         </form>
                         <br>

@@ -25,7 +25,8 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     Route::post('get-attribute-price', [FrontProductController::class, 'getAttributePrice']);
     // Add to Cart route
     Route::post('/add-to-cart', [FrontProductController::class, 'addToCart']);
-
+    // Cart page route
+    Route::get('/cart', [FrontProductController::class, 'cart']);
 
 });
 
