@@ -220,19 +220,19 @@ class ProductController extends Controller
 
         // Get related products in a slideshow
         $relatedProducts = Product::with('brand', 'images')->where('category_id', $productDetails['category']['id'])->where('id', '!=', $id)->limit(4)->inRandomOrder()->get()->toArray();
-//dd($relatedProducts);
+        //dd($relatedProducts);
 
         // Set Session for recently viewed products
-        if(empty(Session::get('session_id'))){
+        if (empty(Session::get('session_id'))) {
             $session_id = md5(uniqid(rand(), true));
         } else {
             $session_id = Session::get('session_id');
         }
         Session::put('session_id', $session_id);
         //Insert product in recently_viewed_items table if it does not exist
-        $countRecentlyViewedItems =DB::table('recently_viewed_items')->where(['product_id' => $id,'session_id' => $session_id])->count();
-        if($countRecentlyViewedItems == 0){
-            DB::table('recently_viewed_items')->insert(['product_id' => $id,'session_id' => $session_id]);
+        $countRecentlyViewedItems = DB::table('recently_viewed_items')->where(['product_id' => $id, 'session_id' => $session_id])->count();
+        if ($countRecentlyViewedItems == 0) {
+            DB::table('recently_viewed_items')->insert(['product_id' => $id, 'session_id' => $session_id]);
         }
         // Get Recently viewed products Ids
         $recentlyViewedProductsIds = DB::table('recently_viewed_items')->select('product_id')->where('product_id', '!=', $id)->where('session_id', $session_id)->inRandomOrder()->get()->take(4)->pluck('product_id');
@@ -272,30 +272,31 @@ class ProductController extends Controller
         }
     }
 
-    public function addToCart(Request $request){
-        if($request->isMethod('post')){
+    public function addToCart(Request $request)
+    {
+        if ($request->isMethod('post')) {
             $data = $request->all();
             //echo "<pre>"; print_r($data); die;
 
             // Fetch data from the productStock() function in app\Models\Attribute.php
             $productStock = Attribute::productStock($data['product_id'], $data['size']);
             // Check if the product is in stock or not
-            if($data['qty'] > $productStock){
+            if ($data['qty'] > $productStock) {
                 $message = "Required Quantity is not available";
-                return response()->json(['status' => false,'message' => $message]);
+                return response()->json(['status' => false, 'message' => $message]);
             }
 
             // Fetch data from the productStatus() function in app\Models\Product.php
             $productStatus = Product::productStatus($data['product_id']);
             // Check if the product is active or not
-            if($productStatus == 0){
+            if ($productStatus == 0) {
                 $message = "Product is not available";
-                return response()->json(['status' => false,'message' => $message]);
+                return response()->json(['status' => false, 'message' => $message]);
             }
 
             // Generate Session Id if it does not exist
             $session_id = Session::get('session_id');
-            if(empty($session_id)){
+            if (empty($session_id)) {
                 $session_id = Session::getId();
                 Session::put('session_id', $session_id);
             } else {
@@ -305,32 +306,34 @@ class ProductController extends Controller
             // echo $session_id; die;
 
             // Check if the product is already in the cart
-            if(Auth::check()){
+            if (Auth::check()) {
                 // User is logged in
                 $user_id = Auth::user()->id;
                 $countProducts = Cart::where([
                     'product_id' => $data['product_id'],
                     'product_size' => $data['size'],
-                    'user_id' => $user_id])
+                    'user_id' => $user_id
+                ])
                     ->count();
-            }else{
+            } else {
                 // User is not logged in
                 $user_id = 0;
                 $countProducts = Cart::where([
                     'product_id' => $data['product_id'],
                     'product_size' => $data['size'],
-                    'session_id' => $session_id])
+                    'session_id' => $session_id
+                ])
                     ->count();
             }
-            if($countProducts > 0){
+            if ($countProducts > 0) {
                 $message = "Product already exists in the cart";
-                return response()->json(['status' => false,'message' => $message]);
+                return response()->json(['status' => false, 'message' => $message]);
             }
 
             // Save the product in Cart
             $item = new Cart;
             $item->session_id = $session_id;
-            if(Auth::check()){
+            if (Auth::check()) {
                 $item->user_id = Auth::user()->id;
             }
             $item->product_id = $data['product_id'];
@@ -338,21 +341,71 @@ class ProductController extends Controller
             $item->product_qty = $data['qty'];
             $item->save();
             $message = "Product has been added to the cart";
-            return response()->json(['status' => true,'message' => $message]);
+            return response()->json(['status' => true, 'message' => $message]);
         }
     }
 
-    public function cart(){
+    public function cart()
+    {
         // Getting the banners
         $homeSliderBanner = Banner::where('type', 'slider')->where('status', 1)->orderBy('sort', 'ASC')->get()->toArray();
         // Fetching the categories and subcategories
         $categories = Category::getCategories();
-        // Fetch all the data about the product
 
         // Get the cart items
         $getCartItems = Cart::getCartItems();
         //dd($getCartItems);
 
-        return view('front.products.cart',compact('categories','homeSliderBanner','getCartItems'));
+        return view('front.products.cart', compact(
+            'categories',
+            'homeSliderBanner',
+            'getCartItems',
+        )
+        );
     }
+
+    public function updateCartItemQuantity(Request $request)
+    {
+        \Log::info('Received request data:', $request->all());
+        if ($request->ajax()) {
+            $data = $request->all();
+            // echo "<pre>"; print_r($data); die;
+
+            // Get cart Details
+            $cartDetails = Cart::find($data['cartid']);
+            //Get Avilable stock
+            $availableStock = Attribute::select('stock')->where(['product_id' => $cartDetails['product_id'], 'size' => $cartDetails['product_size']])->first()->toArray();
+            //echo "<pre>"; print_r($availableStock); die;
+            // Check if the quantity is less than the available stock
+            if ($data['qty'] > $availableStock['stock']) {
+                $getCartItems = Cart::getCartItems();
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Required Quantity is not available',
+                    'view' => (string) View::make('front.products.cart_items', compact('getCartItems')),
+                ]);
+            }
+            // Check if product size is available or not
+            $availableSize = Attribute::where(['product_id' => $cartDetails['product_id'], 'size' => $cartDetails['product_size'], 'status' => 1])->count();
+            if ($availableSize == 0) {
+                $getCartItems = Cart::getCartItems();
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Product Size is not available',
+                    'view' => (string) View::make('front.products.cart_items', compact('getCartItems')),
+                ]);
+            }
+
+            // Update the Cart Item Qty
+            Cart::where('id', $data['cartid'])->update(['product_qty' => $data['qty']]);
+            // Get Updated Cart Items
+            $getCartItems = Cart::getCartItems();
+            // Return the updated cart items via Ajax
+            return response()->json([
+                'status' => true,
+                'view' => (string) View::make('front.products.cart_items', compact('getCartItems')),
+            ]);
+        }
+    }
+
 }

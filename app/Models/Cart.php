@@ -12,6 +12,16 @@ class Cart extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'session_id',
+        'user_id',
+        'product_id',
+        'product_size',
+        'product_qty', // Add this line
+        'created_at',
+        'updated_at',
+    ];
+
     public static function getCartItems() {
         // If the user is logged in , check from Auth (user_id)
         if(Auth::check()){

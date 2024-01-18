@@ -12,10 +12,22 @@ $(document).ready(function () {
             type: "POST",
             data: { size: size, product_id: product_id },
             success: function (data) {
-                if(data['discount'] > 0){
-                    $(".getAttributePrice").html("<h1 class='mb-0' style='color: orange'>"+ data['final_price'] +"Kr</h1><span class='d-flex align-items-end'>&nbsp;&nbsp;&nbsp;<p class='mb-0 mr-3' style='color: orange'>("+ data['discount'] +"% off)</p></span><span class='d-flex align-items-end'><p class='mb-0 mr-3' style='text-decoration: line-through;'>"+ data['product_price'] +"</p></span>");
+                if (data["discount"] > 0) {
+                    $(".getAttributePrice").html(
+                        "<h1 class='mb-0' style='color: orange'>" +
+                            data["final_price"] +
+                            "Kr</h1><span class='d-flex align-items-end'>&nbsp;&nbsp;&nbsp;<p class='mb-0 mr-3' style='color: orange'>(" +
+                            data["discount"] +
+                            "% off)</p></span><span class='d-flex align-items-end'><p class='mb-0 mr-3' style='text-decoration: line-through;'>" +
+                            data["product_price"] +
+                            "</p></span>"
+                    );
                 } else {
-                    $(".getAttributePrice").html("<h1 class='mb-0' style='color: orange'>"+ data['final_price'] +"Kr</h1>");
+                    $(".getAttributePrice").html(
+                        "<h1 class='mb-0' style='color: orange'>" +
+                            data["final_price"] +
+                            "Kr</h1>"
+                    );
                 }
             },
             error: function () {
@@ -25,7 +37,47 @@ $(document).ready(function () {
     });
     // --------------- END --------------
 
-    //------------- Details stock update depending on size ------
+    //------------- Plus minus Btn in cart ------
+    $(document).on("click", ".updateCartItem", function () {
+        if ($(this).hasClass("qtyPlus")) {
+            //Get Qty
+            var quantity = $(this).data("qty");
+            // Increase by 1
+            new_qty = parseInt(quantity) + 1;
+        }
+
+        if ($(this).hasClass("qtyMinus")) {
+            //Get Qty
+            var quantity = $(this).data("qty");
+            // Check if it has atleast 1
+            if (quantity <= 1) {
+                alert("Item Quantaty can not be less than 1");
+                return false;
+            }
+            // Increase by 1
+            new_qty = parseInt(quantity) - 1;
+        }
+
+        var cartid = $(this).data("cartid");
+
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            data: { cartid: cartid, qty: new_qty },
+            url: "/update-cart-item-qty",
+            type: "post",
+            success: function (resp) {
+                if (resp.status == false) {
+                    alert(resp.message);
+                }
+                $("#appendCartItems").html(resp.view);
+            },
+            error: function () {
+                alert("This is the Error");
+            },
+        });
+    });
 
     // --------------- END --------------
 
@@ -86,21 +138,28 @@ $(document).ready(function () {
             type: "POST",
             data: formData,
             success: function (data) {
-                if(data.status == true){
-                    $('.print-success-msg').show();
-                    $('.print-success-msg').delay(3000).fadeOut('slow');
-                    $('.print-success-msg').html("<div class='alert alert-success' role='alert'><strong>Success!! </strong>"+ data.message +"</div>");
+                if (data.status == true) {
+                    $(".print-success-msg").show();
+                    $(".print-success-msg").delay(3000).fadeOut("slow");
+                    $(".print-success-msg").html(
+                        "<div class='alert alert-success' role='alert'><strong>Success!! </strong>" +
+                            data.message +
+                            "</div>"
+                    );
                 } else {
-                    $('.print-error-msg').show();
-                    $('.print-error-msg').delay(3000).fadeOut('slow');
-                    $('.print-error-msg').html("<div class='alert alert-danger' role='alert'><strong>Error!! </strong>"+ data.message +"</div>");
+                    $(".print-error-msg").show();
+                    $(".print-error-msg").delay(3000).fadeOut("slow");
+                    $(".print-error-msg").html(
+                        "<div class='alert alert-danger' role='alert'><strong>Error!! </strong>" +
+                            data.message +
+                            "</div>"
+                    );
                 }
-            }, error: function () {
+            },
+            error: function () {
                 alert("error");
-            }
-        })
+            },
+        });
     });
     // -------------- END ----------------
-
 });
-

@@ -9,18 +9,18 @@
             <ul aria-label="submenu">
                 @foreach ($categories as $category)
                     <li class="has-children">
-                        <a href="{{ $category['url'] }}" aria-haspopup="true">{{ $category['category_name'] }}</a>
+                        <a href="{{ url($category['url']) }}" aria-haspopup="true">{{ $category['category_name'] }}</a>
                         @if (isset($category['subcategories']) && count($category['subcategories']) > 0)
                             <ul aria-label="submenu">
                                 @foreach ($category['subcategories'] as $subcategory)
                                     <li class="has-children">
-                                        <a href="{{ $subcategory['url'] }}"
+                                        <a href="{{ url($subcategory['url']) }}"
                                             aria-haspopup="true">{{ $subcategory['category_name'] }}</a>
                                         @if (isset($subcategory['subcategories']) && count($subcategory['subcategories']) > 0)
                                             <ul aria-label="submenu">
                                                 @foreach ($subcategory['subcategories'] as $subsubcategory)
                                                     <li><a
-                                                            href="{{ $subsubcategory['url'] }}">{{ $subsubcategory['category_name'] }}</a>
+                                                            href="{{ url($subsubcategory['url']) }}">{{ $subsubcategory['category_name'] }}</a>
                                                     </li>
                                                 @endforeach
                                             </ul>

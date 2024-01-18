@@ -266,19 +266,19 @@ h6 {
 .minusBtn {
     border-top-left-radius: 50%; /* Round only the top-left corner */
     border-bottom-left-radius: 50%; /* Round only the bottom-left corner */
-    width: 6%;
+    width: 10%;
 }
 .plusBtn {
     border-top-right-radius: 50%; /* Round only the top-right corner */
     border-bottom-right-radius: 50%; /* Round only the bottom-right corner */
-    width: 6%;
+    width: 10%;
 }
 
 .quantity {
     display: inline-block;
     border: 1px solid;
     text-align: center;
-    width: 6%;
+    width: 10%;
 }
 
 .btn1 {
