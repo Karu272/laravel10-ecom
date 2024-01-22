@@ -68,6 +68,7 @@ $(document).ready(function () {
             url: "/update-cart-item-qty",
             type: "post",
             success: function (resp) {
+                $(".totalCartItems").html(resp.totalCartItems);
                 if (resp.status == false) {
                     alert(resp.message);
                 }
@@ -139,6 +140,7 @@ $(document).ready(function () {
             data: formData,
             success: function (data) {
                 if (data.status == true) {
+                    $(".totalCartItems").html(data['totalCartItems']);
                     $(".print-success-msg").show();
                     $(".print-success-msg").delay(3000).fadeOut("slow");
                     $(".print-success-msg").html(
@@ -161,5 +163,72 @@ $(document).ready(function () {
             },
         });
     });
+    // -------------- END ----------------
+
+    // ----------- Delete cart item -----------
+    $(document).on("click", ".deleteCartItem", function () {
+        var cartid = $(this).data("cartid");
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            data: { cartid: cartid },
+            url: "/delete-cart-item",
+            type: "post",
+            success: function (resp) {
+                $(".totalCartItems").html(resp.totalCartItems);
+                $("#appendCartItems").html(resp.view);
+            },
+            error: function () {
+                alert("This is the Error");
+            }
+        });
+    });
+
+    // -------------- END ----------------
+
+    // --------------- Empty cart --------
+    $(document).on("click", ".emptyCart", function () {
+        var result = confirm("Are you sure want to clear cart?");
+        if (result) {
+            $.ajax({
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                },
+                url: "/empty-cart",
+                type: "post",
+                success: function (resp) {
+                    $(".totalCartItems").html(resp.totalCartItems);
+                    $("#appendCartItems").html(resp.view);
+                },
+                error: function () {
+                    alert("This is the Error");
+                }
+            });
+        }
+    });
+    // -------------- END ----------------
+
+    // ----------- Register user -----------
+
+    $("#registerForm").submit(function () {
+        var formData = $('#registerForm').serialize();
+        $.ajax({
+            url:'/register',
+            type:'POST',
+            data:formData,
+            success:function(resp){
+                window.location.href = resp.redirectUrl;
+            },
+            error:function(){
+                alert("This is the Error");
+            }
+        });
+    });
+
+    // -------------- END ----------------
+
+    // ----------- Login user -----------
+
     // -------------- END ----------------
 });

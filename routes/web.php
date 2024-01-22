@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\BannersController;
 
 use App\Http\Controllers\Front\IndexController;
+use App\Http\Controllers\Front\UserController;
 use App\Http\Controllers\Front\ProductController as FrontProductController;
 use App\Models\Category;
 
@@ -29,6 +30,13 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     Route::get('/cart', [FrontProductController::class, 'cart']);
     // Update cart quantity route
     Route::post('/update-cart-item-qty', [FrontProductController::class, 'updateCartItemQuantity']);
+    // Delete cart item route
+    Route::post('/delete-cart-item', [FrontProductController::class, 'deleteCartItem']);
+    // Empty cart route
+    Route::post('/empty-cart', [FrontProductController::class, 'emptyCart']);
+    // Register & login page route
+    Route::match(['get', 'post'], '/register', [UserController::class,'register']);
+    Route::match(['get', 'post'], '/login', [UserController::class, 'login']);
 
 });
 

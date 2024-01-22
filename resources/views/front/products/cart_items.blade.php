@@ -66,6 +66,7 @@
                                 <p class="plusBtn updateCartItem qtyPlus" data-cartid="{{ $item['id']}}" data-qty="{{ $item['product_qty'] }}">+</p>
                             </div>
                             <br>
+                            <a title="Delete Item" href="#" class="deleteCartItem" data-cartid="{{ $item['id'] }}"><i class="fas fa-trash"></i></a>
                         </div>
                     </div>
                 </div>
@@ -78,8 +79,7 @@
     <br>
     <div class="card-header text-right">
         <span>
-            <a href="{{ url('/') }}" class="btn btn-primary">Continue Shopping</a>
-            <a href="#" class="btn btn-danger">Clear Cart</a>
+            <a href="javascript:;" style="background-color: white" class="btn border p-3 emptyCart">Clear Cart</a>
         </span>
     </div>
     <br>
@@ -98,7 +98,7 @@
                         <td>cd 0kr</td>
                     </tr>
                     <tr>
-                        <td><input type="text" style="border: 1px solid black; background: rgb(228, 228, 228);"
+                        <td><input name="coupon" type="text" style="border: 1px solid black; background: rgb(228, 228, 228);"
                                 placeholder="Enter Coupon Code">
                         </td>
                         <th> GRAND TOTAL</th>

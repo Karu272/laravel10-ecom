@@ -1,0 +1,4 @@
+helper is a global file that will handle all kind of dynamic updates in the project
+
+to connect it to the project add "files": ["app/Helpers/helper.php"] under "autoload":
+in composer.json file and run composer dump-autoload in the Terminal

@@ -91,4 +91,5 @@ class IndexController extends Controller
             'bestSellerProducts'
         ));
     }
+
 }

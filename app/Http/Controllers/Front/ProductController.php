@@ -340,8 +340,18 @@ class ProductController extends Controller
             $item->product_size = $data['size'];
             $item->product_qty = $data['qty'];
             $item->save();
+
+            // Get total cart item
+            $totalCartItems = totalCartItems();
+
             $message = "Product has been added to the cart";
-            return response()->json(['status' => true, 'message' => $message]);
+            return response()->json(
+                [
+                    'status' => true,
+                    'totalCartItems' => $totalCartItems,
+                    'message' => $message
+                ],
+            );
         }
     }
 
@@ -356,11 +366,13 @@ class ProductController extends Controller
         $getCartItems = Cart::getCartItems();
         //dd($getCartItems);
 
-        return view('front.products.cart', compact(
-            'categories',
-            'homeSliderBanner',
-            'getCartItems',
-        )
+        return view(
+            'front.products.cart',
+            compact(
+                'categories',
+                'homeSliderBanner',
+                'getCartItems',
+            )
         );
     }
 
@@ -400,9 +412,53 @@ class ProductController extends Controller
             Cart::where('id', $data['cartid'])->update(['product_qty' => $data['qty']]);
             // Get Updated Cart Items
             $getCartItems = Cart::getCartItems();
+
+            // Get total cart item
+            $totalCartItems = totalCartItems();
             // Return the updated cart items via Ajax
             return response()->json([
                 'status' => true,
+                'totalCartItems' => $totalCartItems,
+                'view' => (string) View::make('front.products.cart_items', compact('getCartItems')),
+            ]);
+        }
+    }
+
+    public function deleteCartItem(Request $request)
+    {
+        \Log::info('Received request data:', $request->all());
+        if ($request->ajax()) {
+            $data = $request->all();
+            // echo "<pre>"; print_r($data); die;
+            Cart::where('id', $data['cartid'])->delete();
+            // Get Updated Cart Items
+            $getCartItems = Cart::getCartItems();
+            // Get total cart item
+            $totalCartItems = totalCartItems();
+            // Return the updated cart items via Ajax
+            return response()->json([
+                'status' => true,
+                'totalCartItems' => $totalCartItems,
+                'message' => 'Product has been removed from the cart',
+                'view' => (string) View::make('front.products.cart_items', compact('getCartItems')),
+            ]);
+        }
+    }
+
+    public function emptyCart(Request $request){
+        \Log::info('Received request data:', $request->all());
+        if ($request->ajax()) {
+            // Empty the cart
+            emptyCart();
+            // Get Updated Cart Items
+            $getCartItems = Cart::getCartItems();
+            // Get total cart item
+            $totalCartItems = totalCartItems();
+            // Return the updated cart items via Ajax
+            return response()->json([
+                'status' => true,
+                'totalCartItems' => $totalCartItems,
+                'message' => 'Product has been removed from the cart',
                 'view' => (string) View::make('front.products.cart_items', compact('getCartItems')),
             ]);
         }
