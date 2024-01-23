@@ -34,9 +34,14 @@
                 @endforeach
             </ul>
         </li>
-        <li><a href="{{ url('/register') }}">Login</a></li>
-        <li><a href="{{ url('/cart') }}"><i
-                    class="fas fa-shopping-cart"></i></a><span class="totalCartItems"
+        @if (Auth::check())
+            <li><a href="{{ url('/account') }}">Account</a></li>
+            <li><a href="{{ url('/logout')}}">Signout</a></li>
+        @else
+            <li><a href="{{ url('/register') }}">Signup</a></li>
+            <li><a href="{{ url('/login') }}">Signin</a></li>
+        @endif
+        <li><a href="{{ url('/cart') }}"><i class="fas fa-shopping-cart"></i></a><span class="totalCartItems"
                 style="color: white; background-color: orange; border-radius: 50%; padding: 4px 6px; font-size: 12px; line-height: 1;">{{ $totalCartItems }}</span>
         </li>
     </ul>

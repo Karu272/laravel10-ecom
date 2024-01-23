@@ -37,6 +37,11 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     // Register & login page route
     Route::match(['get', 'post'], '/register', [UserController::class,'register']);
     Route::match(['get', 'post'], '/login', [UserController::class, 'login']);
+    // User confirm account route
+    Route::match(['get', 'post'], '/confirm/{code}', [UserController::class, 'confirmAccount']);
+    // User logout route
+    Route::get('/logout', [UserController::class, 'logout']);
+    // User account page route
 
 });
 

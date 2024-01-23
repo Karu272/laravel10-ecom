@@ -140,7 +140,7 @@ $(document).ready(function () {
             data: formData,
             success: function (data) {
                 if (data.status == true) {
-                    $(".totalCartItems").html(data['totalCartItems']);
+                    $(".totalCartItems").html(data["totalCartItems"]);
                     $(".print-success-msg").show();
                     $(".print-success-msg").delay(3000).fadeOut("slow");
                     $(".print-success-msg").html(
@@ -181,7 +181,7 @@ $(document).ready(function () {
             },
             error: function () {
                 alert("This is the Error");
-            }
+            },
         });
     });
 
@@ -193,7 +193,9 @@ $(document).ready(function () {
         if (result) {
             $.ajax({
                 headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content"
+                    ),
                 },
                 url: "/empty-cart",
                 type: "post",
@@ -203,26 +205,50 @@ $(document).ready(function () {
                 },
                 error: function () {
                     alert("This is the Error");
-                }
+                },
             });
         }
     });
     // -------------- END ----------------
 
     // ----------- Register user -----------
+    // Hide the submit button initially
+    $("#submitBtn").hide();
+
+    // Add change event listener to the checkbox
+    $("#checkbox").change(function () {
+        if ($(this).prop("checked")) {
+            // If the checkbox is checked, show the submit button
+            $("#submitBtn").show();
+        } else {
+            // If the checkbox is not checked, hide the submit button
+            $("#submitBtn").hide();
+        }
+    });
 
     $("#registerForm").submit(function () {
-        var formData = $('#registerForm').serialize();
+        var formData = $("#registerForm").serialize();
         $.ajax({
-            url:'/register',
-            type:'POST',
-            data:formData,
-            success:function(resp){
-                window.location.href = resp.redirectUrl;
+            url: "/register",
+            type: "POST",
+            data: formData,
+            success: function (data) {
+                if (data.type == "validation") {
+                    $.each(data.errors, function (i, error) {
+                        $("#register-" + i).attr("style", "color:red");
+                        $("#register-" + i).html(error);
+                        setTimeout(function () {
+                            $("#register-" + i).css({ display: "none" });
+                        }, 3000);
+                    });
+                } else if (data.type == "success") {
+                    $("#register-success").attr("style", "color:green");
+                    $("#register-success").html(data.message);
+                }
             },
-            error:function(){
+            error: function () {
                 alert("This is the Error");
-            }
+            },
         });
     });
 
