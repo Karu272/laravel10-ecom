@@ -73,7 +73,7 @@ class CategoryController extends Controller {
             $imageName = null; // Initialize $imageName
 
             $rules = [
-                'category_name' => 'required|max:255|unique:categories,category_name,'.$editCat->id,
+                'category_name' => 'required|max:255|',
                 'description' => 'required',
                 'url' => 'required|unique:categories,url,'.$editCat->id,
                 'image' => 'image',

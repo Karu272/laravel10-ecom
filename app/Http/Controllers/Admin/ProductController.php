@@ -183,11 +183,11 @@ class ProductController extends Controller
             }
 
 
-            $editPro->fabric = $data['fabric'];
-            $editPro->sleeve = $data['sleeve'];
-            $editPro->pattern = $data['pattern'];
-            $editPro->fit = $data['fit'];
-            $editPro->occasion = $data['occasion'];
+            $editPro->fabric = $data['fabric'] ?? 'none';
+            $editPro->sleeve = $data['sleeve'] ?? 'none';
+            $editPro->pattern = $data['pattern'] ?? 'none';
+            $editPro->fit = $data['fit'] ?? 'none';
+            $editPro->occasion = $data['occasion'] ?? 'none';
             $editPro->status = 1;
             $editPro->save();
 

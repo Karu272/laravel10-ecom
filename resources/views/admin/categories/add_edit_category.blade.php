@@ -161,6 +161,9 @@
                     <button type="submit" class="btn btn-primary">Save</button>
                 </form>
             </div>
+            <br>
+            <br>
+            <a href="{{ route('admin.categories.categories') }}">Back</a>
         </div>
     </div>
 @endsection
