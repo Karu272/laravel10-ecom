@@ -3,7 +3,7 @@
 <!-- Side Menu (Hidden on Mobile) -->
 @include('front.layout.sidebar')
     <br>
-    <div style="background-color: rgb(252, 243, 255);" class="col-md-9">
+    <div style="background-color: rgb(252, 243, 255); box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.2);" class="col-md-9">
         <div class="mb-2 mt-1">
             <span style="background-color: white;">&nbsp;FOUND {{ count($categoryProducts) }} RESULTS&nbsp;</span>
             <nav class="mt-4" aria-label="breadcrumb">

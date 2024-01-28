@@ -1,7 +1,7 @@
 @extends('front.layout.layout')
 @section('content')
     <br>
-    <section class="vh-100 col-md-10 mx-auto" style="background-color: rgb(252, 243, 255);">
+    <section class="vh-100 col-md-10 mx-auto" style="background-color: rgb(252, 243, 255); box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.2);">
         <div class="container h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-lg-12 col-xl-11">
@@ -15,37 +15,36 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                             <div class="form-outline flex-fill mb-0">
+                                                <label class="form-label" for="name">Your Name</label>
                                                 <input type="text" id="name" name="name" class="form-control"
                                                     autocomplete="name" />
-                                                <label class="form-label" for="name">Your Name</label>
                                                 <p id="register-name"></p>
                                             </div>
                                         </div>
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                                             <div class="form-outline flex-fill mb-0">
+                                                <label class="form-label" for="email">Your Email</label>
                                                 <input type="email" id="email" name="email" class="form-control"
                                                     autocomplete="off" />
-                                                <label class="form-label" for="email">Your Email</label>
                                                 <p id="register-email"></p>
                                             </div>
                                         </div>
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                                             <div class="form-outline flex-fill mb-0">
+                                                <label class="form-label" for="password">Password</label>
                                                 <input type="password" id="password" name="password"
                                                     class="form-control" />
-                                                <label class="form-label" for="password">Password</label>
                                                 <p id="register-password"></p>
                                             </div>
                                         </div>
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                                             <div class="form-outline flex-fill mb-0">
+                                                <label class="form-label" for="password_confirmation">Repeat your password</label>
                                                 <input type="password" id="password_confirmation"
-                                                    name="password_confirmation" class="form-control" />
-                                                <label class="form-label" for="password_confirmation">Repeat your
-                                                    password</label>
+                                                name="password_confirmation" class="form-control" />
                                             </div>
                                         </div>
                                         <div class="d-flex mb-5">

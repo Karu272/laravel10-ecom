@@ -28,7 +28,7 @@ class AdminController extends Controller
         $brandsCount = Brand::get()->count();
         $usersCount = User::get()->count();
 
-        return view('admin.dashboard', compact('categoriesCount','producsCount','brandsCount','usersCount'));
+        return view('admin.dashboard', compact('categoriesCount', 'producsCount', 'brandsCount', 'usersCount'));
     }
 
     public function login(Request $request)
@@ -358,34 +358,46 @@ class AdminController extends Controller
 
     public function updateRole(Request $request, $id)
     {
+        // Check if the request method is POST
         if ($request->isMethod('post')) {
+            // Get all data from the request
             $data = $request->all();
-            // Delete all earlier roles for subadmin
+
+            // Delete all earlier roles for a specific subadmin (user) identified by $id
             AdminsRole::where('subadmin_id', $id)->delete();
 
+            // Define a set of permissions: 'view', 'edit', 'full'
             $permissions = ['view', 'edit', 'full'];
 
-            foreach (['banners','brands','images','products', 'categories', 'cms_pages'] as $module) {
+            // Iterate over a list of modules: 'banners', 'brands', 'images', 'products', 'categories', 'cms_pages'
+            foreach (['banners', 'brands', 'images', 'products', 'categories', 'cms_pages'] as $module) {
+                // Create a new AdminsRole instance
                 $role = new AdminsRole;
+
+                // Set the subadmin_id and module for the role
                 $role->subadmin_id = $id;
                 $role->module = $module;
 
+                // Iterate over the defined permissions for each module
                 foreach ($permissions as $permission) {
+                    // Build the storedData variable dynamically based on the current module and permission
                     $storedData = "{$module}_$permission";
 
-                    // The double dollar sign ($$) is used for variable variables in PHP.
-                    // It takes the value of the variable whose name is stored in $variable_name.
+                    // Check if the specific permission value is present in the request data
                     if (isset($data[$module][$permission])) {
+                        // If present, assign the value to a dynamically created variable (double dollar sign $$)
                         $$storedData = $data[$module][$permission];
                     } else {
+                        // If not present, set the value to 0
                         $$storedData = 0;
                     }
 
                     // Assign values to the corresponding attributes of the $role object
-                    //  if $permission is 'view', it becomes 'view_access'.
+                    // For example, if $permission is 'view', it becomes 'view_access'.
                     $role->{$permission . '_access'} = $$storedData;
                 }
 
+                // Save the role to the database
                 $role->save();
             }
 

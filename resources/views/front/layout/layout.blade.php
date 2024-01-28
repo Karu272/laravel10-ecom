@@ -13,6 +13,9 @@
 </head>
 
 <body>
+    <div class="loader">
+        <img src="{{ asset('admin/img/loader.gif') }}" alt="loading...">
+    </div>
     @include('front.layout.header')
     <hr>
     <!-- Side Menu and Product Cards -->

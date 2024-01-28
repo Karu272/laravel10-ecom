@@ -32,38 +32,6 @@
                                 placeholder="Type name"
                                 @if (!empty($editBrand['brand_name'])) value="{{ $editBrand['brand_name'] }}" @endif>
                         </div>
-                        <?php /*
-                        <div class="form-group col-md-6">
-                            <label for="#">Category Level</label>
-                            <select name="parent_id" class="form-control">
-                                <option value="">Select</option>
-                                <option class="oSizeT" value="0" @if ($editBrand['parent_id'] == 0) selected="" @endif>
-                                    &lceil;Main Category&rceil;</option>
-                                @foreach ($getCategories as $cat)
-                                    <option @if (isset($editBrand['parent_id']) && $editBrand['parent_id'] == $cat['id']) selected @endif value="{{ $cat['id'] }}">
-                                        &loz;
-                                        {{ $cat['category_name'] }} &loz;</option>
-                                    @if (!empty($cat['subcategories']))
-                                        @foreach ($cat['subcategories'] as $subcat)
-                                            <option @if (isset($editBrand['parent_id']) && $editBrand['parent_id'] == $subcat['id']) selected @endif
-                                                value="{{ $subcat['id'] }}">
-                                                &nbsp;&nbsp;&raquo; {{ $subcat['category_name'] }}
-                                            </option>
-                                            @if (!empty($subcat['subcategories']))
-                                                @foreach ($subcat['subcategories'] as $subsubcat)
-                                                    <option value="{{ $subsubcat['id'] }}">
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;
-                                                        {{ $subsubcat['category_name'] }}
-                                                    </option>
-                                                @endforeach
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-                        */
-                        ?>
                         <div class="form-group col-md-6">
                             <label for="brand_discount">Discount</label>
                             <input type="text" class="form-control" id="brand_discount" name="brand_discount"

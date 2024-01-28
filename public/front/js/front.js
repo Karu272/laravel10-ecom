@@ -1,6 +1,7 @@
 $(document).ready(function () {
     //------------- Details size ajax ------
     $(".getPrice").change(function () {
+        $(".loader").show();
         var size = $(this).val();
         var product_id = $(this).attr("product-id");
 
@@ -13,6 +14,7 @@ $(document).ready(function () {
             data: { size: size, product_id: product_id },
             success: function (data) {
                 if (data["discount"] > 0) {
+                    $(".loader").hide();
                     $(".getAttributePrice").html(
                         "<h1 class='mb-0' style='color: orange'>" +
                             data["final_price"] +
@@ -23,6 +25,7 @@ $(document).ready(function () {
                             "</p></span>"
                     );
                 } else {
+                    $(".loader").hide();
                     $(".getAttributePrice").html(
                         "<h1 class='mb-0' style='color: orange'>" +
                             data["final_price"] +
@@ -39,6 +42,7 @@ $(document).ready(function () {
 
     //------------- Plus minus Btn in cart ------
     $(document).on("click", ".updateCartItem", function () {
+        $(".loader").show();
         if ($(this).hasClass("qtyPlus")) {
             //Get Qty
             var quantity = $(this).data("qty");
@@ -70,6 +74,7 @@ $(document).ready(function () {
             success: function (resp) {
                 $(".totalCartItems").html(resp.totalCartItems);
                 if (resp.status == false) {
+                    $(".loader").hide();
                     alert(resp.message);
                 }
                 $("#appendCartItems").html(resp.view);
@@ -130,6 +135,7 @@ $(document).ready(function () {
 
     // ----------- Add to cart -----------
     $("#addToCart").submit(function () {
+        $(".loader").show();
         var formData = $(this).serialize();
         $.ajax({
             headers: {
@@ -140,6 +146,7 @@ $(document).ready(function () {
             data: formData,
             success: function (data) {
                 if (data.status == true) {
+                    $(".loader").hide();
                     $(".totalCartItems").html(data["totalCartItems"]);
                     $(".print-success-msg").show();
                     $(".print-success-msg").delay(3000).fadeOut("slow");
@@ -149,6 +156,7 @@ $(document).ready(function () {
                             "</div>"
                     );
                 } else {
+                    $(".loader").hide();
                     $(".print-error-msg").show();
                     $(".print-error-msg").delay(3000).fadeOut("slow");
                     $(".print-error-msg").html(
@@ -167,6 +175,7 @@ $(document).ready(function () {
 
     // ----------- Delete cart item -----------
     $(document).on("click", ".deleteCartItem", function () {
+        $(".loader").show();
         var cartid = $(this).data("cartid");
         $.ajax({
             headers: {
@@ -176,6 +185,7 @@ $(document).ready(function () {
             url: "/delete-cart-item",
             type: "post",
             success: function (resp) {
+                $(".loader").hide();
                 $(".totalCartItems").html(resp.totalCartItems);
                 $("#appendCartItems").html(resp.view);
             },
@@ -200,6 +210,7 @@ $(document).ready(function () {
                 url: "/empty-cart",
                 type: "post",
                 success: function (resp) {
+                    $(".loader").hide();
                     $(".totalCartItems").html(resp.totalCartItems);
                     $("#appendCartItems").html(resp.view);
                 },
@@ -218,15 +229,18 @@ $(document).ready(function () {
     // Add change event listener to the checkbox
     $("#checkbox").change(function () {
         if ($(this).prop("checked")) {
+            $(".loader").hide();
             // If the checkbox is checked, show the submit button
             $("#submitBtn").show();
         } else {
+            $(".loader").hide();
             // If the checkbox is not checked, hide the submit button
             $("#submitBtn").hide();
         }
     });
 
     $("#registerForm").submit(function () {
+        $(".loader").show();
         var formData = $("#registerForm").serialize();
         $.ajax({
             url: "/register",
@@ -234,6 +248,7 @@ $(document).ready(function () {
             data: formData,
             success: function (data) {
                 if (data.type == "validation") {
+                    $(".loader").hide();
                     $.each(data.errors, function (i, error) {
                         $("#register-" + i).attr("style", "color:red");
                         $("#register-" + i).html(error);
@@ -242,7 +257,21 @@ $(document).ready(function () {
                         }, 3000);
                     });
                 } else if (data.type == "success") {
-                    $("#register-success").attr("style", "color:green");
+                    $(".loader").hide();
+                    // Set basic styles
+                    $("#register-success").attr(
+                        "style",
+                        "background-color: green; padding: 10px; text-align: center; font-weight: bold; color: white;"
+                    );
+
+                    // Add media query for responsiveness
+                    var responsiveStyles = `@media only screen and (max-width: 600px) {#register-success {font-size: 14px;}}`;
+
+                    // Append responsive styles to existing styles
+                    $("#register-success").append(
+                        "<style>" + responsiveStyles + "</style>"
+                    );
+
                     $("#register-success").html(data.message);
                 }
             },
@@ -255,6 +284,181 @@ $(document).ready(function () {
     // -------------- END ----------------
 
     // ----------- Login user -----------
+    $("#loginForm").submit(function () {
+        $(".loader").show();
+        var formData = $(this).serialize();
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            url: "/login",
+            type: "POST",
+            data: formData,
+            success: function (data) {
+                if (data.type == "error") {
+                    $(".loader").hide();
+                    $.each(data.errors, function (i, error) {
+                        $("#login-" + i).attr("style", "color:red");
+                        $("#login-" + i).html(error);
+                        setTimeout(function () {
+                            $("#login-" + i).css({ display: "none" });
+                        }, 3000);
+                    });
+                } else if (data.type == "inactivated") {
+                    $(".loader").hide();
+                    $("#login-error").attr("style", "color:red");
+                    $("#login-error").html(data.message);
+                } else if (data.type == "incorrect") {
+                    $(".loader").hide();
+                    $("#login-error").attr("style", "color:red");
+                    $("#login-error").html(data.message);
+                } else if (data.type == "success") {
+                    $(".loader").hide();
+                    window.location.href = data.redirectUrl;
+                    $("#login-success").attr(
+                        "style",
+                        "background-color: green; padding: 10px; text-align: center; font-weight: bold; color: white;"
+                    );
+                    $("#login-success").html(data.message);
+                    $("#login-success").show();
+                    setTimeout(function () {
+                        $("#login-success").css({ display: "none" });
+                    }, 3000);
+                }
+            },
+            error: function () {
+                alert("This is the Error");
+            },
+        });
+    });
+    // -------------- END ----------------
 
+    // ----------- Forgot password -----------
+    $("#forgotForm").submit(function () {
+        $(".loader").show();
+        var formData = $(this).serialize();
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            url: "/forgotpwd",
+            type: "POST",
+            data: formData,
+            success: function (data) {
+                if (data.type == "error") {
+                    $(".loader").hide();
+                    $.each(data.errors, function (i, error) {
+                        $("#forgot-" + i).attr("style", "color:red");
+                        $("#forgot-" + i).html(error);
+                        setTimeout(function () {
+                            $("#forgot-" + i).css({ display: "none" });
+                        }, 3000);
+                    });
+                } else if (data.type == "success") {
+                    $(".loader").hide();
+                    $("#forgot-success").attr(
+                        "style",
+                        "background-color: green; padding: 10px; text-align: center; font-weight: bold; color: white;"
+                    );
+                    $("#forgot-success").html(data.message);
+                    $("#forgot-success").show();
+                    setTimeout(function () {
+                        $("#forgot-success").css({ display: "none" });
+                    }, 3000);
+                }
+            },
+            error: function () {
+                alert("This is the Error");
+            },
+        });
+    });
+    // -------------- END ----------------
+
+    // ----------- Reset password -----------
+
+    $("#resetPwdForm").submit(function () {
+        $(".loader").show();
+        var formData = $(this).serialize();
+        var password = $("#reset-password").val();
+        var confirmPassword = $("#password_confirmation").val();
+
+        if (password !== confirmPassword) {
+            $("#no-match")
+                .text("Passwords do not match")
+                .css("color", "red")
+                .show();
+            setTimeout(function () {
+                $("#no-match").hide();
+            }, 3000);
+            return false; // Prevent form submission
+        }
+
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            url: "/resetpwd",
+            type: "POST",
+            data: formData,
+            success: function (data) {
+                if (data.type == "error") {
+                    $(".loader").hide();
+                    $.each(data.errors, function (i, error) {
+                        $("#reset-" + i).attr("style", "color:red");
+                        $("#reset-" + i).html(error);
+                        setTimeout(function () {
+                            $("#reset-" + i).css({ display: "none" });
+                        }, 3000);
+                    });
+                } else if (data.type == "success") {
+                    $(".loader").hide();
+                    $("#reset-success").attr(
+                        "style",
+                        "background-color: green; padding: 10px; text-align: center; font-weight: bold; color: white;"
+                    );
+                    $("#reset-success").html(data.message);
+                    $("#reset-success").show();
+                    setTimeout(function () {
+                        $("#reset-success").css({ display: "none" });
+                    }, 3000);
+                }
+            },
+            error: function () {
+                alert("This is the Error");
+            },
+        });
+    });
+    // -------------- END ----------------
+
+    // ----------- Update account details -----------
+    $("#accountForm").submit(function () {
+        $(".loader").show();
+        var formData = $(this).serialize();
+        $.ajax({
+            url: "/account",
+            type: "POST",
+            data: formData,
+            success: function (data) {
+                if (data.type == "validation") {
+                    $(".loader").hide();
+                    $.each(data.errors, function (i, error) {
+                        $("#account-" + i).attr("style", "color:red");
+                        $("#account-" + i).html(error);
+                        setTimeout(function () {
+                            $("#account-" + i).css({ display: "none" });
+                        }, 3000);
+                    });
+                } else if (data.type == "success") {
+                    $(".loader").hide();
+                    $("#account-success").show().html(data.message).fadeOut(4000);
+                    $("#account-success").html(data.message);
+                }
+            },
+            error: function () {
+                $(".loader").hide();
+                alert("This is the Error");
+            },
+        });
+    });
     // -------------- END ----------------
 });

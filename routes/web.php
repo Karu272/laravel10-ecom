@@ -11,39 +11,49 @@ use App\Http\Controllers\Front\UserController;
 use App\Http\Controllers\Front\ProductController as FrontProductController;
 use App\Models\Category;
 
-Route::namespace('App\Http\Controllers\Front')->group(function () {
-    // Home page route
-    Route::get('/', [IndexController::class, 'index']);
-    // Listing products
-    $catURLs = Category::select('url')->where('status',1)->pluck('url');
-    //dd($catURLs);
-    foreach($catURLs as $url) {
-        Route::get('/' . $url, [FrontProductController::class, 'listing']);
-    }
-    // Detail page
-    Route::get('product/{id}', [FrontProductController::class, 'detail']);
-    // Attribute Ajax size vs price update
-    Route::post('get-attribute-price', [FrontProductController::class, 'getAttributePrice']);
-    // Add to Cart route
-    Route::post('/add-to-cart', [FrontProductController::class, 'addToCart']);
-    // Cart page route
-    Route::get('/cart', [FrontProductController::class, 'cart']);
-    // Update cart quantity route
-    Route::post('/update-cart-item-qty', [FrontProductController::class, 'updateCartItemQuantity']);
-    // Delete cart item route
-    Route::post('/delete-cart-item', [FrontProductController::class, 'deleteCartItem']);
-    // Empty cart route
-    Route::post('/empty-cart', [FrontProductController::class, 'emptyCart']);
-    // Register & login page route
-    Route::match(['get', 'post'], '/register', [UserController::class,'register']);
-    Route::match(['get', 'post'], '/login', [UserController::class, 'login']);
-    // User confirm account route
-    Route::match(['get', 'post'], '/confirm/{code}', [UserController::class, 'confirmAccount']);
-    // User logout route
-    Route::get('/logout', [UserController::class, 'logout']);
-    // User account page route
+Route::
+        namespace('App\Http\Controllers\Front')->group(function () {
+            // Home page route
+            Route::get('/', [IndexController::class, 'index']);
+            // Listing products
+            $catURLs = Category::select('url')->where('status', 1)->pluck('url');
+            //dd($catURLs);
+            foreach ($catURLs as $url) {
+                Route::get('/' . $url, [FrontProductController::class, 'listing']);
+            }
+            // Detail page
+            Route::get('product/{id}', [FrontProductController::class, 'detail']);
+            // Attribute Ajax size vs price update
+            Route::post('get-attribute-price', [FrontProductController::class, 'getAttributePrice']);
+            // Add to Cart route
+            Route::post('/add-to-cart', [FrontProductController::class, 'addToCart']);
+            // Cart page route
+            Route::get('/cart', [FrontProductController::class, 'cart']);
+            // Update cart quantity route
+            Route::post('/update-cart-item-qty', [FrontProductController::class, 'updateCartItemQuantity']);
+            // Delete cart item route
+            Route::post('/delete-cart-item', [FrontProductController::class, 'deleteCartItem']);
+            // Empty cart route
+            Route::post('/empty-cart', [FrontProductController::class, 'emptyCart']);
+            // Register & login page route
+            Route::match(['get', 'post'], '/register', [UserController::class, 'register']);
+            Route::match(['get', 'post'], '/login', [UserController::class, 'login'])->name('login');
+            // User confirm account route
+            Route::match(['get', 'post'], '/confirm/{code}', [UserController::class, 'confirmAccount']);
 
-});
+            Route::group(['middleware' => ['auth']], function () {
+                // User logout route
+                Route::get('/logout', [UserController::class, 'logout']);
+                // User account page route
+                Route::match(['get', 'post'], '/account', [UserController::class, 'account'])->name('front.users.account');;
+            });
+
+            // Forgot password page route
+            Route::match(['get', 'post'], '/forgotpwd', [UserController::class, 'forgotPassword']);
+            // Reset password code route
+            Route::match(['get', 'post'], '/resetpwd/{code?}', [UserController::class, 'resetPassword']);
+
+        });
 
 Route::prefix('admin')->group(function () {
 

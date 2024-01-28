@@ -1,7 +1,7 @@
 @extends('front.layout.layout')
 @section('content')
     <br>
-    <div style="background-color: rgb(252, 243, 255);" class="col-md-10 mx-auto">
+    <div style="background-color: rgb(252, 243, 255); box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.2);" class="col-md-10 mx-auto">
         <br>
         <div class="container-fluid text-center">
             <div class="row justify-content-center">
