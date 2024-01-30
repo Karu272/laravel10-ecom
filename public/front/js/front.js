@@ -44,6 +44,7 @@ $(document).ready(function () {
     $(document).on("click", ".updateCartItem", function () {
         $(".loader").show();
         if ($(this).hasClass("qtyPlus")) {
+            $(".loader").hide();
             //Get Qty
             var quantity = $(this).data("qty");
             // Increase by 1
@@ -51,6 +52,7 @@ $(document).ready(function () {
         }
 
         if ($(this).hasClass("qtyMinus")) {
+            $(".loader").hide();
             //Get Qty
             var quantity = $(this).data("qty");
             // Check if it has atleast 1
@@ -450,7 +452,10 @@ $(document).ready(function () {
                     });
                 } else if (data.type == "success") {
                     $(".loader").hide();
-                    $("#account-success").show().html(data.message).fadeOut(4000);
+                    $("#account-success")
+                        .show()
+                        .html(data.message)
+                        .fadeOut(4000);
                     $("#account-success").html(data.message);
                 }
             },
@@ -483,11 +488,17 @@ $(document).ready(function () {
                     });
                 } else if (data.type == "incorrect") {
                     $(".loader").hide();
-                    $("#password-incorrect").show().html(data.message).fadeOut(4000);
+                    $("#password-incorrect")
+                        .show()
+                        .html(data.message)
+                        .fadeOut(4000);
                     $("#password-incorrect").html(data.message);
-                }else if (data.type == "success") {
+                } else if (data.type == "success") {
                     $(".loader").hide();
-                    $("#password-success").show().html(data.message).fadeOut(4000);
+                    $("#password-success")
+                        .show()
+                        .html(data.message)
+                        .fadeOut(4000);
                     $("#password-success").html(data.message);
                 }
             },
@@ -499,4 +510,58 @@ $(document).ready(function () {
     });
 
     // ------------- END ----------------
+
+    // ----------- Apply coupon -------------
+    $("#ApplyCoupon").submit(function () {
+        var user = $(this).attr("user");
+
+        if (user == 1) {
+            // Proceed with form submission
+        } else {
+            $(".loader").hide(); // Hide the loader
+            $("#coupon-error").html(
+                "<div class='alert alert-danger' role='alert'><strong>Error!! </strong>You need to be logged in to apply a coupon.</div>"
+            );
+            $("#coupon-error").show();
+            $("#coupon-error").delay(3000).fadeOut("slow");
+            return; // Stop further execution
+        }
+
+        var code = $("#code").val();
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            type: "POST",
+            data: {code: code},
+            url: "/apply-coupon",
+            success: function (data) {
+                if(data.message !=""){
+                    $("#coupon-success").html(data.message).css({
+                        "background-color": "darkgrey",
+                        "color": "white",
+                        "padding": "10px",
+                        "font-weight": "bold",
+                        "border": "2px solid green",
+                        "box-shadow": "2px 2px 5px rgba(0, 0, 0, 0.2)",
+                        "font-size": "1.5rem",
+                    }).show().delay(4000).fadeOut("slow");
+                }
+                $(".totalCartItems").html(data["totalCartItems"]);
+                $("#appendCartItems").html(data.view);
+                if(data.couponAmount > 0){
+                    $(".couponAmount").text("Kr." + data.couponAmount);
+                } else {
+                    $(".couponAmount").text("Kr. 0");
+                }
+                if(data.grand_total > 0){
+                    $(".grand_total").text("Kr." + data.grand_total);
+                }
+            },
+            error: function () {
+                alert("An error occurred.");
+            },
+        });
+    });
+    // -------------- END ----------------
 });

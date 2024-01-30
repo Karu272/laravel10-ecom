@@ -61,12 +61,16 @@
                             </div>
                             <br>
                             <div class="">
-                                <p class="minusBtn updateCartItem qtyMinus" data-cartid="{{ $item['id']}}" data-qty="{{ $item['product_qty'] }}">-</p>
-                                <input name="qty" value="{{ $item['product_qty'] }}" data-min="1" data-max="100" class="quantity text-center">
-                                <p class="plusBtn updateCartItem qtyPlus" data-cartid="{{ $item['id']}}" data-qty="{{ $item['product_qty'] }}">+</p>
+                                <p class="minusBtn updateCartItem qtyMinus" data-cartid="{{ $item['id'] }}"
+                                    data-qty="{{ $item['product_qty'] }}">-</p>
+                                <input name="qty" value="{{ $item['product_qty'] }}" data-min="1" data-max="100"
+                                    class="quantity text-center">
+                                <p class="plusBtn updateCartItem qtyPlus" data-cartid="{{ $item['id'] }}"
+                                    data-qty="{{ $item['product_qty'] }}">+</p>
                             </div>
                             <br>
-                            <a title="Delete Item" href="#" class="deleteCartItem" data-cartid="{{ $item['id'] }}"><i class="fas fa-trash"></i></a>
+                            <a title="Delete Item" href="#" class="deleteCartItem"
+                                data-cartid="{{ $item['id'] }}"><i class="fas fa-trash"></i></a>
                         </div>
                     </div>
                 </div>
@@ -88,26 +92,26 @@
             <table class="table table-bordered">
                 <tbody>
                     <tr>
-                        <th>Apply Coupon Code</th>
                         <td>SUBTOTAL</td>
-                        <td>{{ $total_price }}</td>
+                        <td>Kr.{{ $total_price }}</td>
                     </tr>
                     <tr>
-                        <td>Enter Coupon Code to avail Discount</td>
                         <td>COUPON DISCOUNT</td>
-                        <td>cd 0kr</td>
+                        <td><span class="couponAmount">
+                            @if(Session::has('couponAmount'))
+                            Kr.{{ Session::get('couponAmount') }}
+                            @else
+                            Kr.0
+                            @endif
+                        </span></td>
                     </tr>
                     <tr>
-                        <td><input name="coupon" type="text" style="border: 1px solid black; background: rgb(228, 228, 228);"
-                                placeholder="Enter Coupon Code">
-                        </td>
                         <th> GRAND TOTAL</th>
-                        <td><strong style="color: orange;">6994Kr</strong></td>
+                        <td><strong style="color: orange;" class="grand_total">Kr.{{ max($total_price - Session::get('couponAmount'), 0) }}</strong></td>
                     </tr>
                     <tr>
-                        <td><button class="btn btn-primary">Apply</button></td>
                         <td>-</td>
-                        <td><button class="btn btn-success"> PROCEED TO CHECKOUT</button></td>
+                        <td><button type="submit" class="btn btn-success"> PROCEED TO CHECKOUT</button></td>
                     </tr>
                 </tbody>
             </table>

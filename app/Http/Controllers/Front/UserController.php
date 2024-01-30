@@ -12,6 +12,7 @@ use App\Models\User;
 use Auth;
 use Validator;
 use Hash;
+use Session;
 
 class UserController extends Controller
 {
@@ -174,6 +175,10 @@ class UserController extends Controller
 
     public function logout()
     {
+        // Prevent issues with the coupon
+        Session::forget('couponAmount');
+        Session::forget('couponCode');
+
         Auth::logout();
         return redirect('/');
     }
@@ -323,13 +328,14 @@ class UserController extends Controller
         }
     }
 
-    public function updatePassword(Request $request){
+    public function updatePassword(Request $request)
+    {
         // Getting the banners
         $homeSliderBanner = Banner::where('type', 'slider')->where('status', 1)->orderBy('sort', 'ASC')->get()->toArray();
         // Fetching the categories and subcategories
         $categories = Category::getCategories();
 
-        if($request->ajax()){
+        if ($request->ajax()) {
             $data = $request->all();
 
             $validator = Validator::make(
@@ -341,38 +347,38 @@ class UserController extends Controller
                 ]
             );
 
-            if($validator->passes()){
+            if ($validator->passes()) {
                 // Check if the current password is correct
                 $current_password = $data['current_password'];
                 // Get current password form users table
                 $checkPassword = User::where('id', Auth::user()->id)->first();
                 // COmpare current password with the one in the database
-                if(Hash::check($current_password, $checkPassword->password)){
+                if (Hash::check($current_password, $checkPassword->password)) {
                     // Update new password
                     User::where('id', Auth::user()->id)->update(['password' => bcrypt($data['new_password'])]);
                     // Redirect user with success message
                     return response()->json([
-                       'status' => true,
-                        'type' =>'success',
-                       'message' => 'Your password has been updated successfully.'
+                        'status' => true,
+                        'type' => 'success',
+                        'message' => 'Your password has been updated successfully.'
                     ]);
-                }else{
+                } else {
                     return response()->json([
-                       'status' => false,
+                        'status' => false,
                         'type' => 'incorrect',
-                       'message' => 'Your current password is incorrect.'
+                        'message' => 'Your current password is incorrect.'
                     ]);
                 }
 
-            }else{
+            } else {
                 return response()->json([
-                   'status' => false,
+                    'status' => false,
                     'type' => 'validation',
                     'errors' => $validator->messages()
                 ]);
             }
 
-        }else{
+        } else {
             return view('front.users.update_password', compact('homeSliderBanner', 'categories'));
         }
     }

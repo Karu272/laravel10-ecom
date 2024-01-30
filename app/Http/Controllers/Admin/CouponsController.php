@@ -89,7 +89,7 @@ class CouponsController extends Controller
             $users = isset($data['users']) ? implode(',', $data['users']) : '';
 
             // If Automatic code is selected, we need to generate a random code
-            if ($data['coupon_option'] == 'Automatic') {
+            if ($data['coupon_option'] == 'Automatic'  && empty($id)) {
                 $coupon_code = strtoupper(substr(uniqid(sha1(time())), 0, 8));
             } else {
                 $coupon_code = $data['coupon_code'];

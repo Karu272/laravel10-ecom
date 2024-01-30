@@ -383,3 +383,15 @@ input[type="radio"].visually-hidden {
 }
 
 /* // account page */
+
+/* Cart page */
+.coupon-span {
+    display: inline-block;
+}
+.coupon-container{
+    background: white;
+    padding: 10px 10px 10px 10px;
+    border: 1px solid #ccc; /* Add border */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box shadow */
+}
+/* // Cart page */

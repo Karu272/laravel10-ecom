@@ -49,7 +49,8 @@ Route::
                 Route::match(['get', 'post'], '/update-password', [UserController::class, 'updatePassword']);
                 // User account page route
                 Route::match(['get', 'post'], '/account', [UserController::class, 'account'])->name('front.users.account');
-                ;
+                // Apply coupon route
+                Route::post('/apply-coupon', [FrontProductController::class, 'applyCoupon']);
             });
 
             // Forgot password page route
