@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Banner;
+use App\Models\Country;
 use App\Models\Category;
 use App\Models\User;
 use Auth;
 use Validator;
+use Hash;
 
 class UserController extends Controller
 {
@@ -315,7 +317,63 @@ class UserController extends Controller
             }
 
         } else {
-            return view('front.users.account', compact('homeSliderBanner', 'categories', ));
+            $countries = Country::where('status', 1)->get()->toArray();
+            //dd($countries);
+            return view('front.users.account', compact('homeSliderBanner', 'categories', 'countries'));
+        }
+    }
+
+    public function updatePassword(Request $request){
+        // Getting the banners
+        $homeSliderBanner = Banner::where('type', 'slider')->where('status', 1)->orderBy('sort', 'ASC')->get()->toArray();
+        // Fetching the categories and subcategories
+        $categories = Category::getCategories();
+
+        if($request->ajax()){
+            $data = $request->all();
+
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'current_password' => 'required|string|max:255',
+                    'new_password' => 'required|string|min:6',
+                    'confirm_password' => 'required|string|same:new_password',
+                ]
+            );
+
+            if($validator->passes()){
+                // Check if the current password is correct
+                $current_password = $data['current_password'];
+                // Get current password form users table
+                $checkPassword = User::where('id', Auth::user()->id)->first();
+                // COmpare current password with the one in the database
+                if(Hash::check($current_password, $checkPassword->password)){
+                    // Update new password
+                    User::where('id', Auth::user()->id)->update(['password' => bcrypt($data['new_password'])]);
+                    // Redirect user with success message
+                    return response()->json([
+                       'status' => true,
+                        'type' =>'success',
+                       'message' => 'Your password has been updated successfully.'
+                    ]);
+                }else{
+                    return response()->json([
+                       'status' => false,
+                        'type' => 'incorrect',
+                       'message' => 'Your current password is incorrect.'
+                    ]);
+                }
+
+            }else{
+                return response()->json([
+                   'status' => false,
+                    'type' => 'validation',
+                    'errors' => $validator->messages()
+                ]);
+            }
+
+        }else{
+            return view('front.users.update_password', compact('homeSliderBanner', 'categories'));
         }
     }
 }

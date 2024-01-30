@@ -461,4 +461,42 @@ $(document).ready(function () {
         });
     });
     // -------------- END ----------------
+
+    // -------- Update password validation -----------
+
+    $("#passwordForm").submit(function () {
+        $(".loader").show();
+        var formData = $(this).serialize();
+        $.ajax({
+            url: "/update-password",
+            type: "POST",
+            data: formData,
+            success: function (data) {
+                if (data.type == "validation") {
+                    $(".loader").hide();
+                    $.each(data.errors, function (i, error) {
+                        $("#password-" + i).attr("style", "color:red");
+                        $("#password-" + i).html(error);
+                        setTimeout(function () {
+                            $("#password-" + i).css({ display: "none" });
+                        }, 3000);
+                    });
+                } else if (data.type == "incorrect") {
+                    $(".loader").hide();
+                    $("#password-incorrect").show().html(data.message).fadeOut(4000);
+                    $("#password-incorrect").html(data.message);
+                }else if (data.type == "success") {
+                    $(".loader").hide();
+                    $("#password-success").show().html(data.message).fadeOut(4000);
+                    $("#password-success").html(data.message);
+                }
+            },
+            error: function () {
+                $(".loader").hide();
+                alert("This is the Error");
+            },
+        });
+    });
+
+    // ------------- END ----------------
 });

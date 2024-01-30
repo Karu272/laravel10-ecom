@@ -253,6 +253,34 @@ $(document).ready(function () {
         });
     });
 
+    // Update Coupons Status
+    $(document).on("click", ".updateCouponsPageStatus", function () {
+        var status = $(this).children("i").attr("status");
+        var page_id = $(this).attr("page_id");
+        $.ajax({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            type: "post",
+            url: "/admin/update-coupon-status",
+            data: { status: status, page_id: page_id },
+            success: function (resp) {
+                if (resp["status"] == 0) {
+                    $("#page-" + page_id).html(
+                        "<i class='fas fa-toggle-off' aria-hidden='true' status='Inactive'></i>"
+                    );
+                } else if (resp["status"] == 1) {
+                    $("#page-" + page_id).html(
+                        "<i class='fas fa-toggle-on' aria-hidden='true' status='Active' style='color: blue;'></i>"
+                    );
+                }
+            },
+            error: function () {
+                alert("Error");
+            },
+        });
+    });
+
     // confirm delete with sweetalert
     $(document).on("click", ".confirmDelete", function () {
         var record = $(this).attr("record");
@@ -274,5 +302,14 @@ $(document).ready(function () {
                     "/admin/delete-" + record + "/" + recordid;
             }
         });
+    });
+
+    // Show & hide coupn field for manual and automatic
+    $("#ManualCoupon, #AutomaticCoupon").click(function () {
+        if ($(this).attr("id") === "ManualCoupon") {
+            $("#couponField").show();
+        } else {
+            $("#couponField").hide();
+        }
     });
 });

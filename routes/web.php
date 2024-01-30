@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\BannersController;
+use App\Http\Controllers\Admin\CouponsController;
 
 use App\Http\Controllers\Front\IndexController;
 use App\Http\Controllers\Front\UserController;
@@ -44,8 +45,11 @@ Route::
             Route::group(['middleware' => ['auth']], function () {
                 // User logout route
                 Route::get('/logout', [UserController::class, 'logout']);
+                // User update password route
+                Route::match(['get', 'post'], '/update-password', [UserController::class, 'updatePassword']);
                 // User account page route
-                Route::match(['get', 'post'], '/account', [UserController::class, 'account'])->name('front.users.account');;
+                Route::match(['get', 'post'], '/account', [UserController::class, 'account'])->name('front.users.account');
+                ;
             });
 
             // Forgot password page route
@@ -110,6 +114,11 @@ Route::prefix('admin')->group(function () {
         Route::match(['get', 'post'], 'banners/add-edit-banner/{id?}', [BannersController::class, 'edit'])->name('admin.banners.add_edit_banner');
         Route::post('update-banner-status', [BannersController::class, 'update']);
         Route::get('delete-banner/{id}', [BannersController::class, 'destroy']);
+        // Coupons
+        Route::get('coupons/coupons', [CouponsController::class, 'coupons'])->name('admin.coupons.coupons');
+        Route::match(['get', 'post'], 'coupons/add-edit-coupon/{id?}', [CouponsController::class, 'edit'])->name('admin.coupons.add_edit_coupon');
+        Route::post('update-coupon-status', [CouponsController::class, 'update']);
+        Route::get('delete-coupon/{id}', [CouponsController::class, 'destroy']);
 
     });
 

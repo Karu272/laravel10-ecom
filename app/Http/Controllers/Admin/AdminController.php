@@ -370,7 +370,7 @@ class AdminController extends Controller
             $permissions = ['view', 'edit', 'full'];
 
             // Iterate over a list of modules: 'banners', 'brands', 'images', 'products', 'categories', 'cms_pages'
-            foreach (['banners', 'brands', 'images', 'products', 'categories', 'cms_pages'] as $module) {
+            foreach (['coupons','banners', 'brands', 'images', 'products', 'categories', 'cms_pages'] as $module) {
                 // Create a new AdminsRole instance
                 $role = new AdminsRole;
 

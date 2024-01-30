@@ -354,7 +354,7 @@ input[type="radio"].visually-hidden {
 
 /* account page */
 
-.account-success {
+.success {
     background-color: green;
     padding: 10px;
     text-align: center;
@@ -363,7 +363,21 @@ input[type="radio"].visually-hidden {
     display: none;
 }
 @media only screen and (max-width: 600px) {
-    .account-success {
+    .success {
+        font-size: 14px; /* Adjust font size for mobile screens */
+    }
+}
+
+.error {
+    background-color: red;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    display: none;
+}
+@media only screen and (max-width: 600px) {
+    .error {
         font-size: 14px; /* Adjust font size for mobile screens */
     }
 }

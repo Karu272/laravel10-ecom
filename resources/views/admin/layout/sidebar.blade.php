@@ -89,6 +89,11 @@
                             <p><i class="fas fa-window-maximize nav-icon"></i> Banners </p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ url('admin/coupons/coupons') }}" class="nav-link">
+                            <p><i class="fas fa-window-maximize nav-icon"></i> Coupons </p>
+                        </a>
+                    </li>
                 </ul>
             </li>
         </div>
